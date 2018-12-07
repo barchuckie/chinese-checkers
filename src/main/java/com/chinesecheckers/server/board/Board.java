@@ -1,6 +1,4 @@
-package com.chinesecheckers.board;
-
-import java.util.HashMap;
+package com.chinesecheckers.server.board;
 
 public abstract class Board {
 

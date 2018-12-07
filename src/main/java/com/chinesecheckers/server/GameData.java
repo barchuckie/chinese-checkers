@@ -1,6 +1,4 @@
-package com.chinesecheckers;
-
-import com.chinesecheckers.board.Field;
+package com.chinesecheckers.server;
 
 public class GameData {
 

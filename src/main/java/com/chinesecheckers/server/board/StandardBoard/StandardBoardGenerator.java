@@ -1,8 +1,7 @@
-package com.chinesecheckers.board.StandardBoard;
+package com.chinesecheckers.server.board.StandardBoard;
 
-import com.chinesecheckers.GameData;
-import com.chinesecheckers.board.Board;
-import com.chinesecheckers.board.BoardGenerator;
+import com.chinesecheckers.server.board.Board;
+import com.chinesecheckers.server.board.BoardGenerator;
 
 public class StandardBoardGenerator implements BoardGenerator {
 

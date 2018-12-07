@@ -1,6 +1,4 @@
-package com.chinesecheckers.board;
-
-import com.chinesecheckers.GameData;
+package com.chinesecheckers.server.board;
 
 public interface BoardGenerator {
 

@@ -1,6 +1,6 @@
-package com.chinesecheckers.board;
+package com.chinesecheckers.server.board;
 
-import com.chinesecheckers.Player;
+import com.chinesecheckers.server.Player;
 
 public class Field {
     private boolean isActive;
