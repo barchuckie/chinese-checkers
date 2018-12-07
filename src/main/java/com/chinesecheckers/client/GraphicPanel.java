@@ -2,6 +2,8 @@ package com.chinesecheckers.client;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 
 /* TODO funkcja ktora przyjmuje tablice, przeszukuje cala tablice i na danych wspolrzednych
@@ -15,6 +17,7 @@ public class GraphicPanel extends JPanel {
     public GraphicPanel(Ellipse2D ellipse2DS[][])
     {
         this.ellipse2DS=ellipse2DS;
+        this.addMouseListener(new MyMouseAdapter());
     }
     //h=763 w=1000
     public void paintComponent(Graphics g) {
@@ -32,6 +35,28 @@ public class GraphicPanel extends JPanel {
             }
         }
     }
+
+    public class MyMouseAdapter extends MouseAdapter
+    {
+        @Override
+        public void mousePressed(MouseEvent e)
+        {
+            if ((e.getButton() == 1)) {
+                for(int i = 0; i < 17; i++) {
+                    for(int j = 0; j < 25; j++) {
+                       if((ellipse2DS[i][j] != null) && (ellipse2DS[i][j].contains(e.getPoint())))
+                       {
+                           //co chcesz robić gdy klikne dane kółko
+                           System.out.println("Kliknąłem kółko: "+i+"x"+j);
+                       }
+                    }
+                }
+            }
+            repaint();
+        }
+    }
+
+
 
 
 }
