@@ -18,15 +18,15 @@ public class StandardBoardGeneratorTest {
         System.out.println(((StandardBoard) standardBoard).f);
 
         for(int i  = 0; i < fields.length; i++) {
-            for (int j = 0; j < fields[i].length; j++) {
-                if(fields[i][j].getIsActive()) {
+            for (Field field : fields[i]) {
+                if(field.getIsActive()) {
                     System.out.print('X');
                     pola++;
                 } else {
                     System.out.print('x');
                 }
-                System.out.println();
             }
+            System.out.println();
         }
         System.out.println(pola);
     }
