@@ -13,21 +13,16 @@ public class StandardBoardGeneratorTest {
         BoardGenerator standardBoardGenerator = new StandardBoardGenerator();
         Board standardBoard = standardBoardGenerator.generateBoard(numOfPlayers);
         Field[][] fields = standardBoard.getFields();
-        System.out.println(fields.length);
-        int pola = 0;
-        System.out.println(((StandardBoard) standardBoard).f);
 
         for(int i  = 0; i < fields.length; i++) {
             for (Field field : fields[i]) {
                 if(field.getIsActive()) {
                     System.out.print('X');
-                    pola++;
                 } else {
-                    System.out.print('x');
+                    System.out.print(' ');
                 }
             }
             System.out.println();
         }
-        System.out.println(pola);
     }
 }

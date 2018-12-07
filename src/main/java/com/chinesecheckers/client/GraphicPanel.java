@@ -1,13 +1,8 @@
 package com.chinesecheckers.client;
 
-import javafx.scene.shape.Ellipse;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.util.HashSet;
-import java.util.Set;
-
 
 /* TODO funkcja ktora przyjmuje tablice, przeszukuje cala tablice i na danych wspolrzednych
    TODO jesli mam jakiegos gracz to biore jego kolor i wstawiam
