@@ -8,5 +8,4 @@ public class Circle extends Ellipse2D.Double {
     {
         super(x-r,y-r,2*r,2*r);
     }
-
 }
