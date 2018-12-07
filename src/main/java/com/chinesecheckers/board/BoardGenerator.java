@@ -4,6 +4,6 @@ import com.chinesecheckers.GameData;
 
 public interface BoardGenerator {
 
-    Board generateBoard(GameData data);
+    Board generateBoard(int numOfPlayers);
 
 }

@@ -8,8 +8,7 @@ public class StandardBoardGenerator implements BoardGenerator {
 
 
     @Override
-    public Board generateBoard(GameData data) {
-        int numOfPlayers = data.getNumOfPlayers();
+    public Board generateBoard(int numOfPlayers) {
         Board standardBoard = new StandardBoard(numOfPlayers);
         return standardBoard;
     }
