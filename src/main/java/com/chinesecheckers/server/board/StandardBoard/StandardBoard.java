@@ -12,8 +12,17 @@ public class StandardBoard extends Board {
     StandardBoard(int numOfPLayers) {
         /* code */
         f = 0;
+        /*
         for (int i = 0; i < 17; ++i) {
             Arrays.fill(fields[i], new Field(false));
+        }
+        */
+        for(int i=0;i<17;i++)
+        {
+            for(int j=0;j<25;j++)
+            {
+                fields[i][j]=new Field(false);
+            }
         }
         this.numOfPlayers = numOfPLayers;
         setFields();
