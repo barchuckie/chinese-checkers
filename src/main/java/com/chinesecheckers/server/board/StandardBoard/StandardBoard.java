@@ -1,11 +1,8 @@
 package com.chinesecheckers.server.board.StandardBoard;
-import com.chinesecheckers.server.Game;
 import com.chinesecheckers.server.GameData;
 import com.chinesecheckers.server.Player;
 import com.chinesecheckers.server.board.Board;
 import com.chinesecheckers.server.board.Field;
-
-import java.util.Arrays;
 
 public class StandardBoard extends Board {
 
@@ -13,7 +10,6 @@ public class StandardBoard extends Board {
     private Player[] players;
 
     StandardBoard(GameData data) {
-        /* code */
         for(int i = 0; i < 17; i++) {
             for(int j = 0; j < 25; j++) {
                 fields[i][j]=null;

@@ -9,9 +9,9 @@ public class StandardBoardGeneratorTest {
     @Test
     public void testStandardBoardCreating() {
         int numOfPlayers = 3;
-        Player player1 = new RegularPlayer("pat");
-        Player player2 = new RegularPlayer("mat");
-        Player player3 = new RegularPlayer("sat");
+        Player player1 = new Player("pat");
+        Player player2 = new Player("mat");
+        Player player3 = new Player("sat");
 
         Player[] players = { player1, player2, player3 };
         GameMode mode = new StandardGameMode();
