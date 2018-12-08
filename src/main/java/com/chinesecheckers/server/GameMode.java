@@ -1,5 +1,5 @@
 package com.chinesecheckers.server;
 
-public enum GameMode {
-    STANDARD
+public interface GameMode {
+    void validateMove(Player player);
 }
