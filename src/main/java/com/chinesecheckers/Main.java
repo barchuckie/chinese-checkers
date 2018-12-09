@@ -1,7 +1,6 @@
 package com.chinesecheckers;
 
 import com.chinesecheckers.client.MainWindow;
-import com.chinesecheckers.client.StandardBoardView;
 
 public class Main {
 
