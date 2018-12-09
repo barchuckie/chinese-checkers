@@ -35,82 +35,104 @@ public class StandardBoard extends Board {
     }
 
     private void addPlayers() {
-        switch (numOfPlayers) {
-            case 2:
-                for(int i = 0; i < 4; ++i) {
-                    for(Field field : fields[i]) {
-                        if(field != null) {
-                            field.setPlayer(players[0]);
+            switch (numOfPlayers) {
+                case 2:
+                    for(int i = 0; i < 4; ++i) {
+                        for(Field field : fields[i]) {
+                            if(field != null) {
+                                field.setPlayer(players[0]);
+                            }
+                        }
+                        for (Field field : fields[16-i]) {
+                            if(field != null) {
+                                field.setPlayer(players[1]);
+                            }
                         }
                     }
-                    for (Field field : fields[16-i]) {
-                        if(field != null) {
-                            field.setPlayer(players[1]);
-                        }
-                    }
-                }
-                break;
+                    break;
 
-            case 3:
-                for(int i = 0; i < 4; ++i) {
-                    for(Field field : fields[i]) {
-                        if(field != null) {
-                            field.setPlayer(players[0]);
+                case 3:
+                    for(int i = 0; i < 4; ++i) {
+                        for(Field field : fields[i]) {
+                            if(field != null) {
+                                field.setPlayer(players[0]);
+                            }
                         }
                     }
-                }
-                for(int i = 4; i < 9; ++i) {
-                    for(int j = 0; j < 11-i; ++j) {
-                        Field field = fields[16-i][j];
-                        if(field != null) {
-                            field.setPlayer(players[2]);
-                        }
-                        field = fields[16-i][24-j];
-                        if(field != null) {
-                            field.setPlayer(players[1]);
+                    for(int i = 4; i < 9; ++i) {
+                        for(int j = 0; j < 11-i; ++j) {
+                            Field field = fields[16-i][j];
+                            if(field != null) {
+                                field.setPlayer(players[2]);
+                            }
+                            field = fields[16-i][24-j];
+                            if(field != null) {
+                                field.setPlayer(players[1]);
+                            }
                         }
                     }
-                }
-                break;
+                    break;
 
-            case 6:
-                for(int i = 0; i < 4; ++i) {
-                    for(Field field : fields[i]) {
-                        if(field != null) {
-                            field.setPlayer(players[0]);
+                case 4:
+                    for(int i = 4; i < 9; ++i) {
+                        for(int j = 0; j < 11-i; ++j) {
+                            Field field = fields[i][j];
+                            if(field != null) {
+                                field.setPlayer(players[5]);
+                            }
+                            field = fields[i][24-j];
+                            if(field != null) {
+                                field.setPlayer(players[1]);
+                            }
+                            field = fields[16-i][j];
+                            if(field != null) {
+                                field.setPlayer(players[4]);
+                            }
+                            field = fields[16-i][24-j];
+                            if(field != null) {
+                                field.setPlayer(players[2]);
+                            }
                         }
                     }
-                    for (Field field : fields[16-i]) {
-                        if(field != null) {
-                            field.setPlayer(players[3]);
+                    break;
+                case 6:
+                    for(int i = 0; i < 4; ++i) {
+                        for(Field field : fields[i]) {
+                            if(field != null) {
+                                field.setPlayer(players[0]);
+                            }
+                        }
+                        for (Field field : fields[16-i]) {
+                            if(field != null) {
+                                field.setPlayer(players[3]);
+                            }
                         }
                     }
-                }
-                for(int i = 4; i < 9; ++i) {
-                    for(int j = 0; j < 11-i; ++j) {
-                        Field field = fields[i][j];
-                        if(field != null) {
-                            field.setPlayer(players[5]);
-                        }
-                        field = fields[i][24-j];
-                        if(field != null) {
-                            field.setPlayer(players[1]);
-                        }
-                        field = fields[16-i][j];
-                        if(field != null) {
-                            field.setPlayer(players[4]);
-                        }
-                        field = fields[16-i][24-j];
-                        if(field != null) {
-                            field.setPlayer(players[2]);
+                    for(int i = 4; i < 9; ++i) {
+                        for(int j = 0; j < 11-i; ++j) {
+                            Field field = fields[i][j];
+                            if(field != null) {
+                                field.setPlayer(players[5]);
+                            }
+                            field = fields[i][24-j];
+                            if(field != null) {
+                                field.setPlayer(players[1]);
+                            }
+                            field = fields[16-i][j];
+                            if(field != null) {
+                                field.setPlayer(players[4]);
+                            }
+                            field = fields[16-i][24-j];
+                            if(field != null) {
+                                field.setPlayer(players[2]);
+                            }
                         }
                     }
-                }
-                break;
+                    break;
 
-            default:
-                //Throw exc
-        }
+                default:
+                    //Throw exc
+            }
     }
 
 }
