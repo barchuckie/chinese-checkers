@@ -1,7 +1,5 @@
 package com.chinesecheckers.client;
 
-import com.chinesecheckers.server.board.StandardBoard.StandardBoard;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -98,22 +96,30 @@ public class MainWindow {
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            StandardBoardView standardBoardView = new StandardBoardView();
+            int players=0;
+            int bots=0;
             for (Enumeration<AbstractButton> buttons = howManyPlayers.getElements(); buttons.hasMoreElements();) {
                 AbstractButton button = buttons.nextElement();
 
                 if (button.isSelected()) {
                     System.out.println("Players: " + button.getText());
+                    players = Integer.parseInt(button.getText());
                 }
             }
-            for (Enumeration<AbstractButton> buttons = howManyPlayers.getElements(); buttons.hasMoreElements();) {
+            for (Enumeration<AbstractButton> buttons = howManyBots.getElements(); buttons.hasMoreElements();) {
                 AbstractButton button = buttons.nextElement();
                 if (button.isSelected()) {
                     System.out.println("Botów : " + button.getText());
+                    bots = Integer.parseInt(button.getText());
                 }
             }
-            standardBoardView.start();
-            frame.dispose();
+
+            if(players>=bots+1)
+            {
+                PlayWindow playWindow = new PlayWindow(players,bots);
+                playWindow.start();
+                frame.dispose();
+            }
         }
     }
 }
