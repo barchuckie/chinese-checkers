@@ -1,6 +1,7 @@
 package com.chinesecheckers.client;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,8 +9,9 @@ import java.util.Enumeration;
 
 public class MainWindow {
     private JFrame frame;
-    private JPanel mainPanel,namePanel,choosePanel,choosePlayersPanel,chooseBotsPanel;
-    private JButton startButton;
+    private JPanel mainPanel,namePanel,choosePanel,choosePlayersPanel,chooseBotsPanel,newGamePanel,newGameLabelPanel,
+    joinGamePanelLabel;
+    private JButton startButton,joinButton;
     private JLabel chineseCheckersLabel;
     private ButtonGroup howManyPlayers,howManyBots;
     private JRadioButton twoP,threeP,fourP,sixP,zeroB,oneB,twoB,threeB,fourB,fiveB;
@@ -21,8 +23,12 @@ public class MainWindow {
         mainGridLayout = new GridLayout(3,0);
 
         //guzik start
-        startButton = new JButton("Start");
+        startButton = new JButton("Nowa gra");
         startButton.addActionListener(new startButtonListener());
+
+        //guzik join
+        joinButton = new JButton("Dołącz do istniejącej gry");
+        joinButton.addActionListener(new joinButtonListener());
 
         //wybór graczy
         twoP = new JRadioButton("2",true);
@@ -66,9 +72,19 @@ public class MainWindow {
 
         // panel na wybory(gracze/boty)
         choosePanel = new JPanel();
-        choosePanel.setLayout(new GridLayout(0,2));
-        choosePanel.add(choosePlayersPanel);
-        choosePanel.add(chooseBotsPanel);
+        newGameLabelPanel = new JPanel(new GridBagLayout());
+        newGamePanel = new JPanel(new GridBagLayout());
+        joinGamePanelLabel = new JPanel(new GridBagLayout());
+
+        choosePanel.setLayout(new GridLayout(4,0));
+        choosePanel.add(newGameLabelPanel);
+        newGameLabelPanel.add(new JLabel("Zacznij nową grę"));
+        newGamePanel.add(choosePlayersPanel);
+        newGamePanel.add(chooseBotsPanel);
+        newGamePanel.add(startButton);
+        choosePanel.add(newGamePanel);
+        joinGamePanelLabel.add(joinButton);
+        choosePanel.add(joinGamePanelLabel);
 
         //panel na nazwe
         namePanel = new JPanel();
@@ -80,7 +96,7 @@ public class MainWindow {
         mainPanel.setLayout(mainGridLayout);
         mainPanel.add(namePanel);
         mainPanel.add(choosePanel);
-        mainPanel.add(startButton);
+
 
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -120,6 +136,15 @@ public class MainWindow {
                 playWindow.start();
                 frame.dispose();
             }
+        }
+    }
+
+    class joinButtonListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            System.out.println("Tu bedzie jakies oczekiwanie na dolaczenie");
         }
     }
 }
