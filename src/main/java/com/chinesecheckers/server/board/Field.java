@@ -5,6 +5,7 @@ import com.chinesecheckers.server.Player;
 public class Field {
     private boolean isActive;
     private Player player;
+    private Field [] neighbours = new Field[6];
 
     public Field(boolean isActive) {
         this.isActive = isActive;
@@ -14,6 +15,10 @@ public class Field {
     public Field(boolean isActive, Player player) {
         this.isActive = isActive;
         this.player = player;
+    }
+
+    public void setNeighbours(Field[] neighbours) {
+        this.neighbours = neighbours;
     }
 
     public void setIsActive(boolean active) {

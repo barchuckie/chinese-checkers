@@ -1,6 +1,6 @@
 package com.chinesecheckers.server.board.StandardBoard;
 
-import com.chinesecheckers.server.GameData;
+import com.chinesecheckers.server.game.GameData;
 import com.chinesecheckers.server.board.Board;
 import com.chinesecheckers.server.board.BoardGenerator;
 

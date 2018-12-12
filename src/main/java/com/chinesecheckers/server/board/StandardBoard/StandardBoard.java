@@ -1,5 +1,5 @@
 package com.chinesecheckers.server.board.StandardBoard;
-import com.chinesecheckers.server.GameData;
+import com.chinesecheckers.server.game.GameData;
 import com.chinesecheckers.server.Player;
 import com.chinesecheckers.server.board.Board;
 import com.chinesecheckers.server.board.Field;
@@ -18,6 +18,7 @@ public class StandardBoard extends Board {
         this.numOfPlayers = data.getNumOfPlayers();
         this.players = data.getPlayers();
         setFields();
+        setFieldsNeighbours();
         addPlayers();
     }
 
@@ -29,6 +30,56 @@ public class StandardBoard extends Board {
             }
         }
     }
+
+    private void setFieldsNeighbours() {
+        for(int i = 0; i < ROWS; ++i) {
+            for(int j = 0; j < COLUMNS; ++j) {
+                if(fields[i][j] != null) {
+                    Field [] neighbours = { null, null, null, null, null, null };
+                    if(i == 0) {
+                        neighbours[1] = fields[i][j+2];
+                        neighbours[2] = fields[i+1][j+1];
+                        neighbours[3] = fields[i+1][j-1];
+                        neighbours[4] = fields[i][j-2];
+                    } else if(i == ROWS - 1) {
+                        neighbours[0] = fields[i-1][j+1];
+                        neighbours[1] = fields[i][j+2];
+                        neighbours[4] = fields[i][j-2];
+                        neighbours[5] = fields[i-1][j-1];
+                    } else if(j == 0) {
+                        neighbours[0] = fields[i-1][j+1];
+                        neighbours[1] = fields[i][j+2];
+                        neighbours[2] = fields[i+1][j+1];
+                    } else if(j == 1) {
+                        neighbours[0] = fields[i-1][j+1];
+                        neighbours[1] = fields[i][j+2];
+                        neighbours[2] = fields[i+1][j+1];
+                        neighbours[3] = fields[i+1][j-1];
+                        neighbours[5] = fields[i-1][j-1];
+                    } else if(j == COLUMNS - 1) {
+                        neighbours[3] = fields[i+1][j-1];
+                        neighbours[4] = fields[i][j-2];
+                        neighbours[5] = fields[i-1][j-1];
+                    } else if(j == COLUMNS - 2) {
+                        neighbours[0] = fields[i-1][j+1];
+                        neighbours[2] = fields[i+1][j+1];
+                        neighbours[3] = fields[i+1][j-1];
+                        neighbours[4] = fields[i][j-2];
+                        neighbours[5] = fields[i-1][j-1];
+                    } else {
+                        neighbours[0] = fields[i-1][j+1];
+                        neighbours[1] = fields[i][j+2];
+                        neighbours[2] = fields[i+1][j+1];
+                        neighbours[3] = fields[i+1][j-1];
+                        neighbours[4] = fields[i][j-2];
+                        neighbours[5] = fields[i-1][j-1];
+                    }
+                    fields[i][j].setNeighbours(neighbours);
+                }
+            }
+        }
+    }
+
 
     public Field[][] getFields() {
         return fields;

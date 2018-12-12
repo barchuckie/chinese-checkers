@@ -3,6 +3,7 @@ import com.chinesecheckers.server.board.Board;
 import com.chinesecheckers.server.board.BoardGenerator;
 import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.board.StandardBoard.StandardBoardGenerator;
+import com.chinesecheckers.server.game.GameData;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -19,9 +20,8 @@ public class StandardBoardGeneratorTest {
             Player player3 = new Player("sat", new Socket("127.0.0.1", 8901));
 
             Player[] players = {player1, player2, player3};
-            GameMode mode = new StandardGameMode();
 
-            GameData data = new GameData(mode, numOfPlayers, players);
+            GameData data = new GameData(numOfPlayers, players);
 
             BoardGenerator standardBoardGenerator = new StandardBoardGenerator();
             Board standardBoard = standardBoardGenerator.generateBoard(data);

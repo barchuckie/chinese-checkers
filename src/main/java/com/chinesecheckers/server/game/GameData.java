@@ -1,19 +1,15 @@
-package com.chinesecheckers.server;
+package com.chinesecheckers.server.game;
+
+import com.chinesecheckers.server.Player;
 
 public class GameData {
 
-    private GameMode mode;
     private int numOfPlayers;
-    private Player [] players;
+    private Player[] players;
 
-    public GameData(GameMode mode, int numOfPlayers, Player [] players) {
-        this.mode = mode;
+    public GameData(int numOfPlayers, Player [] players) {
         this.numOfPlayers = numOfPlayers;
         this.players = players;
-    }
-
-    public void setMode(GameMode mode) {
-        this.mode = mode;
     }
 
     public void setNumOfPlayers(int numOfPlayers) {
@@ -22,10 +18,6 @@ public class GameData {
 
     public void setPlayers(Player[] players) {
         this.players = players;
-    }
-
-    public GameMode getMode() {
-        return mode;
     }
 
     public int getNumOfPlayers() {
