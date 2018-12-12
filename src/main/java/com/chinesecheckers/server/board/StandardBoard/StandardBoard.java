@@ -25,8 +25,8 @@ public class StandardBoard extends Board {
     private void setFields() {
         for(int i = 0; i < 13; i++) {
             for(int j = 12-i; j <= 12 + i; j = j + 2) {
-                fields[i][j]=new Field(true);
-                fields[16-i][j]=new Field(true);
+                fields[i][j]=new Field();
+                fields[16-i][j]=new Field();
             }
         }
     }
