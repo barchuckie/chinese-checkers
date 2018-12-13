@@ -1,5 +1,9 @@
 package com.chinesecheckers.client;
 
+import com.chinesecheckers.client.Board.Board;
+import com.chinesecheckers.client.Board.BoardFactory;
+import com.chinesecheckers.client.Board.HexBoardFactory;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,15 +12,16 @@ public class PlayWindow {
     private JPanel mainPanel;
     private int players;
     private int bots;
-    private StandardBoard standardBoard;
+    private Board standardBoard;
 
     public PlayWindow(int graczy,int bots)
     {
         this.players=graczy;
         this.bots=bots;
-        standardBoard = new StandardBoard(graczy);
-
+        BoardFactory hexBoardFactory= new HexBoardFactory();
+        standardBoard = hexBoardFactory.getBoard(players);
     }
+
     public void start()
     {
         frame = new JFrame("Gra");

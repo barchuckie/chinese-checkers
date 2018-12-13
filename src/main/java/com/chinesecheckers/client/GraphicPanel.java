@@ -1,10 +1,11 @@
 package com.chinesecheckers.client;
 
+import com.chinesecheckers.client.Board.Board;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
 
 /* TODO funkcja ktora przyjmuje tablice, przeszukuje cala tablice i na danych wspolrzednych
    TODO jesli mam jakiegos gracz to biore jego kolor i wstawiam
@@ -18,11 +19,13 @@ public class GraphicPanel extends JPanel {
     public GraphicPanel(Board board)
     {
         this.board=board;
+        board.addPlayers();
         circles=board.getFields();
         this.addMouseListener(new MyMouseAdapter());
     }
     //h=763 w=1000
     public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(Color.red);

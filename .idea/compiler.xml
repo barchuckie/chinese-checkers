@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="chinese-checkers" />
         <module name="chinese-checkers33" />
+        <module name="chinese-checkersFACTORY" />
         <module name="ChinyW" />
       </profile>
     </annotationProcessing>
