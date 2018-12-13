@@ -1,4 +1,6 @@
 import com.chinesecheckers.server.Player;
+import com.chinesecheckers.server.board.Board;
+import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.game.Game;
 import com.chinesecheckers.server.game.GameData;
 import com.chinesecheckers.server.game.StandardGame;
@@ -16,11 +18,42 @@ public class GameTest extends ChineseCheckersTest {
         int currentPlayer = game.getCurrentPlayer();
 
         if(currentPlayer == 0) {
-            Assert.assertTrue(game.validateMove(players[0], 11, 3, 10, 4));
-            Assert.assertFalse(game.validateMove(players[0], 11, 3, 10, 2));
+            //game.validateMove(players[0], 14, 2, 14, 4);
+            game.validateMove(players[0], 11, 3, 10, 4);
+            printBoard(game.getBoard(), nicks);
+            Assert.assertTrue(game.validateMove(players[1], 11, 13, 10, 12));
+            printBoard(game.getBoard(), nicks);
+            Assert.assertFalse(game.validateMove(players[0], 12, 2, 13, 1));
+            Assert.assertTrue(game.validateMove(players[0], 15, 3, 16, 4));
+            printBoard(game.getBoard(), nicks);
+            Assert.assertTrue(game.validateMove(players[1], 13, 13, 14, 12));
+            printBoard(game.getBoard(), nicks);
+            //Assert.assertFalse(game.validateMove(players[0], 14, 2, 14, 4));
+            Assert.assertTrue(game.validateMove(players[0], 10, 2, 12, 4));
+            printBoard(game.getBoard(), nicks);
         } else {
             Assert.assertTrue(game.validateMove(players[1], 11, 13, 10, 12));
         }
 
+    }
+
+    private void printBoard(Board board, String[] nicks) {
+        Field [][] fields = board.getFields();
+        for (int i = 0; i < fields.length; i++) {
+            for (Field field : fields[i]) {
+                if (field != null) {
+                    if (field.getPlayer() == null) {
+                        System.out.print('*');
+                    } else if (field.getPlayer().getNick().equals(nicks[0])) {
+                        System.out.print('P');
+                    } else if (field.getPlayer().getNick().equals(nicks[1])) {
+                        System.out.print('M');
+                    }
+                } else {
+                    System.out.print(' ');
+                }
+            }
+            System.out.println();
+        }
     }
 }

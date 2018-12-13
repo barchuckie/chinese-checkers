@@ -20,4 +20,8 @@ public abstract class Game {
     public int getCurrentPlayer() {
         return currentPlayer;
     }
+
+    public Board getBoard() {
+        return board;
+    }
 }

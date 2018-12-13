@@ -1,6 +1,5 @@
 import com.chinesecheckers.server.Player;
 import com.chinesecheckers.server.game.GameData;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.net.Socket;

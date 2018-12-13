@@ -20,7 +20,6 @@ public class StandardGame extends Game {
     @Override
     public boolean validateMove(Player player, int oldX, int oldY, int newX, int newY) {
         if(player.equals(players[currentPlayer])) {
-            //TODO: implement jumps over players
             Field [][] fields = board.getFields();
             if(!fields[oldY][oldX].getPlayer().equals(player)) { //error in logic
                 //throw exc
@@ -29,17 +28,48 @@ public class StandardGame extends Game {
                 return false;
             }
 
-            for(Field f : fields[oldY][oldX].getNeighbours()) {
-                if(fields[newY][newX].equals(f)) {
-                    if(currentPlayer < numOfPlayers-1) {
-                        currentPlayer++;
-                    } else {
-                        currentPlayer = 0;
-                    }
+            Field [] neighbours = fields[oldY][oldX].getNeighbours();
+
+            for(int i = 0; i < neighbours.length; ++i) {
+                if(fields[newY][newX].equals(neighbours[i])) {
+                    makeMove(player, oldX, oldY, newX, newY);
                     return true;
+                }
+            }
+
+            if(checkPaths(newX, newY, neighbours, fields[oldY][oldX])) {
+                makeMove(player, oldX, oldY, newX, newY);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkPaths(int newX, int newY, Field [] neighbours, Field origin) {
+        for(int i = 0; i < neighbours.length; ++i) {
+            if(neighbours[i] != null && neighbours[i].getPlayer() != null && !neighbours[i].equals(origin)) {
+                Field nextField = neighbours[i].getNeighbours()[i];
+                if(nextField != null) {
+                    if(board.getFields()[newY][newX].equals(nextField)) {
+                        return true;
+                    } else {
+                        if(checkPaths(newX, newY, nextField.getNeighbours(), nextField)) {
+                            return true;
+                        }
+                    }
                 }
             }
         }
         return false;
+    }
+
+    private void makeMove(Player player, int oldX, int oldY, int newX, int newY) {
+        if(currentPlayer < numOfPlayers-1) {
+            currentPlayer++;
+        } else {
+            currentPlayer = 0;
+        }
+        board.getFields()[oldY][oldX].setPlayer(null);
+        board.getFields()[newY][newX].setPlayer(player);
     }
 }
