@@ -8,8 +8,11 @@ public class StandardBoard extends Board {
 
     private int numOfPlayers;
     private Player[] players;
+    private final int ROWS = 17;
+    private final int COLUMNS = 25;
 
     StandardBoard(GameData data) {
+        fields = new Field[ROWS][COLUMNS];
         for(int i = 0; i < 17; i++) {
             for(int j = 0; j < 25; j++) {
                 fields[i][j]=null;

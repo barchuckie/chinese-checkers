@@ -30,30 +30,18 @@ public class StandardGame extends Game {
 
             Field [] neighbours = fields[oldY][oldX].getNeighbours();
 
-            for(int i = 0; i < neighbours.length; ++i) {
-                if(fields[newY][newX].equals(neighbours[i])) {
-                    makeMove(player, oldX, oldY, newX, newY);
+            for (Field neighbour : neighbours) {
+                if (fields[newY][newX].equals(neighbour)) {
                     return true;
                 }
             }
 
-            if(checkPaths(newX, newY, neighbours, fields[oldY][oldX])) {
-                makeMove(player, oldX, oldY, newX, newY);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean checkPaths(int newX, int newY, Field [] neighbours, Field origin) {
-        for(int i = 0; i < neighbours.length; ++i) {
-            if(neighbours[i] != null && neighbours[i].getPlayer() != null && !neighbours[i].equals(origin)) {
-                Field nextField = neighbours[i].getNeighbours()[i];
-                if(nextField != null) {
-                    if(board.getFields()[newY][newX].equals(nextField)) {
-                        return true;
-                    } else {
-                        if(checkPaths(newX, newY, nextField.getNeighbours(), nextField)) {
+            for(int i = 0; i < neighbours.length; ++i) {
+                if((neighbours[i] != null) &&
+                        (neighbours[i].getPlayer() != null)) {
+                    Field nextField = neighbours[i].getNeighbours()[i];
+                    if(nextField != null) {
+                        if(board.getFields()[newY][newX].equals(nextField)) {
                             return true;
                         }
                     }
@@ -61,15 +49,5 @@ public class StandardGame extends Game {
             }
         }
         return false;
-    }
-
-    private void makeMove(Player player, int oldX, int oldY, int newX, int newY) {
-        if(currentPlayer < numOfPlayers-1) {
-            currentPlayer++;
-        } else {
-            currentPlayer = 0;
-        }
-        board.getFields()[oldY][oldX].setPlayer(null);
-        board.getFields()[newY][newX].setPlayer(player);
     }
 }

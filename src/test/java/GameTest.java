@@ -18,29 +18,34 @@ public class GameTest extends ChineseCheckersTest {
         int currentPlayer = game.getCurrentPlayer();
 
         if(currentPlayer == 0) {
-            //game.validateMove(players[0], 14, 2, 14, 4);
-            game.validateMove(players[0], 11, 3, 10, 4);
             printBoard(game.getBoard(), nicks);
+
             Assert.assertTrue(game.validateMove(players[1], 11, 13, 10, 12));
+            game.makeMove(players[1], 11, 13, 10, 12);
             printBoard(game.getBoard(), nicks);
+
             Assert.assertFalse(game.validateMove(players[0], 12, 2, 13, 1));
             Assert.assertTrue(game.validateMove(players[0], 15, 3, 16, 4));
+            game.makeMove(players[0], 15, 3, 16, 4);
             printBoard(game.getBoard(), nicks);
+
             Assert.assertTrue(game.validateMove(players[1], 13, 13, 14, 12));
+            game.makeMove(players[1], 13, 13, 14, 12);
             printBoard(game.getBoard(), nicks);
-            //Assert.assertFalse(game.validateMove(players[0], 14, 2, 14, 4));
-            Assert.assertTrue(game.validateMove(players[0], 10, 2, 12, 4));
+
+            Assert.assertFalse(game.validateMove(players[0], 14, 2, 14, 4));
             printBoard(game.getBoard(), nicks);
         } else {
             Assert.assertTrue(game.validateMove(players[1], 11, 13, 10, 12));
+            game.makeMove(players[1], 11, 13, 10, 12);
         }
 
     }
 
     private void printBoard(Board board, String[] nicks) {
         Field [][] fields = board.getFields();
-        for (int i = 0; i < fields.length; i++) {
-            for (Field field : fields[i]) {
+        for (Field[] field1 : fields) {
+            for (Field field : field1) {
                 if (field != null) {
                     if (field.getPlayer() == null) {
                         System.out.print('*');

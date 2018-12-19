@@ -24,4 +24,14 @@ public abstract class Game {
     public Board getBoard() {
         return board;
     }
+
+    public void makeMove(Player player, int oldX, int oldY, int newX, int newY) {
+        if(currentPlayer < numOfPlayers-1) {
+            currentPlayer++;
+        } else {
+            currentPlayer = 0;
+        }
+        board.getFields()[oldY][oldX].setPlayer(null);
+        board.getFields()[newY][newX].setPlayer(player);
+    }
 }
