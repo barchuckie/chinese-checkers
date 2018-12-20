@@ -6,21 +6,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.PrintWriter;
 
-/* TODO funkcja ktora przyjmuje tablice, przeszukuje cala tablice i na danych wspolrzednych
-   TODO jesli mam jakiegos gracz to biore jego kolor i wstawiam
- */
 
 public class GraphicPanel extends JPanel {
 
     private Circle circles[][];
-    private Board board;
+    PrintWriter printWriter;
+    private Circle active;
+    private int activeX,activeY;
+    private boolean pawnChosen=false;
+    private int i,j;
 
-    public GraphicPanel(Board board)
+
+    public GraphicPanel(Board board,PrintWriter p)
     {
-        this.board=board;
         board.addPlayers();
         circles=board.getFields();
+        this.printWriter=p;
         this.addMouseListener(new MyMouseAdapter());
     }
     //h=763 w=1000
@@ -50,21 +53,79 @@ public class GraphicPanel extends JPanel {
         @Override
         public void mousePressed(MouseEvent e)
         {
-            if ((e.getButton() == 1)) {
-                for(int i = 0; i < 17; i++) {
-                    for(int j = 0; j < 25; j++) {
-                       if((circles[i][j] != null) && (circles[i][j].contains(e.getPoint())))
-                       {
-                           //co chcesz robić gdy klikne dane kółko
-                           System.out.println("Kliknąłem kółko: "+i+"x"+j + " Player:"+ circles[i][j].getPlayer());
-                       }
+            //LPM
+            if ((e.getButton() == 1))
+            {
+                if(active!=null)
+                {
+                    if(getClickedField(e)!=null)
+                    {
+                        Circle circle = getClickedField(e);
+                        pawnChosen = true;
+                        sendMessage("MOVE", i, j);
+                        activeX = i;
+                        activeY = j;
+                        active = circle;
                     }
                 }
             }
-            repaint();
+            //PPM
+            else if ((e.getButton() == 3))
+            {
+                if(!pawnChosen)
+                {
+                    if(getClickedField(e)!=null)
+                    {
+                        Circle circle = getClickedField(e);
+                        activeX = i;
+                        activeY = j;
+                        active = circle;
+                    }
+
+                }
+                else
+                {
+                    if(getClickedField(e)!=null)
+                    {
+                        if(getClickedField(e)!=null)
+                        {
+                            Circle circle = getClickedField(e);
+                            if (circle.equals(active))
+                            {
+                                System.out.println("KONIEC RUCHU");
+                                //sendMessage("ENDTURN",0,0);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
+    private Circle getClickedField(MouseEvent e)
+    {
+        for (int i = 0; i < 17; i++)
+        {
+            for (int j = 0; j < 25; j++)
+            {
+                if ((circles[i][j] != null) && (circles[i][j].contains(e.getPoint())))
+                {
+                    this.i=i;
+                    this.j=j;
+                    return circles[i][j];
+                }
+            }
+        }
+        return null;
+    }
 
+
+    private void sendMessage(String action,int i,int j)
+    {
+        System.out.println("Wysylam wiadomosc do serwera z ruchem ");
+        //printWriter.println("Kliknąłem kółko: "+i+"x"+j + " Player:"+ circles[i][j].getPlayer());
+        printWriter.println(action+" "+activeX+" "+activeY+" "+i+" "+j);
+        printWriter.flush();
+    }
 
 
 
