@@ -36,6 +36,25 @@ public class Player extends Thread {
     }
 
     public void run() {
+        System.out.println("Player Thread started");
+        String wiadomosc;
+        try {
+            while ((wiadomosc = input.readLine()) != null) {
+                if(wiadomosc.startsWith("MOVE"))
+                {
+                    String[] x = wiadomosc.split(" ");
+                    //
+                    sendToEveryone(wiadomosc);
+                }
+                else if(wiadomosc.startsWith("ENDTURN"))
+                {
+                    //zakoncz ture
+                }
+
+                System.out.println("Odczytano: " + wiadomosc);
+                //sendToEveryone(wiadomosc);
+            } // koniec ptli
+        } catch(Exception ex) {ex.printStackTrace();}
         /*try {
             // The thread is only started after everyone connects.
             output.println("MESSAGE All players connected");
@@ -57,4 +76,29 @@ public class Player extends Thread {
             } catch (IOException ignored) {}
         }*/
     }
+
+    public void sendToEveryone(String message) {
+
+        for (Object outputSocket : GameServer.outputSockets)
+        {
+            try
+            {
+                PrintWriter pisarz = (PrintWriter) outputSocket;
+                pisarz.println(message);
+                pisarz.flush();
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+        // koniec ptli
+    } // koniec metody
+
+    public PrintWriter getOutputStream()
+    {
+        return output;
+    }
+
+
 }
