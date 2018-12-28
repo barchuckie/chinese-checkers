@@ -11,20 +11,17 @@ public class Player extends Thread {
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
+    private GameServer server;
 
-    public Player(String nick, Socket socket) {
+    public Player(Socket socket, GameServer server) {
+        this.socket = socket;
+        this.server = server;
+    }
+
+    public Player(String nick, Socket socket, GameServer server) {
         this.nick = nick;
         this.socket = socket;
-
-        try {
-            input = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
-            output = new PrintWriter(socket.getOutputStream(), true);
-            output.println("WELCOME " + nick);
-            output.println("MESSAGE Waiting for opponents to connect");
-        } catch (IOException e) {
-            System.out.println("Player died: " + e);
-        }
+        this.server = server;
     }
 
     public String getNick() {
@@ -38,6 +35,17 @@ public class Player extends Thread {
     public void run() {
         System.out.println("Player Thread started");
         String wiadomosc;
+
+        try {
+            input = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            output = new PrintWriter(socket.getOutputStream(), true);
+            output.println("WELCOME");
+            output.println("MESSAGE Waiting for opponents to connect");
+        } catch (IOException e) {
+            System.out.println("Player died: " + e);
+        }
+
         try {
             while ((wiadomosc = input.readLine()) != null) {
                 if(wiadomosc.startsWith("MOVE"))
@@ -79,7 +87,7 @@ public class Player extends Thread {
 
     public void sendToEveryone(String message) {
 
-        for (Object outputSocket : GameServer.outputSockets)
+        for (Object outputSocket : server.getOutputSockets())
         {
             try
             {

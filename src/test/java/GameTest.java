@@ -7,7 +7,9 @@ import com.chinesecheckers.server.game.StandardGame;
 import org.junit.Test;
 import org.junit.Assert;
 
+
 public class GameTest extends ChineseCheckersTest {
+
     @Test
     public void testValidateMove() {
         String[] nicks = { "pat", "mat"};
@@ -18,6 +20,10 @@ public class GameTest extends ChineseCheckersTest {
         int currentPlayer = game.getCurrentPlayer();
 
         if(currentPlayer == 0) {
+            printBoard(game.getBoard(), nicks);
+
+            Assert.assertTrue(game.validateMove(players[0], 11, 3, 10, 4));
+            game.makeMove(players[0], 11, 3, 10, 4);
             printBoard(game.getBoard(), nicks);
 
             Assert.assertTrue(game.validateMove(players[1], 11, 13, 10, 12));
