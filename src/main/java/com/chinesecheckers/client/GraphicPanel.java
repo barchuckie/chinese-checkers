@@ -17,7 +17,7 @@ public class GraphicPanel extends JPanel {
     private int activeX,activeY;
     private boolean pawnChosen=false;
     private int i,j;
-
+    boolean myTurn=true;
 
     public GraphicPanel(Board board,PrintWriter p)
     {
@@ -46,6 +46,11 @@ public class GraphicPanel extends JPanel {
                 }
             }
         }
+    }
+
+    public void setMyTurn(boolean t)
+    {
+        myTurn=t;
     }
 
     public class MyMouseAdapter extends MouseAdapter
@@ -93,7 +98,8 @@ public class GraphicPanel extends JPanel {
                             if (circle.equals(active))
                             {
                                 System.out.println("KONIEC RUCHU");
-                                //sendMessage("ENDTURN",0,0);
+                                sendMessage("ENDTURN",0,0);
+                                disactive();
                             }
                         }
                     }
@@ -117,16 +123,23 @@ public class GraphicPanel extends JPanel {
         }
         return null;
     }
+    public void disactive()
+    {
+        active=null;
+        activeX=-1;
+        activeY=-1;
+        pawnChosen=false;
+    }
 
 
     private void sendMessage(String action,int i,int j)
     {
-        System.out.println("Wysylam wiadomosc do serwera z ruchem ");
-        //printWriter.println("Kliknąłem kółko: "+i+"x"+j + " Player:"+ circles[i][j].getPlayer());
-        printWriter.println(action+" "+activeX+" "+activeY+" "+i+" "+j);
-        printWriter.flush();
+        if(myTurn)
+        {
+            System.out.println("Wysylam wiadomosc do serwera z ruchem ");
+            //printWriter.println("Kliknąłem kółko: "+i+"x"+j + " Player:"+ circles[i][j].getPlayer());
+            printWriter.println(action + " " + activeX + " " + activeY + " " + i + " " + j);
+            printWriter.flush();
+        }
     }
-
-
-
 }

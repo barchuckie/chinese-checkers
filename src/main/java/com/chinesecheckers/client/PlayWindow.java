@@ -12,33 +12,34 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import static java.lang.Thread.sleep;
+
 public class PlayWindow {
     private JFrame frame;
-    private JPanel mainPanel;
-    private int players;
-    private int bots;
+    private GraphicPanel mainPanel;
     private Board standardBoard;
     private Socket gniazdo;
     private BufferedReader reader;
     private PrintWriter writer;
+    private JPanel waitingPanel;
 
-    public PlayWindow(int players,int bots)
+    public PlayWindow()
     {
-        this.players=players;
-        this.bots=bots;
-        BoardFactory hexBoardFactory= new HexBoardFactory();
-        standardBoard = hexBoardFactory.getBoard(players);
         configureCommunication();
+        try{
+            sleep(10);
+        }catch(InterruptedException ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     public void start()
     {
-        frame = new JFrame("Gra");
-        mainPanel = new GraphicPanel(standardBoard, writer);
         Thread receiverThread = new Thread(new statementReceiver());
         receiverThread.start();
+        frame = new JFrame("Waiting For All Players To Connect");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.getContentPane().add(BorderLayout.CENTER,mainPanel);
         frame.setSize(1014,800);
         frame.setVisible(true);
         frame.setResizable(false);
@@ -55,6 +56,16 @@ public class PlayWindow {
             ex.printStackTrace();
         }
     }
+
+    private void goToGame(int players)
+    {
+        BoardFactory hexBoardFactory= new HexBoardFactory();
+        standardBoard = hexBoardFactory.getBoard(players);
+        mainPanel = new GraphicPanel(standardBoard, writer);
+        frame.getContentPane().add(BorderLayout.CENTER,mainPanel);
+        frame.setTitle("Gra");
+        frame.repaint();
+    }
     public class statementReceiver implements Runnable {
         public void run()
         {
@@ -66,7 +77,6 @@ public class PlayWindow {
                     wiadom = reader.readLine();
                     System.out.println("Odczytano " + wiadom);
                     String[] x = wiadom.split(" ");
-                    //System.out.println(x[0]);
                     if (x[0].equals("MOVE"))
                     {
 
@@ -75,18 +85,31 @@ public class PlayWindow {
                         standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].setPlayer(0);
                         mainPanel.repaint();
                     }
+                    else if(x[0].startsWith("YOUR"))
+                    {
+                        mainPanel.setMyTurn(true);
+                        frame.setTitle("TWOJA TURA");
+
+                    }
+                    else if(x[0].startsWith("NOT"))
+                    {
+                        mainPanel.setMyTurn(false);
+                        frame.setTitle("TURA PRZECIWNIKA");
+                    }
+                    else if(x[0].startsWith("INFO"))
+                    {
+                        int players=Integer.parseInt(x[1]);
+                        int bots=Integer.parseInt(x[2]);
+                        System.out.println("Liczba graczy "+players+" w tym botow "+bots);
+                        goToGame(players);
+                        sleep(900);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 ex.printStackTrace();
             }
-
-
         }
     }
-
-
-
-
 }

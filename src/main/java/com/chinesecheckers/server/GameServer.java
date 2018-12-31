@@ -1,58 +1,77 @@
 package com.chinesecheckers.server;
 
+import com.chinesecheckers.client.PlayWindow;
+
 import javax.security.auth.RefreshFailedException;
+import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
-// Trzeba jakos zrobic żeby pierwszy klient hostował gre
+import static java.lang.Thread.sleep;
 
-class GameServer {
+public class GameServer {
 
     enum GameServerState {
         FREE,
         WAITING,
         INGAME
     }
-
+    int numOfPlayers;
+    int numOfBots;
     private GameServerState state;
-
     private ServerSocket listener;
-    private ArrayList outputSockets;  //nie wiem jak to zrobić bez statica
+    private ArrayList outputSockets = new ArrayList<>();
+    private ArrayList<Player> players = new ArrayList<Player>();
+    int turn=0;
 
+    public GameServer(int numOfPlayers,int numOfBots)
+    {
+        this.numOfPlayers=numOfPlayers;
+        this.numOfBots=numOfBots;
+    }
 
-    void start() throws Exception {
-        listener = new ServerSocket(8901);
-        outputSockets = new ArrayList();
+    public void start() {
         System.out.println("Chinese Checkers Server is Running");
-        try {
+        try{
+            listener = new ServerSocket(8901);
             while (true) {
                 // TODO: Server lifecycle
+                if(players.size()<numOfPlayers)
+                {
+                    Socket s = listener.accept();
+                    Player pl = new Player(s, this);
+                    players.add(pl);
+                    System.out.println(players.size());
+                }
+                else if(players.size()==numOfPlayers)
+                {
+                    startAllThreads();
+                    break;
+                }else
+                {
+                    System.out.println("I'm sorry. Room is full");
+                }
 
-                /* Player playerA = new Player("Nick1",listener.accept());
-                playerA.start();
-                Player playerB = new Player("Nick2",listener.accept());
-                playerB.start();
-                outputSockets.add(playerA.getOutputStream());
-                outputSockets.add(playerB.getOutputStream()); */
-
-                state = GameServerState.FREE;
-                Player gameCreator = new Player(listener.accept(), this);
-                /*
-                 * Send state
-                 * Receive game params
-                 * Create new game
-                 */
-                state = GameServerState.WAITING;
-                /*
-                 * Waiting for players to connect
-                 */
-                state = GameServerState.INGAME;
-                /*
-                 * Lead the game
-                 */
             }
-        } finally {
-            listener.close();
+        } catch(IOException ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    public void startAllThreads()
+    {
+        for(Player p: players)
+        {
+            p.start();
+        }
+    }
+    public void sendGameInfo()
+    {
+        for(Player p: players)
+        {
+            p.sendToClient("INFO "+numOfPlayers+" "+numOfBots,p);
         }
     }
 
@@ -60,7 +79,28 @@ class GameServer {
         return state;
     }
 
-    public ArrayList getOutputSockets() {
-        return outputSockets;
+    public ArrayList<Player> getPlayers()
+    {
+        return players;
+    }
+
+    public int getTurn()
+    {
+        return turn;
+    }
+
+    public void setTurn(int turn)
+    {
+        this.turn = turn;
+    }
+
+    public int getNumOfPlayers()
+    {
+        return numOfPlayers;
+    }
+
+    public int getNumOfBots()
+    {
+        return numOfPlayers;
     }
 }
