@@ -15,8 +15,9 @@ public class GraphicPanel extends JPanel {
     PrintWriter printWriter;
     private Circle active;
     private int activeX,activeY;
+    private int newX, newY;
+    private int originalX,originalY;
     private boolean pawnChosen=false;
-    private int i,j;
     boolean myTurn=true;
 
     public GraphicPanel(Board board,PrintWriter p)
@@ -67,9 +68,9 @@ public class GraphicPanel extends JPanel {
                     {
                         Circle circle = getClickedField(e);
                         pawnChosen = true;
-                        sendMessage("MOVE", i, j);
-                        activeX = i;
-                        activeY = j;
+                        sendMessage("CHECKMOVE", newX, newY);
+                        activeX = newX;
+                        activeY = newY;
                         active = circle;
                     }
                 }
@@ -82,9 +83,11 @@ public class GraphicPanel extends JPanel {
                     if(getClickedField(e)!=null)
                     {
                         Circle circle = getClickedField(e);
-                        activeX = i;
-                        activeY = j;
+                        activeX = newX;
+                        activeY = newY;
                         active = circle;
+                        originalX= newX;
+                        originalY= newY;
                     }
 
                 }
@@ -98,7 +101,7 @@ public class GraphicPanel extends JPanel {
                             if (circle.equals(active))
                             {
                                 System.out.println("KONIEC RUCHU");
-                                sendMessage("ENDTURN",0,0);
+                                sendEndMessage("MOVE");
                                 disactive();
                             }
                         }
@@ -109,15 +112,15 @@ public class GraphicPanel extends JPanel {
     }
     private Circle getClickedField(MouseEvent e)
     {
-        for (int i = 0; i < 17; i++)
+        for (int x = 0; x < 17; x++)
         {
-            for (int j = 0; j < 25; j++)
+            for (int y = 0; y < 25; y++)
             {
-                if ((circles[i][j] != null) && (circles[i][j].contains(e.getPoint())))
+                if ((circles[x][y] != null) && (circles[x][y].contains(e.getPoint())))
                 {
-                    this.i=i;
-                    this.j=j;
-                    return circles[i][j];
+                    this.newX =x;
+                    this.newY =y;
+                    return circles[x][y];
                 }
             }
         }
@@ -136,8 +139,16 @@ public class GraphicPanel extends JPanel {
         if(myTurn)
         {
             System.out.println("Wysylam wiadomosc do serwera z ruchem ");
-            //printWriter.println("Kliknąłem kółko: "+i+"x"+j + " Player:"+ circles[i][j].getPlayer());
             printWriter.println(action + " " + activeX + " " + activeY + " " + i + " " + j);
+            printWriter.flush();
+        }
+    }
+    private void sendEndMessage(String action)
+    {
+        if(myTurn)
+        {
+            System.out.println("Wysylam wiadomosc do serwera z ruchem ");
+            printWriter.println(action + " " + originalX + " " + originalY + " " + activeX + " " + activeY);
             printWriter.flush();
         }
     }

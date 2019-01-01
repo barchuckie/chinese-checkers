@@ -13,6 +13,7 @@ public class MainWindow {
     private JButton joinButton;
     private JLabel chineseCheckersLabel;
     private GridLayout mainGridLayout;
+    private JTextField getNickTextField;
 
     public void start()
     {
@@ -23,7 +24,10 @@ public class MainWindow {
         joinButton = new JButton("Dołącz do istniejącej gry");
         joinButton.addActionListener(new joinButtonListener());
 
+        getNickTextField = new JTextField("Tu wpisz nick",20);
+
         joinGamePanelLabel = new JPanel(new GridBagLayout());
+        joinGamePanelLabel.add(getNickTextField);
         joinGamePanelLabel.add(joinButton);
 
         //panel na nazwe
@@ -49,9 +53,16 @@ public class MainWindow {
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            PlayWindow playWindow = new PlayWindow();
-            playWindow.start();
-            frame.dispose();
+            String nick = getNickTextField.getText();
+            String[] x = nick.split(" ");
+            if(!nick.isEmpty() && x.length<2)
+            {
+                PlayWindow playWindow = new PlayWindow(nick);
+                playWindow.start();
+                frame.dispose();
+            }
+
         }
     }
+
 }
