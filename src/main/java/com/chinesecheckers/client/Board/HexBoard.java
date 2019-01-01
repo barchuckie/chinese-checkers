@@ -28,7 +28,9 @@ public abstract class HexBoard extends Board {
             for(int w=0;w<i+1;w++)
             {
                 Circle ellipse2D = new Circle(x,y,20);
+                ellipse2D.setPlayer(0);
                 Circle ellipse2DD = new Circle(x,y2,20);
+                ellipse2DD.setPlayer(0);
                 x=x+60;
 
                 circles[a][b]=ellipse2D;

@@ -68,7 +68,7 @@ public class GraphicPanel extends JPanel {
                     {
                         Circle circle = getClickedField(e);
                         pawnChosen = true;
-                        sendMessage("CHECKMOVE", newX, newY);
+                        sendMessage("CHECK", newX, newY);
                         activeX = newX;
                         activeY = newY;
                         active = circle;
@@ -147,7 +147,7 @@ public class GraphicPanel extends JPanel {
     {
         if(myTurn)
         {
-            System.out.println("Wysylam wiadomosc do serwera z ruchem ");
+            System.out.println("Wysylam wiadomosc że zakonczylem");
             printWriter.println(action + " " + originalX + " " + originalY + " " + activeX + " " + activeY);
             printWriter.flush();
         }

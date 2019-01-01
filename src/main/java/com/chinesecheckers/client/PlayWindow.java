@@ -30,7 +30,7 @@ public class PlayWindow {
         try{
             sleep(10);
             configureCommunication();
-            sleep(10);
+            sleep(100);
         }catch(InterruptedException ex)
         {
             ex.printStackTrace();
@@ -94,9 +94,9 @@ public class PlayWindow {
 
                     if (x[0].equals("PLAYERMOVED"))
                     {
-                        standardBoard.getFields()[Integer.parseInt(x[3])][Integer.parseInt(x[4])].setPlayer(
-                                standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].getPlayer());
-                        standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].setPlayer(0);
+                        standardBoard.getFields()[Integer.parseInt(x[4])][Integer.parseInt(x[5])].setPlayer(
+                                standardBoard.getFields()[Integer.parseInt(x[2])][Integer.parseInt(x[3])].getPlayer());
+                        standardBoard.getFields()[Integer.parseInt(x[2])][Integer.parseInt(x[3])].setPlayer(0);
                         graphicPanel.repaint();
                     }
                     else if(x[0].equals("ACCEPT"))
