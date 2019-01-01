@@ -40,13 +40,13 @@ public class PlayWindow {
 
     public void start()
     {
-        Thread receiverThread = new Thread(new statementReceiver());
-        receiverThread.start();
         frame = new JFrame("Waiting For All Players To Connect");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(1014,800);
         frame.setVisible(true);
         frame.setResizable(false);
+        Thread receiverThread = new Thread(new statementReceiver());
+        receiverThread.start();
     }
 
     private void configureCommunication() {
@@ -76,7 +76,7 @@ public class PlayWindow {
         standardBoard = hexBoardFactory.getBoard(players);
         graphicPanel = new GraphicPanel(standardBoard, writer);
         frame.getContentPane().add(BorderLayout.CENTER, graphicPanel);
-        frame.setTitle("Gra");
+        frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
         frame.repaint();
     }
 
@@ -115,12 +115,13 @@ public class PlayWindow {
                     else if(x[0].startsWith("YOURMOVE"))
                     {
                         graphicPanel.setMyTurn(true);
-                        frame.setTitle("TWOJA TURA");
+                        //frame.setTitle("TWOJA TURA - KOLOR: "+PlayerColor.getColor(playerID));
+                        frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TWOJA TURA");
                     }
                     else if(x[0].startsWith("NOT"))
                     {
                         graphicPanel.setMyTurn(false);
-                        frame.setTitle("TURA PRZECIWNIKA");
+                        frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
                     }
                     else if(x[0].startsWith("PLAYERQUIT"))
                     {
@@ -144,7 +145,7 @@ public class PlayWindow {
                     }
                     else if(x[0].startsWith("YOURID"))
                     {
-                        playerID = Integer.parseInt(x[2]);
+                        playerID = Integer.parseInt(x[1]);
                     }
 
                 }
