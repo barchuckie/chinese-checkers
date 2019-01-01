@@ -6,22 +6,33 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Player extends Thread {
+public class Player {
     private String nick;
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
-    private GameServer server;
 
-    public Player(Socket socket, GameServer server) {
+    public Player(Socket socket) {
         this.socket = socket;
-        this.server = server;
+        try {
+            input = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            output = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            System.out.println("Player died: " + e);
+        }
     }
 
-    public Player(String nick, Socket socket, GameServer server) {
+    public Player(String nick, Socket socket) {
         this.nick = nick;
         this.socket = socket;
-        this.server = server;
+        try {
+            input = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            output = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            System.out.println("Player died: " + e);
+        }
     }
 
     public String getNick() {
@@ -32,81 +43,18 @@ public class Player extends Thread {
         this.nick = nick;
     }
 
-    public void run() {
-        System.out.println("Player Thread started");
-        String wiadomosc;
-
+    public String [] read() {
+        //TODO: read from input
+        String [] msg;
         try {
-            input = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
-            output = new PrintWriter(socket.getOutputStream(), true);
-            output.println("WELCOME");
-            output.println("MESSAGE Waiting for opponents to connect");
+            msg = input.readLine().split(" ");
         } catch (IOException e) {
-            System.out.println("Player died: " + e);
+            msg =  new String[]{"ERROR", "PLAYERQUIT"};
         }
-
-        try {
-            while ((wiadomosc = input.readLine()) != null) {
-                if(wiadomosc.startsWith("MOVE"))
-                {
-                    String[] x = wiadomosc.split(" ");
-                    //
-                    sendToEveryone(wiadomosc);
-                }
-                else if(wiadomosc.startsWith("ENDTURN"))
-                {
-                    //zakoncz ture
-                }
-
-                System.out.println("Odczytano: " + wiadomosc);
-                //sendToEveryone(wiadomosc);
-            } // koniec ptli
-        } catch(Exception ex) {ex.printStackTrace();}
-        /*try {
-            // The thread is only started after everyone connects.
-            output.println("MESSAGE All players connected");
-
-            // Tell the first player that it is her turn.
-            if (nick.equals("X")) {
-                output.println("MESSAGE Your move");
-            }
-
-            // Repeatedly get commands from the client and process them.
-            while (true) {
-                //TODO: Client listener
-            }
-        } catch (IOException e) {
-            System.out.println("Player died: " + e);
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException ignored) {}
-        }*/
+        return msg;
     }
 
-    public void sendToEveryone(String message) {
-
-        for (Object outputSocket : server.getOutputSockets())
-        {
-            try
-            {
-                PrintWriter pisarz = (PrintWriter) outputSocket;
-                pisarz.println(message);
-                pisarz.flush();
-            }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
-        // koniec ptli
-    } // koniec metody
-
-    public PrintWriter getOutputStream()
-    {
-        return output;
+    public void sendMessage(String message) {
+        output.println(message);
     }
-
-
 }
