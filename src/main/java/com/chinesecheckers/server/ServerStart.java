@@ -5,7 +5,7 @@ public class ServerStart {
     {
         try
         {
-            GameServer gameServer = new GameServer();
+            ServerStartWindow gameServer = new ServerStartWindow();
             gameServer.start();
         }catch(Exception ex)
         {
