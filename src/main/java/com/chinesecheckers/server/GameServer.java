@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
-class GameServer {
+public class GameServer {
 
     private GameServerState state;
 
@@ -24,7 +24,7 @@ class GameServer {
         this.gameMode = gameMode;
     }
 
-    void start() throws Exception {
+    public void start() throws Exception {
         state = new GameServerState();
         listener = new ServerSocket(8901);
         System.out.println("Chinese Checkers Server is Running");
@@ -57,17 +57,18 @@ class GameServer {
                         break;
                     }
                 }*/
-
+            players = new Player[numOfPlayers];
             state.setStateWaiting();
             for(int i = 0; i < numOfPlayers; ++i) {
                 players[i] = new Player(listener.accept());
+                System.out.println("listener accepted");
                 String [] nickMsg = players[i].read();
                 if(!nickMsg[0].equals("NICK") || nickMsg.length < 2) {
                     i--;
                     continue;
                 }
                 players[i].setNick(nickMsg[1]);
-                sendToEveryone("STATE " + state.stateToString()); // STATE WAITING
+                //sendToEveryone("STATE " + state.stateToString()); // STATE WAITING
             }
 
             /* Create new game */
@@ -109,6 +110,7 @@ class GameServer {
                         break;
                 }
             }
+            listener.close();
         //}
     }
 
@@ -116,7 +118,7 @@ class GameServer {
         return players;
     }
 
-    public void sendToEveryone(String message) {
+    private void sendToEveryone(String message) {
         for (Player player : players) {
             player.sendMessage(message);
         }

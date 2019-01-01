@@ -48,7 +48,7 @@ public class Player {
         String [] msg;
         try {
             msg = input.readLine().split(" ");
-        } catch (IOException e) {
+        } catch (Exception e) {
             msg =  new String[]{"ERROR", "PLAYERQUIT"};
         }
         return msg;
