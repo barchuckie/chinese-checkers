@@ -98,7 +98,8 @@ public class GameServer {
                     case "CHECK": // CHECK oldX oldY newX newY
                         if (game.validateMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
                                 Integer.parseInt(msg[3]), Integer.parseInt(msg[4]))) {
-                            players[currentPlayer].sendMessage("ACCEPT");
+                            players[currentPlayer].sendMessage("ACCEPT "+Integer.parseInt(msg[1]) +" "+ Integer.parseInt(msg[2])+
+                                    " "+Integer.parseInt(msg[3]) +" "+ Integer.parseInt(msg[4]));
                         } else {
                             players[currentPlayer].sendMessage("DECLINE");
                         }
