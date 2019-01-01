@@ -8,7 +8,6 @@ import java.net.Socket;
 
 public class Player extends Thread {
     private String nick;
-
     private Socket socket;
     private GameServer server;
     private BufferedReader input;
@@ -51,11 +50,15 @@ public class Player extends Thread {
                 if(wiadomosc.startsWith("MOVE"))
                 {
                     String[] x = wiadomosc.split(" ");
+                    int x1 = Integer.parseInt(x[1]);
+                    int y1 = Integer.parseInt(x[2]);
+
                     sendToEveryone(wiadomosc);
                 }
                 else if(wiadomosc.startsWith("ENDTURN"))
                 {
                     System.out.println("KONIEC TURY");
+                    changeTurn();
                     sendTurnMessage();
                 }
 
@@ -79,14 +82,6 @@ public class Player extends Thread {
         }
     }
 
-
-    public void sendToEveryone(String message) {
-        for(Player p: server.getPlayers())
-        {
-            sendToClient(message,p);
-        }
-    }
-
     public void sendTurnMessage()
     {
         for(int index = 0; index<server.getPlayers().size();index++)
@@ -98,7 +93,14 @@ public class Player extends Thread {
             else
                 sendToClient("NOT YOUR TURN",p);
         }
-        changeTurn();
+    }
+
+
+    public void sendToEveryone(String message) {
+        for(Player p: server.getPlayers())
+        {
+            sendToClient(message,p);
+        }
     }
 
     public void changeTurn()

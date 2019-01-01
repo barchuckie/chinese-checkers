@@ -21,7 +21,6 @@ public class PlayWindow {
     private Socket gniazdo;
     private BufferedReader reader;
     private PrintWriter writer;
-    private JPanel waitingPanel;
 
     public PlayWindow()
     {
@@ -79,7 +78,6 @@ public class PlayWindow {
                     String[] x = wiadom.split(" ");
                     if (x[0].equals("MOVE"))
                     {
-
                         standardBoard.getFields()[Integer.parseInt(x[3])][Integer.parseInt(x[4])].setPlayer(
                                 standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].getPlayer());
                         standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].setPlayer(0);
@@ -89,7 +87,6 @@ public class PlayWindow {
                     {
                         mainPanel.setMyTurn(true);
                         frame.setTitle("TWOJA TURA");
-
                     }
                     else if(x[0].startsWith("NOT"))
                     {
@@ -102,7 +99,7 @@ public class PlayWindow {
                         int bots=Integer.parseInt(x[2]);
                         System.out.println("Liczba graczy "+players+" w tym botow "+bots);
                         goToGame(players);
-                        sleep(900);
+                        sleep(500);
                     }
                 }
             }

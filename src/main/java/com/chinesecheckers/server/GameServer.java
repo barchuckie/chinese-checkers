@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static java.lang.Thread.sleep;
 
@@ -21,7 +22,6 @@ public class GameServer {
     int numOfBots;
     private GameServerState state;
     private ServerSocket listener;
-    private ArrayList outputSockets = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<Player>();
     int turn=0;
 
@@ -47,6 +47,15 @@ public class GameServer {
                 else if(players.size()==numOfPlayers)
                 {
                     startAllThreads();
+                    chooseFirstPlayer();
+                    try
+                    {
+                        sleep(100);
+                    }catch(InterruptedException ex)
+                    {
+                        ex.printStackTrace();
+                    }
+                    players.get(turn).sendTurnMessage();
                     break;
                 }else
                 {
@@ -67,12 +76,20 @@ public class GameServer {
             p.start();
         }
     }
+
     public void sendGameInfo()
     {
         for(Player p: players)
         {
             p.sendToClient("INFO "+numOfPlayers+" "+numOfBots,p);
         }
+    }
+
+    public void chooseFirstPlayer()
+    {
+        Random r = new Random();
+        turn = r.nextInt(numOfPlayers);
+        System.out.println("Gracz nr "+turn+"bedzie zaczynal");
     }
 
     GameServerState getState() {
@@ -101,6 +118,6 @@ public class GameServer {
 
     public int getNumOfBots()
     {
-        return numOfPlayers;
+        return numOfBots;
     }
 }
