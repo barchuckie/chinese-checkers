@@ -21,8 +21,8 @@ public class StandardGame extends Game {
     public boolean validateMove(Player player, int oldX, int oldY, int newX, int newY) {
         if(player.equals(players[currentPlayer])) {
             Field [][] fields = board.getFields();
-            if(!fields[oldY][oldX].getPlayer().equals(player)) { //error in logic
-                //throw exc
+            if(!fields[oldY][oldX].getPlayer().equals(player)) {
+                return false;
             }
             if(fields[newY][newX].getPlayer() != null) { //field must be empty
                 return false;

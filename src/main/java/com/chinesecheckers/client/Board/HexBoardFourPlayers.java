@@ -10,19 +10,19 @@ public class HexBoardFourPlayers extends HexBoard{
             for(int j = 0; j < 11-i; ++j) {
                 Circle circle = circles[i][j];
                 if(circle != null) {
-                    circle.setPlayer(6);
+                    circle.setPlayer(4);
                 }
                 circle = circles[i][24-j];
                 if(circle != null) {
-                    circle.setPlayer(2);
+                    circle.setPlayer(1);
                 }
                 circle = circles[16-i][j];
                 if(circle != null) {
-                    circle.setPlayer(5);
+                    circle.setPlayer(3);
                 }
                 circle = circles[16-i][24-j];
                 if(circle != null) {
-                    circle.setPlayer(3);
+                    circle.setPlayer(2);
                 }
             }
         }

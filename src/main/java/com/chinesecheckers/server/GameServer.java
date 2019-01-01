@@ -62,6 +62,7 @@ public class GameServer {
                     continue;
                 }
                 players[i].setNick(nickMsg[1]);
+                players[i].sendMessage("YOURID " + (i+1));
             }
 
             /* Create new game */
@@ -81,7 +82,7 @@ public class GameServer {
                         game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
                                 Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
                         // PLAYER_MOVED playerNick oldX oldY newX newY
-                        sendToEveryone("PLAYERMOVED " + players[currentPlayer].getNick() + " "+
+                        sendToEveryone("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
                                 Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
                                 Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ");
                         if(game.checkWinner()) {

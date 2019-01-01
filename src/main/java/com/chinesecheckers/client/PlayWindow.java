@@ -23,6 +23,7 @@ public class PlayWindow {
     private PrintWriter writer;
     private String nick;
     private String tryb;
+    private int playerID;
 
     public PlayWindow(String nick)
     {
@@ -83,12 +84,13 @@ public class PlayWindow {
         public void run()
         {
             String wiadom;
-            try
-            {
-                while (true)
-                {
+            try {
+                while (true) {
                     //pierwsza wiadomosc to GAME tryb liczbagraczy
                     wiadom = reader.readLine();
+                    if(wiadom == null) {
+                        break;
+                    }
                     System.out.println("Odczytano " + wiadom);
                     String[] x = wiadom.split(" ");
 
@@ -139,6 +141,10 @@ public class PlayWindow {
                         System.out.println("Liczba graczy "+players);
                         goToGame(players,tryb);
                         sleep(500);
+                    }
+                    else if(x[0].startsWith("YOURID"))
+                    {
+                        playerID = Integer.parseInt(x[2]);
                     }
 
                 }
