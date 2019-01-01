@@ -10,8 +10,6 @@ import java.util.ArrayList;
 
 public class GameServer {
 
-    private GameServerState state;
-
     private ServerSocket listener;
     private Player [] players;
     private int numOfPlayers;
@@ -25,12 +23,10 @@ public class GameServer {
     }
 
     public void start() throws Exception {
-        state = new GameServerState();
         listener = new ServerSocket(8901);
         System.out.println("Chinese Checkers Server is Running");
 
         //while (true) {
-            // TODO: Server lifecycle
 
             /*state.setStateFree();
             Player gameCreator = new Player(listener.accept());
@@ -49,7 +45,6 @@ public class GameServer {
                 players[0] = gameCreator;
             } //else throw new Exception();
 
-                /* TODO: Generowanie różnych trybów gry
                 GameModeEnum gameMode;
                 for(GameModeEnum mode : GameModeEnum.values()) {
                     if(mode.toString().equals(gameParams[1])) {
@@ -58,7 +53,6 @@ public class GameServer {
                     }
                 }*/
             players = new Player[numOfPlayers];
-            state.setStateWaiting();
             for(int i = 0; i < numOfPlayers; ++i) {
                 players[i] = new Player(listener.accept());
                 System.out.println("listener accepted");
@@ -68,7 +62,6 @@ public class GameServer {
                     continue;
                 }
                 players[i].setNick(nickMsg[1]);
-                //sendToEveryone("STATE " + state.stateToString()); // STATE WAITING
             }
 
             /* Create new game */
@@ -76,23 +69,24 @@ public class GameServer {
             Game game = new StandardGame(data);
             sendToEveryone("GAME " + gameMode.toString() + " " + numOfPlayers);
 
-            state.setStateInGame();
-            sendToEveryone("STATE " + state.stateToString()); // STATE INGAME
-
             /* Lead the game */
             int currentPlayer;
             boolean playing = true;
             while(playing) {
                 currentPlayer = game.getCurrentPlayer();
+                players[currentPlayer].sendMessage("YOURMOVE");
                 String [] msg = players[currentPlayer].read();
                 switch (msg[0]) {
                     case "MOVE": // MOVE oldX oldY newX newY
                         game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
                                 Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
                         // PLAYER_MOVED playerNick oldX oldY newX newY
-                        sendToEveryone("PLAYER_MOVED " + players[currentPlayer].getNick() +
+                        sendToEveryone("PLAYERMOVED " + players[currentPlayer].getNick() +
                                 Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
                                 Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ");
+                        if(game.checkWinner()) {
+                            sendToEveryone("VICTORY " + players[currentPlayer].getNick());
+                        }
                         break;
 
                     case "CHECK": // CHECK oldX oldY newX newY

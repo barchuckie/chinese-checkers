@@ -50,4 +50,9 @@ public class StandardGame extends Game {
         }
         return false;
     }
+
+    @Override
+    public boolean checkWinner() {
+        return false;
+    }
 }

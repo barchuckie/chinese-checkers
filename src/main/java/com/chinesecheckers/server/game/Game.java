@@ -34,4 +34,6 @@ public abstract class Game {
         board.getFields()[oldY][oldX].setPlayer(null);
         board.getFields()[newY][newX].setPlayer(player);
     }
+
+    public abstract boolean checkWinner();
 }

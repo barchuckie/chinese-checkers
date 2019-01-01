@@ -18,8 +18,14 @@ public class GameServerTest {
             PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
             output.println("NICK patryk");
 
-            System.out.println(input.readLine());
-            System.out.println(input.readLine());
+            String msg;
+            while(true) {
+                msg = input.readLine();
+                if(msg == null) {
+                    break;
+                }
+                System.out.println(msg);
+            }
         } catch (Exception ignored) {}
     }
 
@@ -31,9 +37,14 @@ public class GameServerTest {
             PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
             output.println("NICK kuba");
 
-            System.out.println(input.readLine());
-            System.out.println(input.readLine());
-            System.out.println(input.readLine());
+            String msg;
+            while(true) {
+                msg = input.readLine();
+                if(msg == null) {
+                    break;
+                }
+                System.out.println(msg);
+            }
         } catch (Exception ignored) {}
     }
 

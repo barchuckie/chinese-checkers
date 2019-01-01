@@ -44,7 +44,6 @@ public class Player {
     }
 
     public String [] read() {
-        //TODO: read from input
         String [] msg;
         try {
             msg = input.readLine().split(" ");
