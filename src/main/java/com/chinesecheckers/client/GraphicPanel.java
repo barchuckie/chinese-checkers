@@ -64,7 +64,7 @@ public class GraphicPanel extends JPanel {
             {
                 if(active!=null)
                 {
-                    if(getClickedField(e)!=null)
+                    if(getClickedField(e)!=active && getClickedField(e)!=null)
                     {
                         Circle circle = getClickedField(e);
                         pawnChosen = true;
@@ -131,6 +131,8 @@ public class GraphicPanel extends JPanel {
         active=null;
         activeX=-1;
         activeY=-1;
+        originalY=-1;
+        originalX=-1;
         pawnChosen=false;
     }
 
@@ -140,16 +142,16 @@ public class GraphicPanel extends JPanel {
         {
             System.out.println("Wysylam wiadomosc do serwera z ruchem ");
             printWriter.println(action + " " + activeX + " " + activeY + " " + i + " " + j);
-            printWriter.flush();
+
         }
     }
     private void sendEndMessage(String action)
     {
         if(myTurn)
         {
-            System.out.println("Wysylam wiadomosc że zakonczylem");
+            //System.out.println("End message sending");
             printWriter.println(action + " " + originalX + " " + originalY + " " + activeX + " " + activeY);
-            printWriter.flush();
+            //System.out.println("End message sended");
         }
     }
 }

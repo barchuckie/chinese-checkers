@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import static java.lang.Thread.sleep;
-
+        // makemove setplayer i standardgame
 public class PlayWindow {
     private JFrame frame;
     private GraphicPanel graphicPanel;
@@ -85,12 +85,7 @@ public class PlayWindow {
         {
             String wiadom;
             try {
-                while (true) {
-                    //pierwsza wiadomosc to GAME tryb liczbagraczy
-                    wiadom = reader.readLine();
-                    if(wiadom == null) {
-                        break;
-                    }
+                while((wiadom=reader.readLine())!=null) {
                     System.out.println("Odczytano " + wiadom);
                     String[] x = wiadom.split(" ");
 
@@ -118,7 +113,7 @@ public class PlayWindow {
                         //frame.setTitle("TWOJA TURA - KOLOR: "+PlayerColor.getColor(playerID));
                         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TWOJA TURA");
                     }
-                    else if(x[0].startsWith("NOT"))
+                    else if(x[0].startsWith("ENDMOVE"))
                     {
                         graphicPanel.setMyTurn(false);
                         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");

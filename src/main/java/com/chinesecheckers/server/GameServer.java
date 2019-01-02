@@ -81,10 +81,11 @@ public class GameServer {
                     case "MOVE": // MOVE oldX oldY newX newY
                         game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
                                 Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
+
                         // PLAYER_MOVED playerNick oldX oldY newX newY
-                        sendToEveryone("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
+                        sendToEveryoneExceptCurrent("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
                                 Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
-                                Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ");
+                                Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ",players[currentPlayer]);
                         if(game.checkWinner(currentPlayer)) {
                             sendToEveryone("VICTORY " + players[currentPlayer].getNick());
                         }
@@ -117,6 +118,20 @@ public class GameServer {
     private void sendToEveryone(String message) {
         for (Player player : players) {
             player.sendMessage(message);
+        }
+    }
+
+    private void sendToEveryoneExceptCurrent(String message,Player currentPlayer)
+    {
+        for (Player player : players) {
+            if(player.equals(currentPlayer))
+            {
+                System.out.println("beforesendingendmove");
+                player.sendMessage("ENDMOVE");
+                System.out.println("endmovesended");
+            }
+            else
+                player.sendMessage(message);
         }
     }
 }
