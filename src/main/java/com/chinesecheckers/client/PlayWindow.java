@@ -146,7 +146,6 @@ public class PlayWindow {
                     {
                         playerID = Integer.parseInt(x[2]);
                     }
-
                 }
             }
             catch (Exception ex)

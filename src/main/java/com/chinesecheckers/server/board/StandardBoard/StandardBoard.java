@@ -83,11 +83,6 @@ public class StandardBoard extends Board {
         }
     }
 
-
-    public Field[][] getFields() {
-        return fields;
-    }
-
     private void addPlayers() {
             switch (numOfPlayers) {
                 case 2:

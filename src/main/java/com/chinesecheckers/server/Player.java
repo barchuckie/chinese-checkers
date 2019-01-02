@@ -35,6 +35,10 @@ public class Player {
         }
     }
 
+    public Player(String nick) {
+        this.nick = nick;
+    }
+
     public String getNick() {
         return nick;
     }

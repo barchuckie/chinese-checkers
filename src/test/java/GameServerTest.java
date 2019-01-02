@@ -47,14 +47,4 @@ public class GameServerTest {
             }
         } catch (Exception ignored) {}
     }
-
-    @Test
-    public void testGameServer() {
-        GameServer gameServer = new GameServer(2, 0, GameModeEnum.STANDARD);
-        try {
-            gameServer.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

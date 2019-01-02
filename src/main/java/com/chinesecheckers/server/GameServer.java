@@ -85,7 +85,7 @@ public class GameServer {
                         sendToEveryone("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
                                 Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
                                 Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ");
-                        if(game.checkWinner()) {
+                        if(game.checkWinner(currentPlayer)) {
                             sendToEveryone("VICTORY " + players[currentPlayer].getNick());
                         }
                         break;
