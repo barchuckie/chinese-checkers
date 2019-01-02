@@ -40,8 +40,26 @@ public class PlayerColor {
             return 6;
         else
             return 0;
-
-
+    }
+    public static String getColorName(int player)
+    {
+        switch(player)
+        {
+            case 1:
+                return "GREEN";
+            case 2:
+                return "RED";
+            case 3:
+                return "BLUE";
+            case 4:
+                return "BLACK";
+            case 5:
+                return "ORANGE";
+            case 6:
+                return "MAGENTA";
+            default:
+                return "WHITE";
+        }
     }
 
 
