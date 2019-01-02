@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import static java.lang.Thread.sleep;
-        // makemove setplayer i standardgame
+
 public class PlayWindow {
     private JFrame frame;
     private GraphicPanel graphicPanel;
@@ -103,22 +103,25 @@ public class PlayWindow {
                         standardBoard.getFields()[Integer.parseInt(x[3])][Integer.parseInt(x[4])].setPlayer(
                                 standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].getPlayer());
                         standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].setPlayer(0);
+                        graphicPanel.setActive(standardBoard.getFields()[Integer.parseInt(x[3])][Integer.parseInt(x[4])]);
                         graphicPanel.repaint();
                         graphicPanel.validate();
                     }
                     else if(x[0].equals("DECLINE"))
                     {
                         System.out.println("Zły ruch");
+                        graphicPanel.repaint();
+                        graphicPanel.validate();
                     }
                     else if(x[0].startsWith("YOURMOVE"))
                     {
-                        graphicPanel.setMyTurn(true);
+                        graphicPanel.setMyTurn();
                         //frame.setTitle("TWOJA TURA - KOLOR: "+PlayerColor.getColor(playerID));
                         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TWOJA TURA");
                     }
                     else if(x[0].startsWith("ENDMOVE"))
                     {
-                        graphicPanel.setMyTurn(false);
+                        graphicPanel.setNotMyTurn();
                         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
                     }
                     else if(x[0].startsWith("PLAYERQUIT"))

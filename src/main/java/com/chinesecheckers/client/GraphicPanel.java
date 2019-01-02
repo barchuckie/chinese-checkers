@@ -8,6 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.PrintWriter;
 
+import static java.lang.Thread.sleep;
+
 
 public class GraphicPanel extends JPanel {
 
@@ -42,6 +44,10 @@ public class GraphicPanel extends JPanel {
                 {
                     g2d.draw(circle);
                     g2d.setColor(PlayerColor.getColor(circle.getPlayer()));
+                    if(circle==active)
+                    {
+                        g2d.setColor(PlayerColor.getColor(circle.getPlayer()).darker());
+                    }
                     g2d.fill(circle);
                     g2d.setColor(Color.red);
                 }
@@ -49,61 +55,50 @@ public class GraphicPanel extends JPanel {
         }
     }
 
-    public void setMyTurn(boolean t)
-    {
-        myTurn=t;
-    }
-
     public class MyMouseAdapter extends MouseAdapter
     {
         @Override
         public void mousePressed(MouseEvent e)
         {
-            //LPM
+            //LPM  -- ruch do sprawdzenia
             if ((e.getButton() == 1))
             {
                 if(active!=null)
                 {
                     if(getClickedField(e)!=active && getClickedField(e)!=null)
                     {
-                        Circle circle = getClickedField(e);
-                        pawnChosen = true;
                         sendMessage("CHECK", newX, newY);
-                        activeX = newX;
-                        activeY = newY;
-                        active = circle;
                     }
                 }
             }
             //PPM
             else if ((e.getButton() == 3))
             {
+                //jesli pierwsze prawe klikniecie -- wybor piona
                 if(!pawnChosen)
                 {
                     if(getClickedField(e)!=null)
                     {
                         Circle circle = getClickedField(e);
-                        activeX = newX;
-                        activeY = newY;
-                        active = circle;
+                        setActive(circle);
+                        pawnChosen=true;
                         originalX= newX;
                         originalY= newY;
+                        repaint();
                     }
 
                 }
-                else
+                else  //drugie prawe klikniecie -- zakonczenie ruchu
                 {
                     if(getClickedField(e)!=null)
                     {
-                        if(getClickedField(e)!=null)
+                        Circle circle = getClickedField(e);
+                        if (circle.equals(active))
                         {
-                            Circle circle = getClickedField(e);
-                            if (circle.equals(active))
-                            {
-                                System.out.println("KONIEC RUCHU");
-                                sendEndMessage("MOVE");
-                                disactive();
-                            }
+                            System.out.println("KONIEC RUCHU");
+                            sendEndMessage("MOVE");
+                            disactive();
+                            repaint();
                         }
                     }
                 }
@@ -126,6 +121,16 @@ public class GraphicPanel extends JPanel {
         }
         return null;
     }
+
+    public void setMyTurn()
+    {
+        myTurn=true;
+    }
+    public void setNotMyTurn()
+    {
+        myTurn=false;
+        disactive();
+    }
     public void disactive()
     {
         active=null;
@@ -136,13 +141,19 @@ public class GraphicPanel extends JPanel {
         pawnChosen=false;
     }
 
+    public void setActive(Circle circle)
+    {
+        activeX = newX;
+        activeY = newY;
+        active = circle;
+    }
+
     private void sendMessage(String action,int i,int j)
     {
         if(myTurn)
         {
-            System.out.println("Wysylam wiadomosc do serwera z ruchem ");
             printWriter.println(action + " " + activeX + " " + activeY + " " + i + " " + j);
-
+            System.out.println("sentMSG " + action + " " + activeX + " " + activeY + " " + i + " " + j);
         }
     }
     private void sendEndMessage(String action)
@@ -151,7 +162,8 @@ public class GraphicPanel extends JPanel {
         {
             //System.out.println("End message sending");
             printWriter.println(action + " " + originalX + " " + originalY + " " + activeX + " " + activeY);
-            //System.out.println("End message sended");
+            System.out.println("sentENDMSG " + action + " " + originalX + " " + originalY + " " + activeX + " " + activeY);
         }
     }
+
 }
