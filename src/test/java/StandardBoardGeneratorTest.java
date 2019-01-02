@@ -1,21 +1,12 @@
-import com.chinesecheckers.server.*;
 import com.chinesecheckers.server.board.Board;
 import com.chinesecheckers.server.board.BoardGenerator;
 import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.board.StandardBoard.StandardBoardGenerator;
 import com.chinesecheckers.server.game.GameData;
-import org.junit.Before;
-import org.junit.BeforeClass;
+
 import org.junit.Test;
 
-import java.io.IOException;
-import java.net.Socket;
-
 public class StandardBoardGeneratorTest extends ChineseCheckersTest {
-
-    /*
-    * Run server before
-    */
 
     @Test
     public void test2PlayerStandardBoardCreating() {

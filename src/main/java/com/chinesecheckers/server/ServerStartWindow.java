@@ -123,12 +123,14 @@ public class ServerStartWindow {
             }
 
             if(players>=bots+1) {
-                System.out.println("WYBRALISMY TAK GRACZY" + players + " BOTOW"+ bots);
+                System.out.println("WYBRANO GRACZY: " + players + " BOTÓW: "+ bots);
                 frame.dispose();
                 GameServer gameServer = new GameServer(players, bots, GameModeEnum.STANDARD);
                 try {
                     gameServer.start();
-                } catch (Exception ignored) { }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }

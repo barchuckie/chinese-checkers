@@ -19,29 +19,41 @@ public class StandardGame extends Game {
 
     @Override
     public boolean validateMove(Player player, int oldX, int oldY, int newX, int newY) {
+        System.out.println("Wszedł w validateMove z: " + player.getNick() + " " +
+                oldX + " " + oldY + " " + newX + " " + newY);
         if(player.equals(players[currentPlayer])) {
+            System.out.println("Dobry gracz rusza");
             Field [][] fields = board.getFields();
-            if(!fields[oldY][oldX].getPlayer().equals(player)) { // player must play only with its own pawns
+            System.out.println("Pobrano pola");
+            if(!player.equals(fields[oldX][oldY].getPlayer())) { // player must play only with its own pawns
+                System.out.println("Gracz rusza nie swój pionek");
                 return false;
             }
-            if(fields[newY][newX].getPlayer() != null) { // destination field must be empty
+            System.out.println("Za 1. ifem");
+            if(fields[newX][newY].getPlayer() != null) { // destination field must be empty
+                System.out.println("Pole zajęte");
                 return false;
             }
 
-            Field [] neighbours = fields[oldY][oldX].getNeighbours();
+            System.out.println("Pobieram sąsiadów (przeszedłem 2. ifa)");
+            Field [] neighbours = fields[oldX][oldY].getNeighbours();
 
+            System.out.println("Sprawdzam sąsiednie pola");
             for (Field neighbour : neighbours) { // simple move validation
-                if (fields[newY][newX].equals(neighbour)) {
+                if (fields[newX][newY].equals(neighbour)) {
+                    System.out.println("Poprawne pole sasiadujące");
                     return true;
                 }
             }
 
+            System.out.println("Pobieram sąsiadów sąsiadów");
             for(int i = 0; i < neighbours.length; ++i) { // jump move validation
                 if((neighbours[i] != null) &&
                         (neighbours[i].getPlayer() != null)) {
                     Field nextField = neighbours[i].getNeighbours()[i];
                     if(nextField != null) {
-                        if(board.getFields()[newY][newX].equals(nextField)) {
+                        if(board.getFields()[newX][newY].equals(nextField)) {
+                            System.out.println("Poprawny skok");
                             return true;
                         }
                     }

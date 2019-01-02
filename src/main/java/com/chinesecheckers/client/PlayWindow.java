@@ -78,6 +78,7 @@ public class PlayWindow {
         frame.getContentPane().add(BorderLayout.CENTER, graphicPanel);
         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
         frame.repaint();
+        frame.validate();
     }
 
     public class statementReceiver implements Runnable {
@@ -95,6 +96,7 @@ public class PlayWindow {
                                 standardBoard.getFields()[Integer.parseInt(x[2])][Integer.parseInt(x[3])].getPlayer());
                         standardBoard.getFields()[Integer.parseInt(x[2])][Integer.parseInt(x[3])].setPlayer(0);
                         graphicPanel.repaint();
+                        graphicPanel.validate();
                     }
                     else if(x[0].equals("ACCEPT"))
                     {
@@ -102,6 +104,7 @@ public class PlayWindow {
                                 standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].getPlayer());
                         standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].setPlayer(0);
                         graphicPanel.repaint();
+                        graphicPanel.validate();
                     }
                     else if(x[0].equals("DECLINE"))
                     {
@@ -121,7 +124,7 @@ public class PlayWindow {
                     else if(x[0].startsWith("PLAYERQUIT"))
                     {
                         String uciekinier = x[1];
-                        System.out.println("Gracz "+uciekinier + "wyszedł" + "koniec gry");
+                        System.out.println("Gracz "+uciekinier + " wyszedł " + "koniec gry");
                         //TU KONIEC GRY
                     }
                     else if(x[0].startsWith("VICTORY"))

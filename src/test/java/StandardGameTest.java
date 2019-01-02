@@ -4,8 +4,7 @@ import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.game.Game;
 import com.chinesecheckers.server.game.GameData;
 import com.chinesecheckers.server.game.StandardGame;
-import org.junit.Before;
-import org.junit.BeforeClass;
+
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -28,9 +27,9 @@ public class StandardGameTest extends ChineseCheckersTest {
     public void testValidateSimpleMove() {
         prepareGame();
         if(currentPlayer == 0) {
-            Assert.assertTrue(game.validateMove(players[0], 11, 3, 10, 4));
+            Assert.assertTrue(game.validateMove(players[0], 3, 11, 4, 10));
         } else {
-            Assert.assertTrue(game.validateMove(players[1], 11, 13, 10, 12));
+            Assert.assertTrue(game.validateMove(players[1], 13, 11, 12, 10));
         }
     }
 
@@ -38,9 +37,9 @@ public class StandardGameTest extends ChineseCheckersTest {
     public void testValidateJumpMove() {
         prepareGame();
         if(currentPlayer == 0) {
-            Assert.assertTrue(game.validateMove(players[0], 12, 2, 10, 4));
+            Assert.assertTrue(game.validateMove(players[0], 2, 12, 4, 10));
         } else {
-            Assert.assertTrue(game.validateMove(players[1], 12, 14, 10, 12));
+            Assert.assertTrue(game.validateMove(players[1], 14, 12, 12, 10));
         }
     }
 
@@ -48,9 +47,9 @@ public class StandardGameTest extends ChineseCheckersTest {
     public void testValidateMoveNotCurrentPlayer() {
         prepareGame();
         if(currentPlayer == 1) {
-            Assert.assertFalse(game.validateMove(players[0], 11, 3, 10, 4));
+            Assert.assertFalse(game.validateMove(players[0], 3, 11, 4, 10));
         } else {
-            Assert.assertFalse(game.validateMove(players[1], 11, 13, 10, 12));
+            Assert.assertFalse(game.validateMove(players[1], 13, 11, 12, 10));
         }
     }
 
@@ -58,9 +57,9 @@ public class StandardGameTest extends ChineseCheckersTest {
     public void testValidateMoveWrongPlayer() {
         prepareGame();
         if(currentPlayer == 0) {
-            Assert.assertFalse(game.validateMove(players[0], 11, 13, 10, 12));
+            Assert.assertFalse(game.validateMove(players[0], 13, 11, 12, 10));
         } else {
-            Assert.assertFalse(game.validateMove(players[1], 11, 3, 10, 4));
+            Assert.assertFalse(game.validateMove(players[1], 3, 11, 4, 10));
         }
     }
 
@@ -68,11 +67,11 @@ public class StandardGameTest extends ChineseCheckersTest {
     public void testValidateMoveOnTakenField() {
         prepareGame();
         if(currentPlayer == 0) {
-            game.makeMove(players[0], 11, 3, 10, 12);
-            Assert.assertFalse(game.validateMove(players[1], 11, 13, 10, 12));
+            game.makeMove(players[0], 3, 11, 12, 10);
+            Assert.assertFalse(game.validateMove(players[1], 13, 11, 12, 10));
         } else {
-            game.makeMove(players[1], 11, 13, 10, 4);
-            Assert.assertFalse(game.validateMove(players[0], 11, 3, 10, 4));
+            game.makeMove(players[1], 13, 11, 4, 10);
+            Assert.assertFalse(game.validateMove(players[0], 3, 11, 4, 10));
         }
     }
 

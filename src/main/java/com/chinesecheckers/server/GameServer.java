@@ -15,6 +15,8 @@ public class GameServer {
     private int numOfPlayers;
     private int numOfBots;
     private GameModeEnum gameMode;
+    private Game game;
+    private GameData data;
 
     public GameServer(int numOfPlayers, int numOfBots, GameModeEnum gameMode) {
         this.numOfPlayers = numOfPlayers;
@@ -26,89 +28,98 @@ public class GameServer {
         listener = new ServerSocket(8901);
         System.out.println("Chinese Checkers Server is Running");
 
-        //while (true) {
-
-            /*state.setStateFree();
-            Player gameCreator = new Player(listener.accept());
-
-            /* Send state
-            gameCreator.sendMessage("STATE " + state.stateToString()); // STATE FREE
-
-            /* Receive game params
-            String [] gameParams = gameCreator.read(); // GAME gameMode numOfPlayers
-            if(!gameParams[0].equals("GAME")) {
+        players = new Player[numOfPlayers];
+        for(int i = 0; i < numOfPlayers; ++i) {
+            players[i] = new Player(listener.accept());
+            System.out.println("listener accepted");
+            String [] nickMsg = players[i].read();
+            if(!nickMsg[0].equals("NICK") || nickMsg.length < 2) {
+                i--;
                 continue;
             }
-            int numOfPlayers = Integer.parseInt(gameParams[2]);
-            players = new Player[numOfPlayers];
-            if (numOfPlayers > 0) {
-                players[0] = gameCreator;
-            } //else throw new Exception();
+            players[i].setNick(nickMsg[1]);
+            players[i].sendMessage("YOURID " + (i+1));
+        }
 
-                GameModeEnum gameMode;
-                for(GameModeEnum mode : GameModeEnum.values()) {
-                    if(mode.toString().equals(gameParams[1])) {
-                        gameMode = mode;
-                        break;
-                    }
-                }*/
-            players = new Player[numOfPlayers];
-            for(int i = 0; i < numOfPlayers; ++i) {
-                players[i] = new Player(listener.accept());
-                System.out.println("listener accepted");
-                String [] nickMsg = players[i].read();
-                if(!nickMsg[0].equals("NICK") || nickMsg.length < 2) {
-                    i--;
-                    continue;
+        /* Create new game */
+        data = new GameData(numOfPlayers, players);
+        game = new StandardGame(data);
+        sendToEveryone("GAME " + gameMode.toString() + " " + numOfPlayers);
+
+        /* Lead the game */
+        int currentPlayer;
+        boolean playing = true;
+        while(true) {
+            currentPlayer = game.getCurrentPlayer();
+            players[currentPlayer].sendMessage("YOURMOVE");
+            String [] msg = players[currentPlayer].read();
+            System.out.print("Otrzymano: ");
+            for(String czesc : msg) System.out.print(czesc + " ");
+            System.out.println();
+            // MOVE oldX oldY newX newY
+            if ("MOVE".equals(msg[0])) {
+                System.out.println("Wybrano: MOVE");
+                game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
+                        Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
+
+                // PLAYER_MOVED playerNick oldX oldY newX newY
+                sendToEveryoneExceptCurrent("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
+                        Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
+                        Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ", players[currentPlayer]);
+                        /*if(game.checkWinner(currentPlayer)) {
+                            sendToEveryone("VICTORY " + players[currentPlayer].getNick());
+                        }*/
+            } else if ("CHECK".equals(msg[0])) {
+                System.out.println("Wybrano: CHECK");
+                if (game.validateMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
+                        Integer.parseInt(msg[3]), Integer.parseInt(msg[4]))) {
+                    System.out.println("Ruch poprawny");
+                    players[currentPlayer].sendMessage("ACCEPT " + Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) +
+                            " " + Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]));
+                } else {
+                    System.out.println("Ruch NIE poprawny");
+                    players[currentPlayer].sendMessage("DECLINE");
                 }
-                players[i].setNick(nickMsg[1]);
-                players[i].sendMessage("YOURID " + (i+1));
+                System.out.println("Dotarłem za if");
+            } else if ("ERROR".equals(msg[0])) {
+                System.out.println("Wybrano: ERROR");
+                //playing = false;
+                sendToEveryone("PLAYERQUIT " + players[currentPlayer].getNick());
+                break;
             }
+            /*switch (msg[0]) {
+                case "MOVE": // MOVE oldX oldY newX newY
+                    System.out.println("Wybrano: MOVE");
+                    game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
+                            Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
 
-            /* Create new game */
-            GameData data = new GameData(numOfPlayers, players);
-            Game game = new StandardGame(data);
-            sendToEveryone("GAME " + gameMode.toString() + " " + numOfPlayers);
-
-            /* Lead the game */
-            int currentPlayer;
-            boolean playing = true;
-            while(playing) {
-                currentPlayer = game.getCurrentPlayer();
-                players[currentPlayer].sendMessage("YOURMOVE");
-                String [] msg = players[currentPlayer].read();
-                switch (msg[0]) {
-                    case "MOVE": // MOVE oldX oldY newX newY
-                        game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
-                                Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
-
-                        // PLAYER_MOVED playerNick oldX oldY newX newY
-                        sendToEveryoneExceptCurrent("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
-                                Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
-                                Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ",players[currentPlayer]);
-                        if(game.checkWinner(currentPlayer)) {
+                    // PLAYER_MOVED playerNick oldX oldY newX newY
+                    sendToEveryoneExceptCurrent("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
+                            Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
+                            Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ",players[currentPlayer]);
+                        /*if(game.checkWinner(currentPlayer)) {
                             sendToEveryone("VICTORY " + players[currentPlayer].getNick());
                         }
-                        break;
 
-                    case "CHECK": // CHECK oldX oldY newX newY
-                        if (game.validateMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
-                                Integer.parseInt(msg[3]), Integer.parseInt(msg[4]))) {
-                            players[currentPlayer].sendMessage("ACCEPT "+Integer.parseInt(msg[1]) +" "+ Integer.parseInt(msg[2])+
-                                    " "+Integer.parseInt(msg[3]) +" "+ Integer.parseInt(msg[4]));
-                        } else {
-                            players[currentPlayer].sendMessage("DECLINE");
-                        }
-                        break;
+                case "CHECK":  CHECK oldX oldY newX newY
+                    System.out.println("Wybrano: CHECK");
+                    if (game.validateMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
+                            Integer.parseInt(msg[3]), Integer.parseInt(msg[4]))) {
+                        System.out.println("Ruch poprawny");
+                        players[currentPlayer].sendMessage("ACCEPT "+Integer.parseInt(msg[1]) +" "+ Integer.parseInt(msg[2])+
+                                " "+Integer.parseInt(msg[3]) +" "+ Integer.parseInt(msg[4]));
+                    } else {
+                        System.out.println("Ruch NIE poprawny");
+                        players[currentPlayer].sendMessage("DECLINE");
+                    }
 
-                    case "ERROR":
-                        playing = false;
-                        sendToEveryone("PLAYERQUIT " + players[currentPlayer].getNick());
-                        break;
-                }
-            }
-            listener.close();
-        //}
+                case "ERROR":
+                    System.out.println("Wybrano: ERROR");
+                    playing = false;
+                    sendToEveryone("PLAYERQUIT " + players[currentPlayer].getNick());
+            }*/
+        }
+        listener.close();
     }
 
     public Player [] getPlayers() {

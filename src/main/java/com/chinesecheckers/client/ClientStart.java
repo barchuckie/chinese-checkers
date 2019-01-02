@@ -1,8 +1,6 @@
-package com.chinesecheckers;
+package com.chinesecheckers.client;
 
-import com.chinesecheckers.client.MainWindow;
-
-public class Main {
+public class ClientStart {
 
     public static void main(String [] args) {
         MainWindow mainWindow = new MainWindow();
