@@ -83,11 +83,6 @@ public class StandardBoard extends Board {
         }
     }
 
-
-    public Field[][] getFields() {
-        return fields;
-    }
-
     private void addPlayers() {
             switch (numOfPlayers) {
                 case 2:
@@ -132,19 +127,19 @@ public class StandardBoard extends Board {
                         for(int j = 0; j < 11-i; ++j) {
                             Field field = fields[i][j];
                             if(field != null) {
-                                field.setPlayer(players[5]);
+                                field.setPlayer(players[3]);
                             }
                             field = fields[i][24-j];
                             if(field != null) {
-                                field.setPlayer(players[1]);
+                                field.setPlayer(players[0]);
                             }
                             field = fields[16-i][j];
                             if(field != null) {
-                                field.setPlayer(players[4]);
+                                field.setPlayer(players[2]);
                             }
                             field = fields[16-i][24-j];
                             if(field != null) {
-                                field.setPlayer(players[2]);
+                                field.setPlayer(players[1]);
                             }
                         }
                     }

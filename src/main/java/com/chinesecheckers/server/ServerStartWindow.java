@@ -16,8 +16,7 @@ public class ServerStartWindow {
     private JRadioButton twoP,threeP,fourP,sixP,zeroB,oneB,twoB,threeB,fourB,fiveB;
     private GridLayout mainGridLayout;
 
-    public void start()
-    {
+    public void start() {
         frame = new JFrame("Gra");
         mainGridLayout = new GridLayout(3,0);
 
@@ -101,13 +100,12 @@ public class ServerStartWindow {
         frame.setResizable(false);
     }
 
-    class startButtonListener implements ActionListener
-    {
+    class startButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            int players=0;
-            int bots=0;
+            int players = 0;
+            int bots = 0;
             for (Enumeration<AbstractButton> buttons = howManyPlayers.getElements(); buttons.hasMoreElements();) {
                 AbstractButton button = buttons.nextElement();
 
@@ -124,12 +122,15 @@ public class ServerStartWindow {
                 }
             }
 
-            if(players>=bots+1)
-            {
-                System.out.println("WYBRALISMY TAK GRACZY" + players + " BOTOW"+ bots);
+            if(players>=bots+1) {
+                System.out.println("WYBRANO GRACZY: " + players + " BOTÓW: "+ bots);
                 frame.dispose();
-                GameServer gameServer = new GameServer(players,bots);
-                gameServer.start();
+                GameServer gameServer = new GameServer(players, bots, GameModeEnum.STANDARD);
+                try {
+                    gameServer.start();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }

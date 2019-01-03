@@ -6,23 +6,37 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Player extends Thread {
+public class Player {
     private String nick;
     private Socket socket;
-    private GameServer server;
     private BufferedReader input;
     private PrintWriter output;
 
-
-    public Player(Socket socket, GameServer server) {
+    public Player(Socket socket) {
         this.socket = socket;
-        this.server = server;
+        try {
+            input = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            output = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            System.out.println("Player died: " + e);
+        }
     }
 
-    public Player(String nick, Socket socket, GameServer server) {
+    public Player(String nick, Socket socket) {
         this.nick = nick;
         this.socket = socket;
-        this.server = server;
+        try {
+            input = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            output = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            System.out.println("Player died: " + e);
+        }
+    }
+
+    public Player(String nick) {
+        this.nick = nick;
     }
 
     public String getNick() {
@@ -33,86 +47,17 @@ public class Player extends Thread {
         this.nick = nick;
     }
 
-    public void run() {
-        System.out.println("Player Thread started");
-        String wiadomosc;
-
+    public String [] read() {
+        String [] msg;
         try {
-            input = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
-            output = new PrintWriter(socket.getOutputStream(), true);
-            output.println("WELCOME");
-            output.println("MESSAGE Waiting for opponents to connect");
-
-            sendToClient("INFO "+server.getNumOfPlayers()+" "+server.getNumOfBots(),this);
-
-            while ((wiadomosc = input.readLine()) != null) {
-                if(wiadomosc.startsWith("MOVE"))
-                {
-                    String[] x = wiadomosc.split(" ");
-                    int x1 = Integer.parseInt(x[1]);
-                    int y1 = Integer.parseInt(x[2]);
-
-                    sendToEveryone(wiadomosc);
-                }
-                else if(wiadomosc.startsWith("ENDTURN"))
-                {
-                    System.out.println("KONIEC TURY");
-                    changeTurn();
-                    sendTurnMessage();
-                }
-
-                System.out.println("Odczytano: " + wiadomosc);
-            }
-        } catch(Exception ex) {ex.printStackTrace();}
-
-    }
-
-    public void sendToClient(String message,Player player)
-    {
-        try
-        {
-            PrintWriter pis = player.getOutputStream();
-            pis.println(message);
-            pis.flush();
+            msg = input.readLine().split(" ");
+        } catch (Exception e) {
+            msg =  new String[]{"ERROR", "PLAYERQUIT"};
         }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
+        return msg;
     }
 
-    public void sendTurnMessage()
-    {
-        for(int index = 0; index<server.getPlayers().size();index++)
-        {
-            Player p = server.getPlayers().get(index);
-            if(index == server.getTurn())
-                sendToClient("YOUR TURN",p);
-
-            else
-                sendToClient("NOT YOUR TURN",p);
-        }
+    public void sendMessage(String message) {
+        output.println(message);
     }
-
-
-    public void sendToEveryone(String message) {
-        for(Player p: server.getPlayers())
-        {
-            sendToClient(message,p);
-        }
-    }
-
-    public void changeTurn()
-    {
-        System.out.println("TURNCHANGING");
-        server.setTurn((server.getTurn()+1)%(server.getPlayers().size()));
-    }
-
-
-    public PrintWriter getOutputStream()
-    {
-        return output;
-    }
-
 }

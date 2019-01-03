@@ -1,123 +1,150 @@
 package com.chinesecheckers.server;
 
-import com.chinesecheckers.client.PlayWindow;
+import com.chinesecheckers.server.game.Game;
+import com.chinesecheckers.server.game.GameData;
+import com.chinesecheckers.server.game.StandardGame;
 
-import javax.security.auth.RefreshFailedException;
-import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Random;
-
-import static java.lang.Thread.sleep;
 
 public class GameServer {
 
-    enum GameServerState {
-        FREE,
-        WAITING,
-        INGAME
-    }
-    int numOfPlayers;
-    int numOfBots;
-    private GameServerState state;
     private ServerSocket listener;
-    private ArrayList<Player> players = new ArrayList<Player>();
-    int turn=0;
+    private Player [] players;
+    private int numOfPlayers;
+    private int numOfBots;
+    private GameModeEnum gameMode;
+    private Game game;
+    private GameData data;
 
-    public GameServer(int numOfPlayers,int numOfBots)
-    {
-        this.numOfPlayers=numOfPlayers;
-        this.numOfBots=numOfBots;
+    public GameServer(int numOfPlayers, int numOfBots, GameModeEnum gameMode) {
+        this.numOfPlayers = numOfPlayers;
+        this.numOfBots = numOfBots;
+        this.gameMode = gameMode;
     }
 
-    public void start() {
+    public void start() throws Exception {
+        listener = new ServerSocket(8901);
         System.out.println("Chinese Checkers Server is Running");
-        try{
-            listener = new ServerSocket(8901);
-            while (true) {
-                // TODO: Server lifecycle
-                if(players.size()<numOfPlayers)
-                {
-                    Socket s = listener.accept();
-                    Player pl = new Player(s, this);
-                    players.add(pl);
-                    System.out.println(players.size());
-                }
-                else if(players.size()==numOfPlayers)
-                {
-                    startAllThreads();
-                    chooseFirstPlayer();
-                    try
-                    {
-                        sleep(100);
-                    }catch(InterruptedException ex)
-                    {
-                        ex.printStackTrace();
-                    }
-                    players.get(turn).sendTurnMessage();
-                    break;
-                }else
-                {
-                    System.out.println("I'm sorry. Room is full");
-                }
 
+        players = new Player[numOfPlayers];
+        for(int i = 0; i < numOfPlayers; ++i) {
+            players[i] = new Player(listener.accept());
+            System.out.println("listener accepted");
+            String [] nickMsg = players[i].read();
+            if(!nickMsg[0].equals("NICK") || nickMsg.length < 2) {
+                i--;
+                continue;
             }
-        } catch(IOException ex)
-        {
-            ex.printStackTrace();
+            players[i].setNick(nickMsg[1]);
+            players[i].sendMessage("YOURID " + (i+1));
         }
-    }
 
-    public void startAllThreads()
-    {
-        for(Player p: players)
-        {
-            p.start();
+        /* Create new game */
+        data = new GameData(numOfPlayers, players);
+        game = new StandardGame(data);
+        sendToEveryone("GAME " + gameMode.toString() + " " + numOfPlayers);
+
+        /* Lead the game */
+        int currentPlayer;
+        boolean playing = true;
+        while(true) {
+            currentPlayer = game.getCurrentPlayer();
+            players[currentPlayer].sendMessage("YOURMOVE");
+            String [] msg = players[currentPlayer].read();
+            System.out.print("Otrzymano: ");
+            for(String czesc : msg) System.out.print(czesc + " ");
+            System.out.println();
+            // MOVE oldX oldY newX newY
+            if ("MOVE".equals(msg[0])) {
+                System.out.println("Wybrano: MOVE");
+                game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
+                        Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
+
+                // PLAYER_MOVED playerNick oldX oldY newX newY
+                sendPlayerMovedMsg("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
+                        Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
+                        Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ", players[currentPlayer]);
+                        /*if(game.checkWinner(currentPlayer)) {
+                            sendToEveryone("VICTORY " + players[currentPlayer].getNick());
+                        }*/
+            } else if ("CHECK".equals(msg[0])) {
+                System.out.println("Wybrano: CHECK");
+                if (game.validateMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
+                        Integer.parseInt(msg[3]), Integer.parseInt(msg[4]))) {
+                    System.out.println("Ruch poprawny");
+                    players[currentPlayer].sendMessage("ACCEPT " + Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) +
+                            " " + Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]));
+                } else {
+                    System.out.println("Ruch NIE poprawny");
+                    players[currentPlayer].sendMessage("DECLINE");
+                }
+                System.out.println("Dotarłem za if");
+            } else if ("ERROR".equals(msg[0])) {
+                System.out.println("Wybrano: ERROR");
+                //playing = false;
+                sendToEveryone("PLAYERQUIT " + players[currentPlayer].getNick());
+                break;
+            }
+            /*switch (msg[0]) {
+                case "MOVE": // MOVE oldX oldY newX newY
+                    System.out.println("Wybrano: MOVE");
+                    game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
+                            Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
+
+                    // PLAYER_MOVED playerNick oldX oldY newX newY
+                    sendToEveryoneExceptCurrent("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
+                            Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
+                            Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ",players[currentPlayer]);
+                        /*if(game.checkWinner(currentPlayer)) {
+                            sendToEveryone("VICTORY " + players[currentPlayer].getNick());
+                        }
+
+                case "CHECK":  CHECK oldX oldY newX newY
+                    System.out.println("Wybrano: CHECK");
+                    if (game.validateMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
+                            Integer.parseInt(msg[3]), Integer.parseInt(msg[4]))) {
+                        System.out.println("Ruch poprawny");
+                        players[currentPlayer].sendMessage("ACCEPT "+Integer.parseInt(msg[1]) +" "+ Integer.parseInt(msg[2])+
+                                " "+Integer.parseInt(msg[3]) +" "+ Integer.parseInt(msg[4]));
+                    } else {
+                        System.out.println("Ruch NIE poprawny");
+                        players[currentPlayer].sendMessage("DECLINE");
+                    }
+
+                case "ERROR":
+                    System.out.println("Wybrano: ERROR");
+                    playing = false;
+                    sendToEveryone("PLAYERQUIT " + players[currentPlayer].getNick());
+            }*/
         }
+        listener.close();
     }
 
-    public void sendGameInfo()
-    {
-        for(Player p: players)
-        {
-            p.sendToClient("INFO "+numOfPlayers+" "+numOfBots,p);
-        }
-    }
-
-    public void chooseFirstPlayer()
-    {
-        Random r = new Random();
-        turn = r.nextInt(numOfPlayers);
-        System.out.println("Gracz nr "+turn+"bedzie zaczynal");
-    }
-
-    GameServerState getState() {
-        return state;
-    }
-
-    public ArrayList<Player> getPlayers()
-    {
+    public Player [] getPlayers() {
         return players;
     }
 
-    public int getTurn()
-    {
-        return turn;
+    private void sendToEveryone(String message) {
+        for (Player player : players) {
+            player.sendMessage(message);
+        }
     }
 
-    public void setTurn(int turn)
+    private void sendToEveryoneExceptCurrent(String message,Player currentPlayer)
     {
-        this.turn = turn;
+        for (Player player : players) {
+            if(!player.equals(currentPlayer))
+            {
+                player.sendMessage(message);
+            }
+        }
     }
 
-    public int getNumOfPlayers()
+    private void sendPlayerMovedMsg(String message,Player currentPlayer)
     {
-        return numOfPlayers;
-    }
-
-    public int getNumOfBots()
-    {
-        return numOfBots;
+        currentPlayer.sendMessage("ENDMOVE");
+        sendToEveryoneExceptCurrent(message,currentPlayer);
     }
 }

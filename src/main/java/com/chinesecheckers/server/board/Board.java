@@ -8,6 +8,7 @@ public abstract class Board {
      * Bo jak nie to trzeba to zdowngradeować */
 
     public Field[][] getFields() {
+        System.out.println("Pobieranie pól");
         return fields;
     }
 }

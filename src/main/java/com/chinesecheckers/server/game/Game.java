@@ -31,7 +31,9 @@ public abstract class Game {
         } else {
             currentPlayer = 0;
         }
-        board.getFields()[oldY][oldX].setPlayer(null);
-        board.getFields()[newY][newX].setPlayer(player);
+        board.getFields()[oldX][oldY].setPlayer(null);
+        board.getFields()[newX][newY].setPlayer(player);
     }
+
+    public abstract boolean checkWinner(int currentPlayer);
 }

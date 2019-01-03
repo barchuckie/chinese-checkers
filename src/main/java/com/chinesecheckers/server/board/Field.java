@@ -11,10 +11,6 @@ public class Field {
         player = null;
     }
 
-    public Field(Player player) {
-        this.player = player;
-    }
-
     public void setNeighbours(Field[] neighbours) {
         this.neighbours = neighbours;
     }
