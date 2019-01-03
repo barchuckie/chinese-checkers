@@ -14,7 +14,7 @@ public class PlayerColor {
             case 3:
                 return Color.BLUE;
             case 4:
-                return Color.BLACK;
+                return Color.YELLOW;
             case 5:
                 return Color.ORANGE;
             case 6:
@@ -32,7 +32,7 @@ public class PlayerColor {
             return 2;
         else if(color==Color.BLUE)
             return 3;
-        else if(color==Color.BLACK)
+        else if(color==Color.YELLOW)
             return 4;
         else if(color==Color.ORANGE)
             return 5;
@@ -40,8 +40,26 @@ public class PlayerColor {
             return 6;
         else
             return 0;
-
-
+    }
+    public static String getColorName(int player)
+    {
+        switch(player)
+        {
+            case 1:
+                return "GREEN";
+            case 2:
+                return "RED";
+            case 3:
+                return "BLUE";
+            case 4:
+                return "YELLOW";
+            case 5:
+                return "ORANGE";
+            case 6:
+                return "MAGENTA";
+            default:
+                return "WHITE";
+        }
     }
 
 

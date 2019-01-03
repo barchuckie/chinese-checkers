@@ -1,18 +1,19 @@
 package com.chinesecheckers.client.Board;
 
 import com.chinesecheckers.client.Circle;
+import com.chinesecheckers.client.Field;
 
 public abstract class Board {
-    Circle[][] circles;
+    Field[][] fields;
 
-    public Circle[][] getFields()
+    public Field[][] getFields()
     {
-        return circles;
+        return fields;
     }
 
     public abstract void fillWithNulls();
 
-    public abstract void setup();
+    public abstract void setup(String gameMode);
 
     public abstract void addPlayers();
 }

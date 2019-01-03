@@ -16,17 +16,22 @@ import static java.lang.Thread.sleep;
 
 public class PlayWindow {
     private JFrame frame;
-    private GraphicPanel mainPanel;
+    AbstractGraphicPanel panel;
     private Board standardBoard;
-    private Socket gniazdo;
+    private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
+    private String nick;
+    private String gameMode;
+    private int playerID;
 
-    public PlayWindow()
+    public PlayWindow(String nick)
     {
-        configureCommunication();
+        this.nick=nick;
         try{
             sleep(10);
+            configureCommunication();
+            sleep(100);
         }catch(InterruptedException ex)
         {
             ex.printStackTrace();
@@ -35,71 +40,114 @@ public class PlayWindow {
 
     public void start()
     {
-        Thread receiverThread = new Thread(new statementReceiver());
-        receiverThread.start();
         frame = new JFrame("Waiting For All Players To Connect");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(1014,800);
         frame.setVisible(true);
         frame.setResizable(false);
+        Thread receiverThread = new Thread(new statementReceiver());
+        receiverThread.start();
     }
 
     private void configureCommunication() {
         try {
-            gniazdo = new Socket("127.0.0.1", 8901);
-            InputStreamReader StreamReader = new InputStreamReader(gniazdo.getInputStream());
+            socket = new Socket("127.0.0.1", 8901);
+            InputStreamReader StreamReader = new InputStreamReader(socket.getInputStream());
             reader = new BufferedReader(StreamReader);
-            writer = new PrintWriter(gniazdo.getOutputStream());
-            System.out.println("Obsluga sieci gotowa");
+            writer = new PrintWriter(socket.getOutputStream(),true);
+            writer.println("NICK " + nick);
+            System.out.println("NICK" + nick);
         } catch(IOException ex) {
             ex.printStackTrace();
         }
     }
 
-    private void goToGame(int players)
+    private void goToGame(int players,String gameMode)
+    {
+        if(gameMode.equals("STANDARD"))
+        {
+            goToStandardGame(players);
+        }
+    }
+
+    private void goToStandardGame(int players)
     {
         BoardFactory hexBoardFactory= new HexBoardFactory();
-        standardBoard = hexBoardFactory.getBoard(players);
-        mainPanel = new GraphicPanel(standardBoard, writer);
-        frame.getContentPane().add(BorderLayout.CENTER,mainPanel);
-        frame.setTitle("Gra");
+        standardBoard = hexBoardFactory.getBoard(players,gameMode);
+        panel = new CircleGraphicPanel(standardBoard, writer);
+        frame.getContentPane().add(BorderLayout.CENTER, panel);
+        frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
         frame.repaint();
+        frame.validate();
     }
+
     public class statementReceiver implements Runnable {
         public void run()
         {
             String wiadom;
-            try
-            {
-                while (true)
-                {
-                    wiadom = reader.readLine();
+            try {
+                while((wiadom=reader.readLine())!=null) {
                     System.out.println("Odczytano " + wiadom);
                     String[] x = wiadom.split(" ");
-                    if (x[0].equals("MOVE"))
+
+                    if (x[0].equals("PLAYERMOVED"))
+                    {
+                        standardBoard.getFields()[Integer.parseInt(x[4])][Integer.parseInt(x[5])].setPlayer(
+                                standardBoard.getFields()[Integer.parseInt(x[2])][Integer.parseInt(x[3])].getPlayer());
+                        standardBoard.getFields()[Integer.parseInt(x[2])][Integer.parseInt(x[3])].setPlayer(0);
+                        panel.repaint();
+                        panel.validate();
+                    }
+                    else if(x[0].equals("ACCEPT"))
                     {
                         standardBoard.getFields()[Integer.parseInt(x[3])][Integer.parseInt(x[4])].setPlayer(
                                 standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].getPlayer());
                         standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].setPlayer(0);
-                        mainPanel.repaint();
+                        //setActive();
+                        panel.setActive(standardBoard.getFields()[Integer.parseInt(x[3])][Integer.parseInt(x[4])]);
+                        panel.repaint();
+                        panel.validate();
                     }
-                    else if(x[0].startsWith("YOUR"))
+                    else if(x[0].equals("DECLINE"))
                     {
-                        mainPanel.setMyTurn(true);
-                        frame.setTitle("TWOJA TURA");
+                        System.out.println("Zły ruch");
+                        panel.repaint();
+                        panel.validate();
                     }
-                    else if(x[0].startsWith("NOT"))
+                    else if(x[0].startsWith("YOURMOVE"))
                     {
-                        mainPanel.setMyTurn(false);
-                        frame.setTitle("TURA PRZECIWNIKA");
+                        panel.setMyTurn();
+                        //frame.setTitle("TWOJA TURA - KOLOR: "+PlayerColor.getColor(playerID));
+                        frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TWOJA TURA");
                     }
-                    else if(x[0].startsWith("INFO"))
+                    else if(x[0].startsWith("ENDMOVE"))
                     {
-                        int players=Integer.parseInt(x[1]);
-                        int bots=Integer.parseInt(x[2]);
-                        System.out.println("Liczba graczy "+players+" w tym botow "+bots);
-                        goToGame(players);
+                        panel.setNotMyTurn();
+                        frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
+                    }
+                    else if(x[0].startsWith("PLAYERQUIT"))
+                    {
+                        String uciekinier = x[1];
+                        System.out.println("Gracz "+uciekinier + " wyszedł " + "koniec gry");
+                        //TU KONIEC GRY
+                    }
+                    else if(x[0].startsWith("VICTORY"))
+                    {
+                        String zwyciezca = x[1];
+                        System.out.println("Gracz "+zwyciezca + "wyszedł" + "koniec gry");
+                        //TU KONIEC GRY
+                    }
+                    else if(x[0].startsWith("GAME"))
+                    {
+                        int players=Integer.parseInt(x[2]);
+                        gameMode =x[1];
+                        System.out.println("Liczba graczy "+players);
+                        goToGame(players, gameMode);
                         sleep(500);
+                    }
+                    else if(x[0].startsWith("YOURID"))
+                    {
+                        playerID = Integer.parseInt(x[1]);
                     }
                 }
             }
@@ -107,6 +155,8 @@ public class PlayWindow {
             {
                 ex.printStackTrace();
             }
+
         }
+
     }
 }

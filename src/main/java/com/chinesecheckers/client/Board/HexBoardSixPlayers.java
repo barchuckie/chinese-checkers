@@ -1,6 +1,7 @@
 package com.chinesecheckers.client.Board;
 
 import com.chinesecheckers.client.Circle;
+import com.chinesecheckers.client.Field;
 
 public class HexBoardSixPlayers extends HexBoard
 {
@@ -8,35 +9,35 @@ public class HexBoardSixPlayers extends HexBoard
     public void addPlayers()
     {
         for(int i = 0; i < 4; ++i) {
-            for(Circle circle : circles[i]) {
-                if(circle != null) {
-                    circle.setPlayer(1);
+            for(Field field : fields[i]) {
+                if(field != null) {
+                    field.setPlayer(1);
                 }
             }
-            for (Circle circle : circles[16-i]) {
-                if(circle != null) {
-                    circle.setPlayer(4);
+            for (Field field : fields[16-i]) {
+                if(field != null) {
+                    field.setPlayer(4);
                 }
             }
         }
 
         for(int i = 4; i < 9; ++i) {
             for(int j = 0; j < 11-i; ++j) {
-                Circle circle = circles[i][j];
-                if(circle != null) {
-                    circle.setPlayer(6);
+                Field field = fields[i][j];
+                if(field != null) {
+                    field.setPlayer(6);
                 }
-                circle = circles[i][24-j];
-                if(circle != null) {
-                    circle.setPlayer(2);
+                field = fields[i][24-j];
+                if(field != null) {
+                    field.setPlayer(2);
                 }
-                circle = circles[16-i][j];
-                if(circle != null) {
-                    circle.setPlayer(5);
+                field = fields[16-i][j];
+                if(field != null) {
+                    field.setPlayer(5);
                 }
-                circle = circles[16-i][24-j];
-                if(circle != null) {
-                    circle.setPlayer(3);
+                field = fields[16-i][24-j];
+                if(field != null) {
+                    field.setPlayer(3);
                 }
             }
         }

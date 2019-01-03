@@ -1,18 +1,16 @@
 package com.chinesecheckers.client.Board;
 
-import com.chinesecheckers.client.Board.Board;
 import com.chinesecheckers.client.Circle;
+import com.chinesecheckers.client.CircleField;
 
 public abstract class HexBoard extends Board {
 
-    public HexBoard()
+    public void setup(String type)
     {
-        circles = new Circle[17][25];
-        setup();
-    }
-
-    public void setup()
-    {
+        if(type.equals("STANDARD"))
+        {
+            fields = new CircleField[17][25];
+        }
         fillWithNulls();
         int startingX=500;
         int x;
@@ -27,12 +25,14 @@ public abstract class HexBoard extends Board {
             //0-13
             for(int w=0;w<i+1;w++)
             {
-                Circle ellipse2D = new Circle(x,y,20);
-                Circle ellipse2DD = new Circle(x,y2,20);
+                CircleField ellipse2D = new CircleField(x,y,20);
+                ellipse2D.setPlayer(0);
+                CircleField ellipse2DD = new CircleField(x,y2,20);
+                ellipse2DD.setPlayer(0);
                 x=x+60;
 
-                circles[a][b]=ellipse2D;
-                circles[16-a][b]=ellipse2DD;
+                fields[a][b]=ellipse2D;
+                fields[16-a][b]=ellipse2DD;
                 b=b+2;
             }
 
@@ -52,7 +52,7 @@ public abstract class HexBoard extends Board {
         {
             for(int j=0;j<25;j++)
             {
-                circles[i][j]=null;
+                fields[i][j]=null;
             }
         }
     }
