@@ -63,7 +63,7 @@ public class GameServer {
                         Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
 
                 // PLAYER_MOVED playerNick oldX oldY newX newY
-                sendToEveryoneExceptCurrent("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
+                sendPlayerMovedMsg("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
                         Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
                         Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ", players[currentPlayer]);
                         /*if(game.checkWinner(currentPlayer)) {
@@ -135,14 +135,16 @@ public class GameServer {
     private void sendToEveryoneExceptCurrent(String message,Player currentPlayer)
     {
         for (Player player : players) {
-            if(player.equals(currentPlayer))
+            if(!player.equals(currentPlayer))
             {
-                System.out.println("beforesendingendmove");
-                player.sendMessage("ENDMOVE");
-                System.out.println("endmovesended");
-            }
-            else
                 player.sendMessage(message);
+            }
         }
+    }
+
+    private void sendPlayerMovedMsg(String message,Player currentPlayer)
+    {
+        currentPlayer.sendMessage("ENDMOVE");
+        sendToEveryoneExceptCurrent(message,currentPlayer);
     }
 }
