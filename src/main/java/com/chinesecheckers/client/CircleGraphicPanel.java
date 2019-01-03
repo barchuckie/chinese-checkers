@@ -2,31 +2,28 @@ package com.chinesecheckers.client;
 
 import com.chinesecheckers.client.Board.Board;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.PrintWriter;
 
-import static java.lang.Thread.sleep;
-
 //TODO Wyróżnienie przy decline, kiedy pierwszy ruch(można zmienić piona) a kiedy już kolejny(nie można zmienić piona)
 
-public class GraphicPanel extends JPanel {
+public class CircleGraphicPanel extends AbstractGraphicPanel {
 
-    private Circle circles[][];
+    private CircleField fields[][];
     PrintWriter printWriter;
-    private Circle active;
+    private CircleField active;
     private int activeX,activeY;
     private int newX, newY;
     private int originalX,originalY;
     private boolean pawnChosen=false;
     private boolean myTurn=false;
 
-    public GraphicPanel(Board board,PrintWriter p)
+    public CircleGraphicPanel(Board board, PrintWriter p)
     {
         board.addPlayers();
-        circles=board.getFields();
+        fields =(CircleField[][]) board.getFields();
         this.printWriter=p;
         this.addMouseListener(new MyMouseAdapter());
     }
@@ -37,19 +34,19 @@ public class GraphicPanel extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(Color.red);
 
-        for (Circle[] circles : circles)
+        for (Field[] circles : fields)
         {
-            for (Circle circle : circles)
+            for (Field circle : circles)
             {
                 if (circle!= null)
                 {
-                    g2d.draw(circle);
+                    g2d.draw((CircleField)circle);
                     g2d.setColor(PlayerColor.getColor(circle.getPlayer()));
                     if(circle==active)
                     {
                         g2d.setColor(PlayerColor.getColor(circle.getPlayer()).darker());
                     }
-                    g2d.fill(circle);
+                    g2d.fill((CircleField)circle);
                     g2d.setColor(Color.red);
                 }
             }
@@ -83,7 +80,7 @@ public class GraphicPanel extends JPanel {
                     {
                         if (getClickedField(e) != null)
                         {
-                            Circle circle = getClickedField(e);
+                            CircleField circle = getClickedField(e);
                             setActive(circle);
                             pawnChosen = true;
                             originalX = newX;
@@ -96,7 +93,7 @@ public class GraphicPanel extends JPanel {
                     {
                         if (getClickedField(e) != null)
                         {
-                            Circle circle = getClickedField(e);
+                            CircleField circle = getClickedField(e);
                             if (circle.equals(active))
                             {
                                 System.out.println("KONIEC RUCHU");
@@ -110,17 +107,17 @@ public class GraphicPanel extends JPanel {
             }
         }
     }
-    private Circle getClickedField(MouseEvent e)
+    private CircleField getClickedField(MouseEvent e)
     {
         for (int x = 0; x < 17; x++)
         {
             for (int y = 0; y < 25; y++)
             {
-                if ((circles[x][y] != null) && (circles[x][y].contains(e.getPoint())))
+                if ((fields[x][y] != null) && (fields[x][y].contains(e.getPoint())))
                 {
                     this.newX =x;
                     this.newY =y;
-                    return circles[x][y];
+                    return fields[x][y];
                 }
             }
         }
@@ -147,11 +144,11 @@ public class GraphicPanel extends JPanel {
         pawnChosen=false;
     }
 
-    public void setActive(Circle circle)
+    public void setActive(Field circle)
     {
         activeX = newX;
         activeY = newY;
-        active = circle;
+        active = (CircleField) circle;
     }
 
     private void sendMessage(String action,int i,int j)

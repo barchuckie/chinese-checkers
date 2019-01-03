@@ -1,6 +1,7 @@
 package com.chinesecheckers.client.Board;
 
 import com.chinesecheckers.client.Circle;
+import com.chinesecheckers.client.Field;
 
 public class HexBoardTwoPlayers extends HexBoard {
 
@@ -14,15 +15,15 @@ public class HexBoardTwoPlayers extends HexBoard {
     {
         for(int i = 0; i < 4; ++i) {
             //gora
-            for(Circle circle : circles[i]) {
-                if(circle != null) {
-                    circle.setPlayer(1);
+            for(Field field : fields[i]) {
+                if(field != null) {
+                    field.setPlayer(1);
                 }
             }
             //dol
-            for (Circle circle : circles[16-i]) {
-                if(circle != null) {
-                    circle.setPlayer(2);
+            for (Field field : fields[16-i]) {
+                if(field != null) {
+                    field.setPlayer(2);
                 }
             }
         }

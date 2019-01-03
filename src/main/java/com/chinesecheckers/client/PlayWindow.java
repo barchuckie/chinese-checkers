@@ -16,7 +16,7 @@ import static java.lang.Thread.sleep;
 
 public class PlayWindow {
     private JFrame frame;
-    private GraphicPanel graphicPanel;
+    AbstractGraphicPanel panel;
     private Board standardBoard;
     private Socket socket;
     private BufferedReader reader;
@@ -73,9 +73,9 @@ public class PlayWindow {
     private void goToStandardGame(int players)
     {
         BoardFactory hexBoardFactory= new HexBoardFactory();
-        standardBoard = hexBoardFactory.getBoard(players);
-        graphicPanel = new GraphicPanel(standardBoard, writer);
-        frame.getContentPane().add(BorderLayout.CENTER, graphicPanel);
+        standardBoard = hexBoardFactory.getBoard(players,gameMode);
+        panel = new CircleGraphicPanel(standardBoard, writer);
+        frame.getContentPane().add(BorderLayout.CENTER, panel);
         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
         frame.repaint();
         frame.validate();
@@ -95,33 +95,34 @@ public class PlayWindow {
                         standardBoard.getFields()[Integer.parseInt(x[4])][Integer.parseInt(x[5])].setPlayer(
                                 standardBoard.getFields()[Integer.parseInt(x[2])][Integer.parseInt(x[3])].getPlayer());
                         standardBoard.getFields()[Integer.parseInt(x[2])][Integer.parseInt(x[3])].setPlayer(0);
-                        graphicPanel.repaint();
-                        graphicPanel.validate();
+                        panel.repaint();
+                        panel.validate();
                     }
                     else if(x[0].equals("ACCEPT"))
                     {
                         standardBoard.getFields()[Integer.parseInt(x[3])][Integer.parseInt(x[4])].setPlayer(
                                 standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].getPlayer());
                         standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].setPlayer(0);
-                        graphicPanel.setActive(standardBoard.getFields()[Integer.parseInt(x[3])][Integer.parseInt(x[4])]);
-                        graphicPanel.repaint();
-                        graphicPanel.validate();
+                        //setActive();
+                        panel.setActive(standardBoard.getFields()[Integer.parseInt(x[3])][Integer.parseInt(x[4])]);
+                        panel.repaint();
+                        panel.validate();
                     }
                     else if(x[0].equals("DECLINE"))
                     {
                         System.out.println("Zły ruch");
-                        graphicPanel.repaint();
-                        graphicPanel.validate();
+                        panel.repaint();
+                        panel.validate();
                     }
                     else if(x[0].startsWith("YOURMOVE"))
                     {
-                        graphicPanel.setMyTurn();
+                        panel.setMyTurn();
                         //frame.setTitle("TWOJA TURA - KOLOR: "+PlayerColor.getColor(playerID));
                         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TWOJA TURA");
                     }
                     else if(x[0].startsWith("ENDMOVE"))
                     {
-                        graphicPanel.setNotMyTurn();
+                        panel.setNotMyTurn();
                         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
                     }
                     else if(x[0].startsWith("PLAYERQUIT"))
@@ -154,6 +155,8 @@ public class PlayWindow {
             {
                 ex.printStackTrace();
             }
+
         }
+
     }
 }
