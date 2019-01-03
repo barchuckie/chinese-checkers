@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 
 import static java.lang.Thread.sleep;
 
+//TODO Wyróżnienie przy decline, kiedy pierwszy ruch(można zmienić piona) a kiedy już kolejny(nie można zmienić piona)
 
 public class GraphicPanel extends JPanel {
 
@@ -20,7 +21,7 @@ public class GraphicPanel extends JPanel {
     private int newX, newY;
     private int originalX,originalY;
     private boolean pawnChosen=false;
-    boolean myTurn=true;
+    private boolean myTurn=false;
 
     public GraphicPanel(Board board,PrintWriter p)
     {
@@ -60,45 +61,49 @@ public class GraphicPanel extends JPanel {
         @Override
         public void mousePressed(MouseEvent e)
         {
-            //LPM  -- ruch do sprawdzenia
-            if ((e.getButton() == 1))
+            if(myTurn)
             {
-                if(active!=null)
+                //LPM  -- ruch do sprawdzenia
+                if ((e.getButton() == 1))
                 {
-                    if(getClickedField(e)!=active && getClickedField(e)!=null)
+                    if (active != null)
                     {
-                        sendMessage("CHECK", newX, newY);
-                    }
-                }
-            }
-            //PPM
-            else if ((e.getButton() == 3))
-            {
-                //jesli pierwsze prawe klikniecie -- wybor piona
-                if(!pawnChosen)
-                {
-                    if(getClickedField(e)!=null)
-                    {
-                        Circle circle = getClickedField(e);
-                        setActive(circle);
-                        pawnChosen=true;
-                        originalX= newX;
-                        originalY= newY;
-                        repaint();
-                    }
-
-                }
-                else  //drugie prawe klikniecie -- zakonczenie ruchu
-                {
-                    if(getClickedField(e)!=null)
-                    {
-                        Circle circle = getClickedField(e);
-                        if (circle.equals(active))
+                        if (getClickedField(e) != active && getClickedField(e) != null)
                         {
-                            System.out.println("KONIEC RUCHU");
-                            sendEndMessage("MOVE");
-                            disactive();
+                            Circle circle = getClickedField(e); //czy ja tego potrzebuje?
+                            sendMessage("CHECK", newX, newY);
+                        }
+                    }
+                }
+                //PPM
+                else if ((e.getButton() == 3))
+                {
+                    //jesli pierwsze prawe klikniecie -- wybor piona
+                    if (!pawnChosen)
+                    {
+                        if (getClickedField(e) != null)
+                        {
+                            Circle circle = getClickedField(e);
+                            setActive(circle);
+                            pawnChosen = true;
+                            originalX = newX;
+                            originalY = newY;
                             repaint();
+                        }
+
+                    }
+                    else  //drugie prawe klikniecie -- zakonczenie ruchu
+                    {
+                        if (getClickedField(e) != null)
+                        {
+                            Circle circle = getClickedField(e);
+                            if (circle.equals(active))
+                            {
+                                System.out.println("KONIEC RUCHU");
+                                sendEndMessage("MOVE");
+                                disactive();
+                                repaint();
+                            }
                         }
                     }
                 }
@@ -126,6 +131,7 @@ public class GraphicPanel extends JPanel {
     {
         myTurn=true;
     }
+
     public void setNotMyTurn()
     {
         myTurn=false;
@@ -150,20 +156,13 @@ public class GraphicPanel extends JPanel {
 
     private void sendMessage(String action,int i,int j)
     {
-        if(myTurn)
-        {
-            printWriter.println(action + " " + activeX + " " + activeY + " " + i + " " + j);
-            System.out.println("sentMSG " + action + " " + activeX + " " + activeY + " " + i + " " + j);
-        }
+        printWriter.println(action + " " + activeX + " " + activeY + " " + i + " " + j);
+        System.out.println("sentMSG " + action + " " + activeX + " " + activeY + " " + i + " " + j);
     }
     private void sendEndMessage(String action)
     {
-        if(myTurn)
-        {
-            //System.out.println("End message sending");
-            printWriter.println(action + " " + originalX + " " + originalY + " " + activeX + " " + activeY);
-            System.out.println("sentENDMSG " + action + " " + originalX + " " + originalY + " " + activeX + " " + activeY);
-        }
+        printWriter.println(action + " " + originalX + " " + originalY + " " + activeX + " " + activeY);
+        System.out.println("sentENDMSG " + action + " " + originalX + " " + originalY + " " + activeX + " " + activeY);
     }
 
 }

@@ -22,7 +22,7 @@ public class PlayWindow {
     private BufferedReader reader;
     private PrintWriter writer;
     private String nick;
-    private String tryb;
+    private String gameMode;
     private int playerID;
 
     public PlayWindow(String nick)
@@ -62,15 +62,15 @@ public class PlayWindow {
         }
     }
 
-    private void goToGame(int players,String tryb)
+    private void goToGame(int players,String gameMode)
     {
-        if(tryb.equals("STANDARD"))
+        if(gameMode.equals("STANDARD"))
         {
-            goToStandardGame(players,tryb);
+            goToStandardGame(players);
         }
     }
 
-    private void goToStandardGame(int players,String tryb)
+    private void goToStandardGame(int players)
     {
         BoardFactory hexBoardFactory= new HexBoardFactory();
         standardBoard = hexBoardFactory.getBoard(players);
@@ -139,9 +139,9 @@ public class PlayWindow {
                     else if(x[0].startsWith("GAME"))
                     {
                         int players=Integer.parseInt(x[2]);
-                        tryb=x[1];
+                        gameMode =x[1];
                         System.out.println("Liczba graczy "+players);
-                        goToGame(players,tryb);
+                        goToGame(players, gameMode);
                         sleep(500);
                     }
                     else if(x[0].startsWith("YOURID"))
