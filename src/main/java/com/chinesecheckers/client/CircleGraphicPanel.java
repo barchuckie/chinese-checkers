@@ -8,17 +8,20 @@ import java.awt.event.MouseEvent;
 import java.io.PrintWriter;
 
 //TODO Wyróżnienie przy decline, kiedy pierwszy ruch(można zmienić piona) a kiedy już kolejny(nie można zmienić piona)
+//miejsce z ktorego zaczynalem
+//i bez poruszania
 
 public class CircleGraphicPanel extends AbstractGraphicPanel {
 
     private CircleField fields[][];
     PrintWriter printWriter;
-    private CircleField active;
+    private CircleField active,original;
     private int activeX,activeY;
     private int newX, newY;
     private int originalX,originalY;
     private boolean pawnChosen=false;
     private boolean myTurn=false;
+    private int playerID;
 
     public CircleGraphicPanel(Board board, PrintWriter p)
     {
@@ -53,6 +56,11 @@ public class CircleGraphicPanel extends AbstractGraphicPanel {
         }
     }
 
+    public void setPlayerID(int id)
+    {
+        playerID=id;
+    }
+
     public class MyMouseAdapter extends MouseAdapter
     {
         @Override
@@ -81,11 +89,15 @@ public class CircleGraphicPanel extends AbstractGraphicPanel {
                         if (getClickedField(e) != null)
                         {
                             CircleField circle = getClickedField(e);
-                            setActive(circle);
-                            pawnChosen = true;
-                            originalX = newX;
-                            originalY = newY;
-                            repaint();
+                            if(circle.getPlayer()==playerID) //jesli moj pion
+                            {
+                                setActive(circle);
+                                pawnChosen = true;
+                                originalX = newX;
+                                originalY = newY;
+                                original = circle;
+                                repaint();
+                            }
                         }
 
                     }
@@ -141,6 +153,7 @@ public class CircleGraphicPanel extends AbstractGraphicPanel {
         activeY=-1;
         originalY=-1;
         originalX=-1;
+        original=null;
         pawnChosen=false;
     }
 

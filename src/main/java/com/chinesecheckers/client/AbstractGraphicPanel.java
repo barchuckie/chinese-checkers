@@ -7,5 +7,5 @@ public abstract class AbstractGraphicPanel extends JPanel {
     abstract void setMyTurn();
     abstract void setNotMyTurn();
     abstract void disactive();
-
+    abstract void setPlayerID(int id);
 }

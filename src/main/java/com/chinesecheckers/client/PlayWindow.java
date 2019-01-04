@@ -129,12 +129,18 @@ public class PlayWindow {
                     {
                         String uciekinier = x[1];
                         System.out.println("Gracz "+uciekinier + " wyszedł " + "koniec gry");
+                        frame.setTitle("Gracz "+uciekinier + " wyszedł " + "koniec gry");
+                        closeStreams();
+                        break;
                         //TU KONIEC GRY
                     }
                     else if(x[0].startsWith("VICTORY"))
                     {
                         String zwyciezca = x[1];
                         System.out.println("Gracz "+zwyciezca + "wyszedł" + "koniec gry");
+                        frame.setTitle("Gracz "+zwyciezca + " wyszedł " + "koniec gry");
+                        closeStreams();
+                        break;
                         //TU KONIEC GRY
                     }
                     else if(x[0].startsWith("GAME"))
@@ -143,6 +149,7 @@ public class PlayWindow {
                         gameMode =x[1];
                         System.out.println("Liczba graczy "+players);
                         goToGame(players, gameMode);
+                        panel.setPlayerID(playerID);
                         sleep(500);
                     }
                     else if(x[0].startsWith("YOURID"))
@@ -150,6 +157,8 @@ public class PlayWindow {
                         playerID = Integer.parseInt(x[1]);
                     }
                 }
+                socket.close();
+
             }
             catch (Exception ex)
             {
@@ -157,6 +166,10 @@ public class PlayWindow {
             }
 
         }
-
+        public void closeStreams() throws IOException
+        {
+            reader.close();
+            writer.close();
+        }
     }
 }
