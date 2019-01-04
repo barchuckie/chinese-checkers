@@ -43,7 +43,7 @@ public class GameServer {
         /* Create new game */
         data = new GameData(numOfPlayers, players);
         game = gameMode.generateGame(data);
-        sendToEveryone("GAME " + gameMode.toString() + " " + numOfPlayers);
+        sendToEveryone("GAME " + gameMode.getName() + " " + numOfPlayers);
 
         /* Lead the game */
         int currentPlayer;

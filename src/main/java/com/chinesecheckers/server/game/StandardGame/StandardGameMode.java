@@ -11,4 +11,9 @@ public class StandardGameMode implements GameMode {
         return new StandardGame(data);
     }
 
+    @Override
+    public String getName() {
+        return "STANDARD";
+    }
+
 }

@@ -4,4 +4,5 @@ public interface GameMode {
 
     Game generateGame(GameData data);
 
+    String getName();
 }

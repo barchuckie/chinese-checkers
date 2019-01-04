@@ -52,7 +52,7 @@ public class Player {
         try {
             msg = input.readLine().split(" ");
         } catch (Exception e) {
-            msg =  new String[]{"ERROR", "PLAYERQUIT"};
+            msg =  new String[]{ "ERROR", "PLAYERQUIT" };
         }
         return msg;
     }
