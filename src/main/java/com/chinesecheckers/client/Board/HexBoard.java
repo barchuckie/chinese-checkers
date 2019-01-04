@@ -2,6 +2,7 @@ package com.chinesecheckers.client.Board;
 
 import com.chinesecheckers.client.CircleField;
 import com.chinesecheckers.client.Field;
+import com.chinesecheckers.client.SquareField;
 
 public abstract class HexBoard extends Board {
 
@@ -12,6 +13,10 @@ public abstract class HexBoard extends Board {
         if(type.equals("STANDARD"))
         {
             fields = new CircleField[17][25];
+        }
+        else
+        {
+            fields = new SquareField[17][25];
         }
         fillWithNulls();
         int startingX=500;
@@ -31,6 +36,11 @@ public abstract class HexBoard extends Board {
                 {
                     field = new CircleField(x,y,20);
                     field2 = new CircleField(x,y2,20);
+                }
+                else
+                {
+                    field = new SquareField(x,y,20);
+                    field2 = new SquareField(x,y2,20);
                 }
                 field.setPlayer(0);
                 field2.setPlayer(0);
