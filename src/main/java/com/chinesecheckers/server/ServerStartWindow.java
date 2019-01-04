@@ -1,12 +1,14 @@
 package com.chinesecheckers.server;
 
+import com.chinesecheckers.server.game.StandardGame.StandardGameMode;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
-public class ServerStartWindow {
+class ServerStartWindow {
     private JFrame frame;
     private JPanel mainPanel,namePanel,choosePanel,choosePlayersPanel,chooseBotsPanel,newGamePanel,newGameLabelPanel;
 
@@ -16,7 +18,7 @@ public class ServerStartWindow {
     private JRadioButton twoP,threeP,fourP,sixP,zeroB,oneB,twoB,threeB,fourB,fiveB;
     private GridLayout mainGridLayout;
 
-    public void start() {
+    void start() {
         frame = new JFrame("Gra");
         mainGridLayout = new GridLayout(3,0);
 
@@ -125,7 +127,7 @@ public class ServerStartWindow {
             if(players>=bots+1) {
                 System.out.println("WYBRANO GRACZY: " + players + " BOTÓW: "+ bots);
                 frame.dispose();
-                GameServer gameServer = new GameServer(players, bots, GameModeEnum.STANDARD);
+                GameServer gameServer = new GameServer(players, bots, new StandardGameMode());
                 try {
                     gameServer.start();
                 } catch (Exception ex) {

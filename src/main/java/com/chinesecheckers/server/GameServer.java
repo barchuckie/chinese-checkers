@@ -2,11 +2,10 @@ package com.chinesecheckers.server;
 
 import com.chinesecheckers.server.game.Game;
 import com.chinesecheckers.server.game.GameData;
-import com.chinesecheckers.server.game.StandardGame;
+import com.chinesecheckers.server.game.GameMode;
+import com.chinesecheckers.server.game.StandardGame.StandardGame;
 
-import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.util.ArrayList;
 
 public class GameServer {
 
@@ -14,11 +13,11 @@ public class GameServer {
     private Player [] players;
     private int numOfPlayers;
     private int numOfBots;
-    private GameModeEnum gameMode;
+    private GameMode gameMode;
     private Game game;
     private GameData data;
 
-    public GameServer(int numOfPlayers, int numOfBots, GameModeEnum gameMode) {
+    public GameServer(int numOfPlayers, int numOfBots, GameMode gameMode) {
         this.numOfPlayers = numOfPlayers;
         this.numOfBots = numOfBots;
         this.gameMode = gameMode;
@@ -43,52 +42,58 @@ public class GameServer {
 
         /* Create new game */
         data = new GameData(numOfPlayers, players);
-        game = new StandardGame(data);
+        game = gameMode.generateGame(data);
         sendToEveryone("GAME " + gameMode.toString() + " " + numOfPlayers);
 
         /* Lead the game */
         int currentPlayer;
-        boolean playing = true;
+        boolean blockFurtherMove = false;
         while(true) {
             currentPlayer = game.getCurrentPlayer();
             players[currentPlayer].sendMessage("YOURMOVE");
             String [] msg = players[currentPlayer].read();
             System.out.print("Otrzymano: ");
-            for(String czesc : msg) System.out.print(czesc + " ");
+            for(String part : msg) System.out.print(part + " ");
             System.out.println();
-            // MOVE oldX oldY newX newY
+
+            // MOVE originalX originalY newX newY
             if ("MOVE".equals(msg[0])) {
-                System.out.println("Wybrano: MOVE");
-                if(Integer.parseInt(msg[1]) != Integer.parseInt(msg[3]) ||      // ignore if position has not changed
-                        Integer.parseInt(msg[2]) != Integer.parseInt(msg[4])) {
-
-                    game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
-                            Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
-
-                    // PLAYER_MOVED playerNick oldX oldY newX newY
+                int originalX = Integer.parseInt(msg[1]);
+                int originalY = Integer.parseInt(msg[2]);
+                int newX = Integer.parseInt(msg[3]);
+                int newY = Integer.parseInt(msg[4]);
+                if(originalX != newX || originalY != newY) { // ignore if position has not changed
+                    // PLAYER_MOVED playerNick originalX originalY newX newY
                     sendPlayerMovedMsg("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
-                            Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
-                            Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ", players[currentPlayer]);
+                            originalX + " " + originalY + " " + newX + " " + newY + " ", players[currentPlayer]);
                     if(game.checkWinner(currentPlayer)) {
                         sendToEveryone("VICTORY " + players[currentPlayer].getNick());
                     }
+                    blockFurtherMove = false;
                     game.nextTurn();
                 }
             } else if ("CHECK".equals(msg[0])) {
-                System.out.println("Wybrano: CHECK");
-                if (game.validateMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
-                        Integer.parseInt(msg[3]), Integer.parseInt(msg[4]))) {
-                    System.out.println("Ruch poprawny");
-                    players[currentPlayer].sendMessage("ACCEPT " + Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) +
-                            " " + Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]));
+                int oldX = Integer.parseInt(msg[1]);
+                int oldY = Integer.parseInt(msg[2]);
+                int newX = Integer.parseInt(msg[3]);
+                int newY = Integer.parseInt(msg[4]);
+                if (game.validateMove(players[currentPlayer], oldX, oldY, newX, newY)) {
+                    if(!blockFurtherMove) {
+                        if(isSimpleMove(oldX, oldY, newX, newY)) {
+                            blockFurtherMove = true;
+                        }
+                        System.out.println("Ruch poprawny");
+                        game.makeMove(players[currentPlayer], oldX, oldY, newX, newY);
+                        players[currentPlayer].sendMessage("ACCEPT " + oldX + " " + oldY + " " + newX + " " + newY);
+                    } else {
+                        System.out.println("Brak możliwości dalszego ruchu");
+                        players[currentPlayer].sendMessage("DECLINE");
+                    }
                 } else {
                     System.out.println("Ruch NIE poprawny");
                     players[currentPlayer].sendMessage("DECLINE");
                 }
-                System.out.println("Dotarłem za if");
             } else if ("ERROR".equals(msg[0])) {
-                System.out.println("Wybrano: ERROR");
-                //playing = false;
                 sendToEveryone("PLAYERQUIT " + players[currentPlayer].getNick());
                 break;
             }
@@ -106,19 +111,20 @@ public class GameServer {
         }
     }
 
-    private void sendToEveryoneExceptCurrent(String message,Player currentPlayer)
-    {
+    private void sendToEveryoneExceptCurrent(String message,Player currentPlayer) {
         for (Player player : players) {
-            if(!player.equals(currentPlayer))
-            {
+            if(!player.equals(currentPlayer)) {
                 player.sendMessage(message);
             }
         }
     }
 
-    private void sendPlayerMovedMsg(String message,Player currentPlayer)
-    {
+    private void sendPlayerMovedMsg(String message,Player currentPlayer) {
         currentPlayer.sendMessage("ENDMOVE");
         sendToEveryoneExceptCurrent(message,currentPlayer);
+    }
+
+    private boolean isSimpleMove(int oldX, int oldY, int newX, int newY) {
+        return game.getBoard().getFields()[oldX][oldY].isNeighbourWith(game.getBoard().getFields()[newX][newY]);
     }
 }

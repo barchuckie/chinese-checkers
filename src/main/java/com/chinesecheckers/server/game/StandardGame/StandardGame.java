@@ -1,9 +1,11 @@
-package com.chinesecheckers.server.game;
+package com.chinesecheckers.server.game.StandardGame;
 
 import com.chinesecheckers.server.Player;
 import com.chinesecheckers.server.board.BoardGenerator;
 import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.board.StandardBoard.StandardBoardGenerator;
+import com.chinesecheckers.server.game.Game;
+import com.chinesecheckers.server.game.GameData;
 
 import java.util.Random;
 
@@ -21,48 +23,47 @@ public class StandardGame extends Game {
     public boolean validateMove(Player player, int oldX, int oldY, int newX, int newY) {
         System.out.println("Wszedł w validateMove z: " + player.getNick() + " " +
                 oldX + " " + oldY + " " + newX + " " + newY);
-        if(player.equals(players[currentPlayer])) {
-            System.out.println("Dobry gracz rusza");
-            Field [][] fields = board.getFields();
-            System.out.println("Pobrano pola");
-            if((!player.equals(fields[oldX][oldY].getPlayer())) &&
-                    (fields[oldX][oldY].getPlayer() != null)) {
-                // player must play only with its own pawns
-                System.out.println("Gracz rusza nie swój pionek");
-                return false;
-            }
-            System.out.println("Za 1. ifem");
-            if(fields[newX][newY].getPlayer() != null) { // destination field must be empty
-                System.out.println("Pole zajęte");
-                return false;
-            }
 
-            System.out.println("Pobieram sąsiadów (przeszedłem 2. ifa)");
-            Field [] neighbours = fields[oldX][oldY].getNeighbours();
+        if(!player.equals(players[currentPlayer])) {
+            System.out.println("Zły gracz rusza");
+            return false;
+        }
 
-            System.out.println("Sprawdzam sąsiednie pola");
-            for (Field neighbour : neighbours) { // simple move validation
-                if (fields[newX][newY].equals(neighbour)) {
-                    System.out.println("Poprawne pole sasiadujące");
-                    return true;
-                }
+        Field [][] fields = board.getFields();
+
+        if(!player.equals(fields[oldX][oldY].getPlayer())) {
+            // player must play only with its own pawns
+            System.out.println("Gracz rusza nie swój pionek");
+            return false;
+        }
+        if(fields[newX][newY].getPlayer() != null) { // destination field must be empty
+            System.out.println("Pole zajęte");
+            return false;
+        }
+
+        Field [] neighbours = fields[oldX][oldY].getNeighbours();
+
+        for (Field neighbour : neighbours) { // simple move validation
+            if (fields[newX][newY].equals(neighbour)) {
+                System.out.println("Poprawne pole sasiadujące");
+                return true;
             }
+        }
 
-            System.out.println("Pobieram sąsiadów sąsiadów");
-            for(int i = 0; i < neighbours.length; ++i) { // jump move validation
-                if((neighbours[i] != null) &&
-                        (neighbours[i].getPlayer() != null)) {
-                    Field nextField = neighbours[i].getNeighbours()[i];
-                    if(nextField != null) {
-                        if(board.getFields()[newX][newY].equals(nextField)) {
-                            System.out.println("Poprawny skok");
-                            return true;
-                        }
+        for(int i = 0; i < neighbours.length; ++i) { // jump move validation
+            if((neighbours[i] != null) &&
+                    (neighbours[i].getPlayer() != null)) {
+                Field nextField = neighbours[i].getNeighbours()[i];
+                if(nextField != null) {
+                    if(board.getFields()[newX][newY].equals(nextField)) {
+                        System.out.println("Poprawny skok");
+                        return true;
                     }
                 }
             }
         }
 
+        System.out.println("Niepoprawny ruch");
         return false;
     }
 
@@ -134,13 +135,6 @@ public class StandardGame extends Game {
         }
     }
 
-    /*private boolean checkField(Field field, int player) {
-        if(field != null) {
-            return players[player].equals(field.getPlayer());
-        }
-        return true;
-    }*/
-
     private boolean checkArm(int armNumber, int player) {
         Field [][] fields = board.getFields();
         switch (armNumber) {
@@ -183,7 +177,7 @@ public class StandardGame extends Game {
                 return true;
 
             case 3:
-                for(int i = 16; i > 12; ++i) {
+                for(int i = 16; i > 12; --i) {
                     for (Field field : fields[i]) {
                         if(field != null) {
                             if(!players[player].equals(field.getPlayer())) {

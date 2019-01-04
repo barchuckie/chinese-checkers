@@ -3,7 +3,7 @@ import com.chinesecheckers.server.board.Board;
 import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.game.Game;
 import com.chinesecheckers.server.game.GameData;
-import com.chinesecheckers.server.game.StandardGame;
+import com.chinesecheckers.server.game.StandardGame.StandardGame;
 
 import org.junit.Test;
 import org.junit.Assert;
@@ -68,11 +68,18 @@ public class StandardGameTest extends ChineseCheckersTest {
         prepareGame();
         if(currentPlayer == 0) {
             game.makeMove(players[0], 3, 11, 12, 10);
+            game.nextTurn();
             Assert.assertFalse(game.validateMove(players[1], 13, 11, 12, 10));
         } else {
             game.makeMove(players[1], 13, 11, 4, 10);
+            game.nextTurn();
             Assert.assertFalse(game.validateMove(players[0], 3, 11, 4, 10));
         }
+    }
+
+    @Test
+    public void testCheckWinner() {
+        prepareGame();
     }
 
     private void printBoard(Board board, String[] nicks) {

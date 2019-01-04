@@ -1,6 +1,6 @@
 package com.chinesecheckers.client;
 
-public class ClientStart {
+public class ClientRun {
 
     public static void main(String [] args) {
         MainWindow mainWindow = new MainWindow();

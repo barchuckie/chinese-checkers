@@ -6,11 +6,11 @@ import com.chinesecheckers.server.board.Board;
 public abstract class Game {
 
     protected Player[] players;
-    int currentPlayer;
-    int numOfPlayers;
+    protected int currentPlayer;
+    protected int numOfPlayers;
     protected Board board;
 
-    Game(GameData data) {
+    protected Game(GameData data) {
         this.players = data.getPlayers();
         this.numOfPlayers = data.getNumOfPlayers();
     }

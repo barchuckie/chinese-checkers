@@ -1,10 +1,10 @@
 package com.chinesecheckers.server;
 
-public class ServerStart {
+public class ServerRun {
     public static void main(String[] args) {
         try {
-            ServerStartWindow gameServer = new ServerStartWindow();
-            gameServer.start();
+            ServerStartWindow gameServerWindow = new ServerStartWindow();
+            gameServerWindow.start();
         } catch(Exception ex) {
             ex.printStackTrace();
         }

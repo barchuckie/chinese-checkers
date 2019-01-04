@@ -11,4 +11,5 @@ public class StandardBoardGenerator implements BoardGenerator {
     public Board generateBoard(GameData data) {
         return new StandardBoard(data);
     }
+
 }

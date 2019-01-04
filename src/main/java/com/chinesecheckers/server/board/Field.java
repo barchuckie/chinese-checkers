@@ -26,4 +26,12 @@ public class Field {
     public Player getPlayer() {
         return player;
     }
+
+    public boolean isNeighbourWith(Field field) {
+        for (Field neighbour : neighbours) {
+            if(neighbour.equals(field))
+                return true;
+        }
+        return false;
+    }
 }
