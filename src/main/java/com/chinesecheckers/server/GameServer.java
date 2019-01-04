@@ -59,16 +59,21 @@ public class GameServer {
             // MOVE oldX oldY newX newY
             if ("MOVE".equals(msg[0])) {
                 System.out.println("Wybrano: MOVE");
-                game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
-                        Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
+                if(Integer.parseInt(msg[1]) != Integer.parseInt(msg[3]) ||      // ignore if position has not changed
+                        Integer.parseInt(msg[2]) != Integer.parseInt(msg[4])) {
 
-                // PLAYER_MOVED playerNick oldX oldY newX newY
-                sendPlayerMovedMsg("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
-                        Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
-                        Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ", players[currentPlayer]);
-                        /*if(game.checkWinner(currentPlayer)) {
-                            sendToEveryone("VICTORY " + players[currentPlayer].getNick());
-                        }*/
+                    game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
+                            Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
+
+                    // PLAYER_MOVED playerNick oldX oldY newX newY
+                    sendPlayerMovedMsg("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
+                            Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
+                            Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ", players[currentPlayer]);
+                    if(game.checkWinner(currentPlayer)) {
+                        sendToEveryone("VICTORY " + players[currentPlayer].getNick());
+                    }
+                    game.nextTurn();
+                }
             } else if ("CHECK".equals(msg[0])) {
                 System.out.println("Wybrano: CHECK");
                 if (game.validateMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
@@ -87,37 +92,6 @@ public class GameServer {
                 sendToEveryone("PLAYERQUIT " + players[currentPlayer].getNick());
                 break;
             }
-            /*switch (msg[0]) {
-                case "MOVE": // MOVE oldX oldY newX newY
-                    System.out.println("Wybrano: MOVE");
-                    game.makeMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
-                            Integer.parseInt(msg[3]), Integer.parseInt(msg[4]));
-
-                    // PLAYER_MOVED playerNick oldX oldY newX newY
-                    sendToEveryoneExceptCurrent("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
-                            Integer.parseInt(msg[1]) + " " + Integer.parseInt(msg[2]) + " " +
-                            Integer.parseInt(msg[3]) + " " + Integer.parseInt(msg[4]) + " ",players[currentPlayer]);
-                        /*if(game.checkWinner(currentPlayer)) {
-                            sendToEveryone("VICTORY " + players[currentPlayer].getNick());
-                        }
-
-                case "CHECK":  CHECK oldX oldY newX newY
-                    System.out.println("Wybrano: CHECK");
-                    if (game.validateMove(players[currentPlayer], Integer.parseInt(msg[1]), Integer.parseInt(msg[2]),
-                            Integer.parseInt(msg[3]), Integer.parseInt(msg[4]))) {
-                        System.out.println("Ruch poprawny");
-                        players[currentPlayer].sendMessage("ACCEPT "+Integer.parseInt(msg[1]) +" "+ Integer.parseInt(msg[2])+
-                                " "+Integer.parseInt(msg[3]) +" "+ Integer.parseInt(msg[4]));
-                    } else {
-                        System.out.println("Ruch NIE poprawny");
-                        players[currentPlayer].sendMessage("DECLINE");
-                    }
-
-                case "ERROR":
-                    System.out.println("Wybrano: ERROR");
-                    playing = false;
-                    sendToEveryone("PLAYERQUIT " + players[currentPlayer].getNick());
-            }*/
         }
         listener.close();
     }
