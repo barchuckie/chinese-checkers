@@ -1,6 +1,5 @@
 package com.chinesecheckers.client.Board;
 
-import com.chinesecheckers.client.Circle;
 import com.chinesecheckers.client.Field;
 
 public abstract class Board {

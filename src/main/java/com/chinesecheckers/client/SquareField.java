@@ -2,18 +2,17 @@ package com.chinesecheckers.client;
 
 import java.awt.*;
 
-public class CircleField extends Circle implements Field {
+public class SquareField extends Square implements Field {
 
-    public CircleField(double x, double y, double r, int player)
+    public SquareField(double x, double y, double r, int player)
     {
         super(x,y,r,player);
     }
 
-    public CircleField(double x, double y, double r)
+    public SquareField(double x, double y, double r)
     {
         super(x,y,r);
     }
-
     public int getPlayer()
     {
         return player;
@@ -24,6 +23,7 @@ public class CircleField extends Circle implements Field {
         this.player = player;
     }
 
+    @Override
     public boolean doesContain(Point p)
     {
         return contains(p);

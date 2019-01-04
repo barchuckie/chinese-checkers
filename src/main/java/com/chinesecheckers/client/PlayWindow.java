@@ -64,22 +64,30 @@ public class PlayWindow {
 
     private void goToGame(int players,String gameMode)
     {
-        if(gameMode.equals("STANDARD"))
-        {
-            goToStandardGame(players);
-        }
-    }
-
-    private void goToStandardGame(int players)
-    {
         BoardFactory hexBoardFactory= new HexBoardFactory();
         standardBoard = hexBoardFactory.getBoard(players,gameMode);
-        panel = new CircleGraphicPanel(standardBoard, writer);
+        PanelFactory panelFactory = new PanelFactory();
+        panel = panelFactory.getPanel(gameMode,standardBoard,writer);
+        //panel = new CircleGraphicPanel(standardBoard, writer);
         frame.getContentPane().add(BorderLayout.CENTER, panel);
         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
         frame.repaint();
         frame.validate();
     }
+    /*
+    private void goToStandardGame(int players,String gamemode)
+    {
+        BoardFactory hexBoardFactory= new HexBoardFactory();
+        standardBoard = hexBoardFactory.getBoard(players,gameMode);
+        PanelFactory panelFactory = new PanelFactory();
+        panel = panelFactory.getPanel(gameMode,standardBoard,writer);
+        //panel = new CircleGraphicPanel(standardBoard, writer);
+        frame.getContentPane().add(BorderLayout.CENTER, panel);
+        frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
+        frame.repaint();
+        frame.validate();
+    }
+    */
 
     public class statementReceiver implements Runnable {
         public void run()
@@ -104,7 +112,8 @@ public class PlayWindow {
                                 standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].getPlayer());
                         standardBoard.getFields()[Integer.parseInt(x[1])][Integer.parseInt(x[2])].setPlayer(0);
                         //setActive();
-                        panel.setActive(standardBoard.getFields()[Integer.parseInt(x[3])][Integer.parseInt(x[4])]);
+                        panel.getMyMouseAdapter().setActiveField(Integer.parseInt(x[3]),Integer.parseInt(x[4]));
+
                         panel.repaint();
                         panel.validate();
                     }
@@ -116,33 +125,41 @@ public class PlayWindow {
                     }
                     else if(x[0].startsWith("YOURMOVE"))
                     {
-                        panel.setMyTurn();
+                        panel.setMyTurn(true);
                         //frame.setTitle("TWOJA TURA - KOLOR: "+PlayerColor.getColor(playerID));
                         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TWOJA TURA");
                     }
                     else if(x[0].startsWith("ENDMOVE"))
                     {
-                        panel.setNotMyTurn();
+                        panel.setMyTurn(false);
                         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
                     }
                     else if(x[0].startsWith("PLAYERQUIT"))
                     {
                         String uciekinier = x[1];
                         System.out.println("Gracz "+uciekinier + " wyszedł " + "koniec gry");
+                        frame.setTitle("Gracz "+uciekinier + " wyszedł " + "koniec gry");
+                        closeStreams();
+                        break;
                         //TU KONIEC GRY
                     }
                     else if(x[0].startsWith("VICTORY"))
                     {
                         String zwyciezca = x[1];
                         System.out.println("Gracz "+zwyciezca + "wyszedł" + "koniec gry");
+                        frame.setTitle("Gracz "+zwyciezca + " wyszedł " + "koniec gry");
+                        closeStreams();
+                        break;
                         //TU KONIEC GRY
                     }
                     else if(x[0].startsWith("GAME"))
                     {
                         int players=Integer.parseInt(x[2]);
                         gameMode =x[1];
+                        gameMode ="sfd";
                         System.out.println("Liczba graczy "+players);
                         goToGame(players, gameMode);
+                        panel.setPlayerID(playerID);
                         sleep(500);
                     }
                     else if(x[0].startsWith("YOURID"))
@@ -150,6 +167,8 @@ public class PlayWindow {
                         playerID = Integer.parseInt(x[1]);
                     }
                 }
+                socket.close();
+
             }
             catch (Exception ex)
             {
@@ -157,6 +176,10 @@ public class PlayWindow {
             }
 
         }
-
+        public void closeStreams() throws IOException
+        {
+            reader.close();
+            writer.close();
+        }
     }
 }

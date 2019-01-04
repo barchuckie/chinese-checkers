@@ -7,18 +7,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.PrintWriter;
 
-//TODO Wyróżnienie przy decline, kiedy pierwszy ruch(można zmienić piona) a kiedy już kolejny(nie można zmienić piona)
-//miejsce z ktorego zaczynalem
-//i bez poruszania
-
-public class CircleGraphicPanel extends AbstractGraphicPanel {
-    private CircleField[][] fields;
+public class SquareGraphicPanel extends AbstractGraphicPanel {
+    private SquareField[][] fields;
     MyMouseAdapter mouseAdapter;
 
-    public CircleGraphicPanel(Board board, PrintWriter p)
+    public SquareGraphicPanel(Board board, PrintWriter p)
     {
         super(p,board);
-        fields = (CircleField[][]) board.getFields();
+        fields = (SquareField[][]) board.getFields();
         mouseAdapter = new MyMouseAdapter(fields,this);
         this.addMouseListener(mouseAdapter);
     }
