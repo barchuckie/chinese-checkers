@@ -26,13 +26,16 @@ public abstract class Game {
     }
 
     public void makeMove(Player player, int oldX, int oldY, int newX, int newY) {
+        board.getFields()[oldX][oldY].setPlayer(null);
+        board.getFields()[newX][newY].setPlayer(player);
+    }
+
+    public void nextTurn() {
         if(currentPlayer < numOfPlayers-1) {
             currentPlayer++;
         } else {
             currentPlayer = 0;
         }
-        board.getFields()[oldX][oldY].setPlayer(null);
-        board.getFields()[newX][newY].setPlayer(player);
     }
 
     public abstract boolean checkWinner(int currentPlayer);

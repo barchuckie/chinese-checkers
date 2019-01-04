@@ -25,7 +25,9 @@ public class StandardGame extends Game {
             System.out.println("Dobry gracz rusza");
             Field [][] fields = board.getFields();
             System.out.println("Pobrano pola");
-            if(!player.equals(fields[oldX][oldY].getPlayer())) { // player must play only with its own pawns
+            if((!player.equals(fields[oldX][oldY].getPlayer())) &&
+                    (fields[oldX][oldY].getPlayer() != null)) {
+                // player must play only with its own pawns
                 System.out.println("Gracz rusza nie swój pionek");
                 return false;
             }
@@ -65,171 +67,65 @@ public class StandardGame extends Game {
     }
 
     @Override
-    public boolean checkWinner(int currentPlayer) {
-        Field [][] fields = board.getFields();
+    public boolean checkWinner(int player) {
         switch (numOfPlayers) {
             case 2:
-                if(currentPlayer == 1) {
-                    for(int i = 0; i < 4; ++i) {
-                        for (Field field : fields[i]) {
-                            if(!checkField(field)) {
-                                return false;
-                            }
-                        }
-                    }
-                    return true;
-                } else if(currentPlayer == 0) {
-                    for(int i = 0; i < 4; ++i) {
-                        for (Field field : fields[16-i]) {
-                            if(!checkField(field)) {
-                                return false;
-                            }
-                        }
-                    }
-                    return true;
+                if(player == 1) {
+                    return checkArm(0, player);
+                } else if(player == 0) {
+                    return checkArm(3, player);
                 }
                 return false;
 
             case 3:
-                switch (currentPlayer) {
+                switch (player) {
                     case 0:
-                        for(int i = 0; i < 4; ++i) {
-                            for (Field field : fields[16-i]) {
-                                if(!checkField(field)) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(3, player);
 
                     case 1:
-                        for(int i = 4; i < 9; ++i) {
-                            for (int j = 0; j < 11 - i; ++j) {
-                                if(!checkField(fields[i][j])) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(5, player);
 
                     case 2:
-                        for(int i = 4; i < 9; ++i) {
-                            for (int j = 0; j < 11 - i; ++j) {
-                                if(!checkField(fields[i][24 - j])) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(1, player);
 
                 }
                 return false;
 
             case 4:
-                switch (currentPlayer) {
+                switch (player) {
                     case 0:
-                        for(int i = 4; i < 9; ++i) {
-                            for (int j = 0; j < 11 - i; ++j) {
-                                if(!checkField(fields[16-i][j])) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(4, player);
 
                     case 1:
-                        for(int i = 4; i < 9; ++i) {
-                            for (int j = 0; j < 11 - i; ++j) {
-                                if(!checkField(fields[i][j])) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(5, player);
 
                     case 2:
-                        for(int i = 4; i < 9; ++i) {
-                            for (int j = 0; j < 11 - i; ++j) {
-                                if(!checkField(fields[i][24 - j])) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(1, player);
 
                     case 3:
-                        for(int i = 4; i < 9; ++i) {
-                            for (int j = 0; j < 11 - i; ++j) {
-                                if(!checkField(fields[16 - i][24 - j])) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(2, player);
                 }
                 return false;
 
             case 6:
-                switch (currentPlayer) {
+                switch (player) {
                     case 0:
-                        for(int i = 0; i < 4; ++i) {
-                            for (Field field : fields[16-i]) {
-                                if(!checkField(field)) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(3, player);
 
                     case 1:
-                        for(int i = 4; i < 9; ++i) {
-                            for (int j = 0; j < 11 - i; ++j) {
-                                if(!checkField(fields[16 - i][j])) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(4, player);
 
                     case 2:
-                        for(int i = 4; i < 9; ++i) {
-                            for (int j = 0; j < 11 - i; ++j) {
-                                if(!checkField(fields[i][j])) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(5, player);
 
                     case 3:
-                        for(int i = 0; i < 4; ++i) {
-                            for(Field field : fields[i]) {
-                                if(!checkField(field)) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(0, player);
 
                     case 4:
-                        for(int i = 4; i < 9; ++i) {
-                            for (int j = 0; j < 11 - i; ++j) {
-                                if(!checkField(fields[i][24 - j])) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(1, player);
 
                     case 5:
-                        for(int i = 4; i < 9; ++i) {
-                            for (int j = 0; j < 11 - i; ++j) {
-                                if(!checkField(fields[16 - i][24 - j])) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
+                        return checkArm(2, player);
                 }
                 return false;
 
@@ -238,10 +134,93 @@ public class StandardGame extends Game {
         }
     }
 
-    private boolean checkField(Field field) {
+    /*private boolean checkField(Field field, int player) {
         if(field != null) {
-            return field.getPlayer().equals(players[currentPlayer]);
+            return players[player].equals(field.getPlayer());
         }
         return true;
+    }*/
+
+    private boolean checkArm(int armNumber, int player) {
+        Field [][] fields = board.getFields();
+        switch (armNumber) {
+            case 0:
+                for(int i = 0; i < 4; ++i) {
+                    for(Field field : fields[i]) {
+                        if(field != null) {
+                            if(!players[player].equals(field.getPlayer())) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+
+            case 1:
+                for(int i = 4; i < 9; ++i) {
+                    for(int j = 0; j < 11-i; ++j) {
+                        Field field = fields[i][24-j];
+                        if(field != null) {
+                            if(!players[player].equals(field.getPlayer())) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+
+            case 2:
+                for(int i = 4; i < 9; ++i) {
+                    for(int j = 0; j < 11-i; ++j) {
+                        Field field = fields[16-i][24-j];
+                        if(field != null) {
+                            if(!players[player].equals(field.getPlayer())) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+
+            case 3:
+                for(int i = 16; i > 12; ++i) {
+                    for (Field field : fields[i]) {
+                        if(field != null) {
+                            if(!players[player].equals(field.getPlayer())) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+
+            case 4:
+                for(int i = 4; i < 9; ++i) {
+                    for(int j = 0; j < 11-i; ++j) {
+                        Field field = fields[16-i][j];
+                        if(field != null) {
+                            if(!players[player].equals(field.getPlayer())) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+
+            case 5:
+                for(int i = 4; i < 9; ++i) {
+                    for(int j = 0; j < 11-i; ++j) {
+                        Field field = fields[i][j];
+                        if(field != null) {
+                            if(!players[player].equals(field.getPlayer())) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+
+                default: return false;
+        }
     }
 }
