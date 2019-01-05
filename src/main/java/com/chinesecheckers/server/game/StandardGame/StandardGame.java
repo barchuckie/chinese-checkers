@@ -11,12 +11,19 @@ import java.util.Random;
 
 public class StandardGame extends Game {
 
+    private Player lastPlayer;
+    int originalX, originalY, defaultX, defaultY;
+
     public StandardGame(GameData data) {
         super(data);
         BoardGenerator generator = new StandardBoardGenerator();
         super.board = generator.generateBoard(data);
         Random rand = new Random();
         currentPlayer = rand.nextInt(numOfPlayers);
+        lastPlayer = null;
+        defaultX = super.board.getFields().length;
+        defaultY = super.board.getFields()[0].length;
+        setOriginalsDefault();
     }
 
     @Override
@@ -43,10 +50,22 @@ public class StandardGame extends Game {
 
         Field [] neighbours = fields[oldX][oldY].getNeighbours();
 
-        for (Field neighbour : neighbours) { // simple move validation
-            if (fields[newX][newY].equals(neighbour)) {
-                System.out.println("Poprawne pole sasiadujące");
-                return true;
+        if(newX == originalX && newY == originalY) {
+            System.out.println("Poprawne cofnięcie z pola sąsiadującego");
+            lastPlayer = null;
+            setOriginalsDefault();
+            return true;
+        }
+
+        if(!player.equals(lastPlayer)) {
+            originalX = oldX;
+            originalY = oldY;
+            for (Field neighbour : neighbours) { // simple move validation
+                if (fields[newX][newY].equals(neighbour)) {
+                    System.out.println("Poprawne pole sasiadujące");
+                    lastPlayer = player;
+                    return true;
+                }
             }
         }
 
@@ -57,6 +76,7 @@ public class StandardGame extends Game {
                 if(nextField != null) {
                     if(board.getFields()[newX][newY].equals(nextField)) {
                         System.out.println("Poprawny skok");
+                        lastPlayer = player;
                         return true;
                     }
                 }
@@ -216,6 +236,11 @@ public class StandardGame extends Game {
 
                 default: return false;
         }
+    }
+
+    private void setOriginalsDefault() {
+        originalX = defaultX;
+        originalY = defaultY;
     }
 
 }

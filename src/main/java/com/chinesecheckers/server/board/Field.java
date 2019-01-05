@@ -29,7 +29,7 @@ public class Field {
 
     public boolean isNeighbourWith(Field field) {
         for (Field neighbour : neighbours) {
-            if(neighbour.equals(field))
+            if(neighbour != null && neighbour.equals(field))
                 return true;
         }
         return false;

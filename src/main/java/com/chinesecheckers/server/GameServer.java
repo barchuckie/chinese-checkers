@@ -47,7 +47,6 @@ public class GameServer {
 
         /* Lead the game */
         int currentPlayer;
-        boolean blockFurtherMove = false;
         while(true) {
             currentPlayer = game.getCurrentPlayer();
             players[currentPlayer].sendMessage("YOURMOVE");
@@ -69,7 +68,6 @@ public class GameServer {
                     if(game.checkWinner(currentPlayer)) {
                         sendToEveryone("VICTORY " + players[currentPlayer].getNick());
                     }
-                    blockFurtherMove = false;
                     game.nextTurn();
                 }
             } else if ("CHECK".equals(msg[0])) {
@@ -78,17 +76,9 @@ public class GameServer {
                 int newX = Integer.parseInt(msg[3]);
                 int newY = Integer.parseInt(msg[4]);
                 if (game.validateMove(players[currentPlayer], oldX, oldY, newX, newY)) {
-                    if(!blockFurtherMove) {
-                        if(isSimpleMove(oldX, oldY, newX, newY)) {
-                            blockFurtherMove = true;
-                        }
-                        System.out.println("Ruch poprawny");
-                        game.makeMove(players[currentPlayer], oldX, oldY, newX, newY);
-                        players[currentPlayer].sendMessage("ACCEPT " + oldX + " " + oldY + " " + newX + " " + newY);
-                    } else {
-                        System.out.println("Brak możliwości dalszego ruchu");
-                        players[currentPlayer].sendMessage("DECLINE");
-                    }
+                    System.out.println("Ruch poprawny");
+                    game.makeMove(players[currentPlayer], oldX, oldY, newX, newY);
+                    players[currentPlayer].sendMessage("ACCEPT " + oldX + " " + oldY + " " + newX + " " + newY);
                 } else {
                     System.out.println("Ruch NIE poprawny");
                     players[currentPlayer].sendMessage("DECLINE");
@@ -124,7 +114,4 @@ public class GameServer {
         sendToEveryoneExceptCurrent(message,currentPlayer);
     }
 
-    private boolean isSimpleMove(int oldX, int oldY, int newX, int newY) {
-        return game.getBoard().getFields()[oldX][oldY].isNeighbourWith(game.getBoard().getFields()[newX][newY]);
-    }
 }

@@ -2,8 +2,6 @@ package com.chinesecheckers.client;
 
 import java.io.IOException;
 
-import static java.lang.Thread.sleep;
-
 public interface GameClient {
 
     default void runClient() {
