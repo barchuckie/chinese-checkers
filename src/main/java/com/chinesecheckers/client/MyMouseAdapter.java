@@ -35,7 +35,7 @@ public class MyMouseAdapter extends MouseAdapter {
                     {
                         if (clickedField == active)
                         {
-                            window.sendPassMessage();
+                            window.sendPassMessage(originalX,originalY,activeX,activeY);
                             window.onPassMessage();
                             if(clickedField != originalField)
                             {

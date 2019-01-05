@@ -168,8 +168,8 @@ public class PlayWindow implements GameClient {
     }
 
     @Override
-    public void sendPassMessage() {
-        writer.println("PASS");
+    public void sendPassMessage(int originalX,int originalY,int newX,int newY) {
+        writer.println("PASS " + + originalX + " " + originalY + " " + newX + " " + newY);
         System.out.println("PASS");
     }
 

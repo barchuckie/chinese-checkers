@@ -70,7 +70,7 @@ public interface GameClient {
 
     void sendMoveMessage(int originalX, int originalY, int newX, int newY);
 
-    void sendPassMessage();
+    void sendPassMessage(int originalX,int originalY,int newX,int newY);
 
     String getMessage() throws IOException;
 }

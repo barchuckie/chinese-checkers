@@ -91,6 +91,11 @@ public class GameServer {
                     players[currentPlayer].sendMessage("DECLINE");
                 }
             } else if ("PASS".equals(msg[0])) {
+                int originalX = Integer.parseInt(msg[1]);
+                int originalY = Integer.parseInt(msg[2]);
+                int newX = Integer.parseInt(msg[3]);
+                int newY = Integer.parseInt(msg[4]);
+                game.makeMove(players[currentPlayer],newX,newY,originalX,originalY);
                 game.nextTurn();
             } else if ("ERROR".equals(msg[0])) {
                 sendToEveryone("PLAYERQUIT " + players[currentPlayer].getNick());
