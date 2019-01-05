@@ -9,7 +9,7 @@ public class MyMouseAdapter extends MouseAdapter {
     private PlayWindow window;
     private int clickedX, clickedY, originalX, originalY,activeX,activeY;
     private boolean pawnChosen;
-    private Field active;
+    private Field active,originalField;
 
     public MyMouseAdapter(Field[][] fields, PlayWindow window)
     {
@@ -18,40 +18,61 @@ public class MyMouseAdapter extends MouseAdapter {
     }
 
     public void mousePressed(MouseEvent e) {
-        if(window.isMyTurn() && (getClickedField(e) != null))
+        boolean leftClick=(e.getButton() == 1);
+        boolean rightClick=(e.getButton() == 3);
+        Field clickedField = getClickedField(e);
+        if(window.isMyTurn() && clickedField!=null)
         {
             //LPM
-            if(e.getButton() == 1)
+            if(leftClick)
             {
-                if(active != null) // gdy mamy już jakis wybrany
+                boolean doubleClick=e.getClickCount()==2;
+                if(doubleClick)
                 {
-                    if (getClickedField(e) != active && getClickedField(e) != null)
+                    //żeby pominac najpierw musisz wybrać piona, pozniej robisz ruchy(lub nie) i podwojnym kliknieciem
+                    //pomijasz ture(Twoje poprzednie ruchy jeśli je zrobiłes nie maja żadnego wplywu na rozgrywke)
+                    if(pawnChosen)
+                    {
+                        if (clickedField == active)
+                        {
+                            window.sendPassMessage();
+                            window.onPassMessage();
+                            if(clickedField != originalField)
+                            {
+                                fields[originalX][originalY].setPlayer(fields[activeX][activeY].getPlayer());
+                                fields[activeX][activeY].setPlayer(0);
+                            }
+                            disactive();
+                            window.getPanel().repaint();
+                        }
+                    }
+                }
+                else if(active != null) // gdy mamy już jakis wybrany
+                {
+                    if (clickedField != active)
                     {
                         window.sendCheckMessage(activeX, activeY, clickedX, clickedY);
                     }
                 }
             }
             //PPM
-            else if(e.getButton() == 3)
+            else if(rightClick)
             {
                 //pierwszy klik prawy
                 if(!pawnChosen)
                 {
-                    Field field = getClickedField(e);
-                    assert field != null;
-                    if(field.getPlayer() == window.getPlayerID()) //jesli moj pion
+                    if(clickedField.getPlayer() == window.getPlayerID()) //jesli moj pion
                     {
                         pawnChosen=true;
                         setActiveField(clickedX,clickedY);
-                        setOriginalParam(clickedX,clickedY);
+                        setOriginalField(clickedX,clickedY);
                         window.getPanel().repaint();
                     }
                 }
                 //drugi klik prawy
                 else
                 {
-                    Field field = getClickedField(e);
-                    if(active.equals(field))
+                    if(active.equals(clickedField))
                     {
                         System.out.println("KONIEC RUCHU");
                         window.sendMoveMessage(originalX, originalY, clickedX, clickedY);
@@ -88,8 +109,9 @@ public class MyMouseAdapter extends MouseAdapter {
         pawnChosen=false;
     }
 
-    private void setOriginalParam(int x ,int y)
+    private void setOriginalField(int x , int y)
     {
+        originalField = fields[x][y];
         originalX=x;
         originalY=y;
     }

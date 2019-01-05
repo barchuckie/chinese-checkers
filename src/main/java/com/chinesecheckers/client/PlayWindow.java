@@ -204,6 +204,12 @@ public class PlayWindow implements GameClient {
         return panel;
     }
 
+    // to samo co w endmove ale nwm czy zadziała to zrobiłem oddzielna funckje
+    public void onPassMessage()
+    {
+        setMyTurn(false);
+        frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
+    }
     /*
     private void goToStandardGame(int players,String gamemode)
     {
