@@ -1,9 +1,13 @@
 import com.chinesecheckers.server.Player;
+import com.chinesecheckers.server.board.Board;
+import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.game.GameData;
 
 class ChineseCheckersTest {
 
-    GameData createDummy2PlayerGameData(String[] nicks) {
+    private String[] nicks = { "pat", "mat", "sat", "war", "jar", "fer" };
+
+    GameData createDummy2PlayerGameData() {
         int numOfPlayers = 2;
         Player player1 = new Player(nicks[0]);
         Player player2 = new Player(nicks[1]);
@@ -13,7 +17,7 @@ class ChineseCheckersTest {
         return new GameData(numOfPlayers, players);
     }
 
-    GameData createDummy3PlayerGameData(String[] nicks) {
+    GameData createDummy3PlayerGameData() {
         int numOfPlayers = 3;
         Player player1 = new Player(nicks[0]);
         Player player2 = new Player(nicks[1]);
@@ -24,7 +28,7 @@ class ChineseCheckersTest {
         return new GameData(numOfPlayers, players);
     }
 
-    GameData createDummy4PlayerGameData(String[] nicks) {
+    GameData createDummy4PlayerGameData() {
         int numOfPlayers = 4;
         Player player1 = new Player(nicks[0]);
         Player player2 = new Player(nicks[1]);
@@ -36,7 +40,7 @@ class ChineseCheckersTest {
         return new GameData(numOfPlayers, players);
     }
 
-    GameData createDummy6PlayerGameData(String[] nicks) {
+    GameData createDummy6PlayerGameData() {
         int numOfPlayers = 6;
         Player player1 = new Player(nicks[0]);
         Player player2 = new Player(nicks[1]);
@@ -48,5 +52,35 @@ class ChineseCheckersTest {
         Player[] players = { player1, player2, player3, player4, player5, player6 };
 
         return new GameData(numOfPlayers, players);
+    }
+
+    void printBoard(Board board) {
+
+        Field[][] fields = board.getFields();
+
+        for (Field[] field1 : fields) {
+            for (Field field : field1) {
+                if (field != null) {
+                    if (field.getPlayer() == null) {
+                        System.out.print('*');
+                    } else if (field.getPlayer().getNick().equals(nicks[0])) {
+                        System.out.print('P');
+                    } else if (field.getPlayer().getNick().equals(nicks[1])) {
+                        System.out.print('M');
+                    } else if (field.getPlayer().getNick().equals(nicks[2])) {
+                        System.out.print('S');
+                    } else if (field.getPlayer().getNick().equals(nicks[3])) {
+                        System.out.print('W');
+                    } else if (field.getPlayer().getNick().equals(nicks[4])) {
+                        System.out.print('J');
+                    } else if (field.getPlayer().getNick().equals(nicks[5])) {
+                        System.out.print('F');
+                    }
+                } else {
+                    System.out.print(' ');
+                }
+            }
+            System.out.println();
+        }
     }
 }

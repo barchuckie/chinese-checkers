@@ -16,7 +16,7 @@ import static java.lang.Thread.sleep;
 
 public class PlayWindow implements GameClient {
     private JFrame frame;
-    AbstractGraphicPanel panel;
+    private AbstractGraphicPanel panel;
     private Board standardBoard;
     private Socket socket;
     private BufferedReader reader;
@@ -24,9 +24,10 @@ public class PlayWindow implements GameClient {
     private String nick;
     private String gameMode;
     private int playerID;
+    private boolean myTurn = false;
 
     public PlayWindow(String nick) {
-        this.nick=nick;
+        this.nick = nick;
         try {
             sleep(10);
             configureCommunication();
@@ -52,8 +53,7 @@ public class PlayWindow implements GameClient {
             InputStreamReader StreamReader = new InputStreamReader(socket.getInputStream());
             reader = new BufferedReader(StreamReader);
             writer = new PrintWriter(socket.getOutputStream(),true);
-            writer.println("NICK " + nick);
-            System.out.println("NICK" + nick);
+            sendNickMessage(nick);
         } catch(IOException ex) {
             ex.printStackTrace();
         }
@@ -61,9 +61,9 @@ public class PlayWindow implements GameClient {
 
     private void goToGame(int players,String gameMode) {
         BoardFactory hexBoardFactory= new HexBoardFactory();
-        standardBoard = hexBoardFactory.getBoard(players,gameMode);
+        standardBoard = hexBoardFactory.getBoard(players, gameMode);
         PanelFactory panelFactory = new PanelFactory();
-        panel = panelFactory.getPanel(gameMode,standardBoard,writer);
+        panel = panelFactory.getPanel(gameMode, standardBoard, this);
         //panel = new CircleGraphicPanel(standardBoard, writer);
         frame.getContentPane().add(BorderLayout.CENTER, panel);
         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
@@ -99,14 +99,14 @@ public class PlayWindow implements GameClient {
 
     @Override
     public void onYourMove() {
-        panel.setMyTurn(true);
+        setMyTurn(true);
         //frame.setTitle("TWOJA TURA - KOLOR: "+PlayerColor.getColor(playerID));
         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TWOJA TURA");
     }
 
     @Override
     public void onEndMove() {
-        panel.setMyTurn(false);
+        setMyTurn(false);
         frame.setTitle(nick+"|"+PlayerColor.getColorName(playerID)+"|TURA PRZECIWNIKA");
     }
 
@@ -128,7 +128,6 @@ public class PlayWindow implements GameClient {
     public void onGame(String gameMode, int numOfPLayers) {
         System.out.println("Liczba graczy " + numOfPLayers);
         goToGame(numOfPLayers, gameMode);
-        panel.setPlayerID(playerID);
         try {
             sleep(500);
         } catch (InterruptedException e) {
@@ -151,17 +150,58 @@ public class PlayWindow implements GameClient {
     }
 
     @Override
+    public void sendNickMessage(String nick) {
+        writer.println("NICK " + nick);
+        System.out.println("NICK " + nick);
+    }
+
+    @Override
+    public void sendCheckMessage(int oldX, int oldY, int newX, int newY) {
+        writer.println("CHECK " + oldX + " " + oldY + " " + newX + " " + newY);
+        System.out.println("sentMSG CHECK " + oldX + " " + oldY + " " + newX + " " + newY);
+    }
+
+    @Override
+    public void sendMoveMessage(int originalX, int originalY, int newX, int newY) {
+        writer.println("MOVE " + originalX + " " + originalY + " " + newX + " " + newY);
+        System.out.println("sentMSG MOVE " + originalX + " " + originalY + " " + newX + " " + newY);
+    }
+
+    @Override
+    public void sendPassMessage() {
+        writer.println("PASS");
+        System.out.println("PASS");
+    }
+
+    @Override
     public String getMessage() throws IOException {
         return reader.readLine();
     }
 
-    public void closeStreams() {
+    private void closeStreams() {
         try {
             reader.close();
             writer.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void setMyTurn(boolean t) {
+        myTurn = t;
+        System.out.println("Zmiana " + myTurn);
+    }
+
+    public boolean isMyTurn() {
+        return myTurn;
+    }
+
+    public int getPlayerID() {
+        return playerID;
+    }
+
+    public AbstractGraphicPanel getPanel() {
+        return panel;
     }
 
     /*
@@ -185,6 +225,7 @@ public class PlayWindow implements GameClient {
         public void run() {
             runClient();
         }
+
     }
 }
 

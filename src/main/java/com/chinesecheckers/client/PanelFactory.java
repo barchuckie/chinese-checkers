@@ -6,15 +6,11 @@ import java.io.PrintWriter;
 
 public class PanelFactory {
 
-    public AbstractGraphicPanel getPanel (String gameMode, Board board, PrintWriter writer)
-    {
-        if(gameMode.equals("STANDARD"))
-        {
-            return new CircleGraphicPanel(board,writer);
-        }
-        else
-        {
-            return new SquareGraphicPanel(board,writer);
+    public AbstractGraphicPanel getPanel (String gameMode, Board board, PlayWindow window) {
+        if(gameMode.equals("STANDARD")) {
+            return new CircleGraphicPanel(board, window);
+        } else {
+            return new SquareGraphicPanel(board, window);
         }
     }
 }

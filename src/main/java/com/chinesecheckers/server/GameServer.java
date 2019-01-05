@@ -30,7 +30,7 @@ public class GameServer {
         players = new Player[numOfPlayers];
         for(int i = 0; i < numOfPlayers; ++i) {
             players[i] = new Player(listener.accept());
-            System.out.println("listener accepted");
+            System.out.println("Listener #" + i + " accepted");
             String [] nickMsg = players[i].read();
             if(!nickMsg[0].equals("NICK") || nickMsg.length < 2) {
                 i--;
@@ -49,6 +49,10 @@ public class GameServer {
         int currentPlayer;
         while(true) {
             currentPlayer = game.getCurrentPlayer();
+            if(players[currentPlayer].isFinished()) {
+                game.nextTurn();
+                continue;
+            }
             players[currentPlayer].sendMessage("YOURMOVE");
             String [] msg = players[currentPlayer].read();
             System.out.print("Otrzymano: ");
@@ -61,12 +65,14 @@ public class GameServer {
                 int originalY = Integer.parseInt(msg[2]);
                 int newX = Integer.parseInt(msg[3]);
                 int newY = Integer.parseInt(msg[4]);
-                if(originalX != newX || originalY != newY) { // ignore if position has not changed
+
+                if (originalX != newX || originalY != newY) { // ignore if position has not changed
                     // PLAYER_MOVED playerNick originalX originalY newX newY
                     sendPlayerMovedMsg("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
                             originalX + " " + originalY + " " + newX + " " + newY + " ", players[currentPlayer]);
                     if(game.checkWinner(currentPlayer)) {
                         sendToEveryone("VICTORY " + players[currentPlayer].getNick());
+                        players[currentPlayer].setFinished(true);
                     }
                     game.nextTurn();
                 }
@@ -75,6 +81,7 @@ public class GameServer {
                 int oldY = Integer.parseInt(msg[2]);
                 int newX = Integer.parseInt(msg[3]);
                 int newY = Integer.parseInt(msg[4]);
+
                 if (game.validateMove(players[currentPlayer], oldX, oldY, newX, newY)) {
                     System.out.println("Ruch poprawny");
                     game.makeMove(players[currentPlayer], oldX, oldY, newX, newY);
@@ -83,6 +90,8 @@ public class GameServer {
                     System.out.println("Ruch NIE poprawny");
                     players[currentPlayer].sendMessage("DECLINE");
                 }
+            } else if ("PASS".equals(msg[0])) {
+                game.nextTurn();
             } else if ("ERROR".equals(msg[0])) {
                 sendToEveryone("PLAYERQUIT " + players[currentPlayer].getNick());
                 break;

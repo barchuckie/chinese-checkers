@@ -11,9 +11,11 @@ public class Player {
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
+    private boolean finished;
 
     public Player(Socket socket) {
         this.socket = socket;
+        finished = false;
         try {
             input = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
@@ -26,6 +28,7 @@ public class Player {
     public Player(String nick, Socket socket) {
         this.nick = nick;
         this.socket = socket;
+        finished = false;
         try {
             input = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
@@ -37,6 +40,7 @@ public class Player {
 
     public Player(String nick) {
         this.nick = nick;
+        finished = false;
     }
 
     public String getNick() {
@@ -60,4 +64,13 @@ public class Player {
     public void sendMessage(String message) {
         output.println(message);
     }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
 }

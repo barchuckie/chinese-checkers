@@ -13,13 +13,13 @@ import java.io.PrintWriter;
 
 public class CircleGraphicPanel extends AbstractGraphicPanel {
     private CircleField[][] fields;
-    MyMouseAdapter mouseAdapter;
+    private MyMouseAdapter mouseAdapter;
 
-    public CircleGraphicPanel(Board board, PrintWriter p)
+    public CircleGraphicPanel(Board board, PlayWindow window)
     {
-        super(p,board);
+        super(board);
         fields = (CircleField[][]) board.getFields();
-        mouseAdapter = new MyMouseAdapter(fields,this);
+        mouseAdapter = new MyMouseAdapter(fields, window);
         this.addMouseListener(mouseAdapter);
     }
 

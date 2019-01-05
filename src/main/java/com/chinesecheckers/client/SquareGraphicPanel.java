@@ -6,13 +6,13 @@ import java.io.PrintWriter;
 
 public class SquareGraphicPanel extends AbstractGraphicPanel {
     private SquareField[][] fields;
-    MyMouseAdapter mouseAdapter;
+    private MyMouseAdapter mouseAdapter;
 
-    public SquareGraphicPanel(Board board, PrintWriter p)
+    public SquareGraphicPanel(Board board, PlayWindow window)
     {
-        super(p,board);
+        super(board);
         fields = (SquareField[][]) board.getFields();
-        mouseAdapter = new MyMouseAdapter(fields,this);
+        mouseAdapter = new MyMouseAdapter(fields, window);
         this.addMouseListener(mouseAdapter);
     }
 

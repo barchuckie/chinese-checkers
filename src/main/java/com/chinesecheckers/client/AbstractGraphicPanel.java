@@ -4,34 +4,20 @@ import com.chinesecheckers.client.Board.Board;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.PrintWriter;
 
 // pola planszy implementować Shape
 
 public abstract class AbstractGraphicPanel extends JPanel {
-    Field[][] fields;
-    PrintWriter printWriter;
-    Board board;
-    private int playerID;
-    boolean myTurn=false;
+    private Field[][] fields;
 
     public abstract MyMouseAdapter getMyMouseAdapter();
 
-    public AbstractGraphicPanel(PrintWriter p,Board board)
-    {
-        this.board=board;
+    public AbstractGraphicPanel(Board board) {
         board.addPlayers();
-        printWriter=p;
         fields = board.getFields();
     }
-    void sendMessage(String action, int oldX, int oldY, int newX, int newY)
-    {
-        printWriter.println(action + " " + oldX + " " + oldY + " " + newX + " " + newY);
-        System.out.println("sentMSG " + action + " " + oldX + " " + oldY + " " + newX + " " + newY);
-    }
 
-    public void paintComponent(Graphics g)
-    {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -54,21 +40,5 @@ public abstract class AbstractGraphicPanel extends JPanel {
                 }
             }
         }
-    }
-
-    public void setPlayerID(int id)
-    {
-        playerID=id;
-    }
-
-    public int getPlayerID()
-    {
-        return playerID;
-    }
-
-    public void setMyTurn(boolean t)
-    {
-        myTurn = t;
-        System.out.println("Zmiana"+myTurn);
     }
 }

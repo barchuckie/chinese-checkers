@@ -1,6 +1,4 @@
 import com.chinesecheckers.server.Player;
-import com.chinesecheckers.server.board.Board;
-import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.game.Game;
 import com.chinesecheckers.server.game.GameData;
 import com.chinesecheckers.server.game.StandardGame.StandardGame;
@@ -15,8 +13,7 @@ public class StandardGameTest extends ChineseCheckersTest {
     private Player [] players;
 
     private void prepareGame() {
-        String[] nicks = { "pat", "mat"};
-        GameData data = createDummy2PlayerGameData(nicks);
+        GameData data = createDummy2PlayerGameData();
         players = data.getPlayers();
 
         game = new StandardGame(data);
@@ -80,25 +77,5 @@ public class StandardGameTest extends ChineseCheckersTest {
     @Test
     public void testCheckWinner() {
         prepareGame();
-    }
-
-    private void printBoard(Board board, String[] nicks) {
-        Field [][] fields = board.getFields();
-        for (Field[] field1 : fields) {
-            for (Field field : field1) {
-                if (field != null) {
-                    if (field.getPlayer() == null) {
-                        System.out.print('*');
-                    } else if (field.getPlayer().getNick().equals(nicks[0])) {
-                        System.out.print('P');
-                    } else if (field.getPlayer().getNick().equals(nicks[1])) {
-                        System.out.print('M');
-                    }
-                } else {
-                    System.out.print(' ');
-                }
-            }
-            System.out.println();
-        }
     }
 }

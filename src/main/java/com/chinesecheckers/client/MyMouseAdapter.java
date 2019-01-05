@@ -6,30 +6,28 @@ import java.awt.event.MouseEvent;
 public class MyMouseAdapter extends MouseAdapter {
 
     private Field[][] fields;
-    private AbstractGraphicPanel panel;
+    private PlayWindow window;
     private int clickedX, clickedY, originalX, originalY,activeX,activeY;
     private boolean pawnChosen;
     private Field active;
 
-    public MyMouseAdapter(Field fields[][], AbstractGraphicPanel panel)
+    public MyMouseAdapter(Field[][] fields, PlayWindow window)
     {
         this.fields = fields;
-        this.panel = panel;
+        this.window = window;
     }
 
-    public void mousePressed(MouseEvent e)
-    {
-        if(panel.myTurn && getClickedField(e)!=null)
+    public void mousePressed(MouseEvent e) {
+        if(window.isMyTurn() && (getClickedField(e) != null))
         {
             //LPM
             if(e.getButton() == 1)
             {
-                if(active!=null) // gdy mamy już jakis wybrany
+                if(active != null) // gdy mamy już jakis wybrany
                 {
                     if (getClickedField(e) != active && getClickedField(e) != null)
                     {
-                        Field field = getClickedField(e);
-                        panel.sendMessage("CHECK",activeX,activeY,clickedX,clickedY);
+                        window.sendCheckMessage(activeX, activeY, clickedX, clickedY);
                     }
                 }
             }
@@ -40,24 +38,25 @@ public class MyMouseAdapter extends MouseAdapter {
                 if(!pawnChosen)
                 {
                     Field field = getClickedField(e);
-                    if(field.getPlayer()==panel.getPlayerID()) //jesli moj pion
+                    assert field != null;
+                    if(field.getPlayer() == window.getPlayerID()) //jesli moj pion
                     {
                         pawnChosen=true;
                         setActiveField(clickedX,clickedY);
                         setOriginalParam(clickedX,clickedY);
-                        panel.repaint();
+                        window.getPanel().repaint();
                     }
                 }
                 //drugi klik prawy
                 else
                 {
                     Field field = getClickedField(e);
-                    if(field.equals(active))
+                    if(active.equals(field))
                     {
                         System.out.println("KONIEC RUCHU");
-                        panel.sendMessage("MOVE",originalX,originalY,clickedX,clickedY);
+                        window.sendMoveMessage(originalX, originalY, clickedX, clickedY);
                         disactive();
-                        panel.repaint();
+                        window.getPanel().repaint();
                     }
                 }
             }

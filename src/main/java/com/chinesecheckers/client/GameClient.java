@@ -64,5 +64,13 @@ public interface GameClient {
 
     void onGameOver();
 
+    void sendNickMessage(String nick);
+
+    void sendCheckMessage(int oldX, int oldY, int newX, int newY);
+
+    void sendMoveMessage(int originalX, int originalY, int newX, int newY);
+
+    void sendPassMessage();
+
     String getMessage() throws IOException;
 }
