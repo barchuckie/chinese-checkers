@@ -1,0 +1,64 @@
+@startuml
+
+abstract class BoardFactory
+abstract class Board
+abstract class HexBoard
+class HexBoardFactory
+class HexBoardTwoPlayers
+class HexBoardThreePlayers
+class HexBoardFourPlayers
+class HexBoardSixPlayers
+Board <|--HexBoard
+HexBoard <|--HexBoardTwoPlayers
+HexBoard <|--HexBoardThreePlayers
+HexBoard <|--HexBoardFourPlayers
+HexBoard <|--HexBoardSixPlayers
+BoardFactory <|--HexBoardFactory
+BoardFactory-"<use>"Board
+
+
+class BoardFactory {
+  {abstract} Board createBoard
+  Board getBoard
+}
+class Board
+{
+    Field[][] fields;
+    public Field[][] getFields()
+    {abstract} void fillWithNulls();
+    {abstract} void setup(String gameMode);
+    {abstract} void addPlayers();
+}
+class HexBoard
+{
+    Field field;
+    Field field2;
+    void setup(String type)
+    void fillWithNulls()
+}
+class HexBoardFactory
+{
+    {method}Board createBoard
+}
+class HexBoardFourPlayers
+{
+    public HexBoardFourPlayers()
+    public void addPlayers()
+}
+class HexBoardThreePlayers
+{
+    public HexBoardThreePlayers()
+    public void addPlayers()
+}
+class HexBoardSixPlayers
+{
+    public HexBoardSixPlayers()
+    public void addPlayers()
+}
+class HexBoardTwoPlayers
+{
+    public HexBoardTwoPlayers()
+    public void addPlayers()
+}
+
+@enduml
