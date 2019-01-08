@@ -1,5 +1,156 @@
+Aggregation implies a relationship where the child can exist independently
+of the parent.
+Example: Class (parent) and Student (child).
+Delete the Class and the Students still exist.
+Composition implies a relationship where the child cannot exist independent of the parent.
+Example: House (parent) and Room (child).
+Rooms don't exist separate to a House.
+Kompozycja-całość jest jedynym wlaścicielem częśći ~wykład
 
 @startuml
+package "SERVER"{
+class ServerRun
+class ServerStartWindow
+class GameServer
+class StandardGame
+class StandardGameMode
+class Player
+class FieldS
+abstract class BoardS
+class StandardBoard
+interface BoardGenerator
+class StandardBoardGenerator
+abstract class Game
+interface GameMode
+class GameData
+ServerRun-"starts"ServerStartWindow
+ServerStartWindow--"starts"GameServer
+GameServer o--Game
+GameServer*--GameMode
+GameServer*--GameData
+GameServer*--Player
+Player-*Game
+FieldS-BoardS
+Game<|--StandardGame
+Game--BoardS
+Game--BoardGenerator
+BoardGenerator<|..StandardBoardGenerator
+GameMode<|..StandardGameMode
+BoardS<|--StandardBoard
+BoardS-BoardGenerator
+StandardBoard-StandardBoardGenerator
+
+    class ServerRun
+    {
+    void main()
+    }
+    class ServerStartWindow
+    {
+        void start()
+    }
+    class GameServer
+    {
+            ServerSocket listener;
+             Player [] players;
+             int numOfPlayers;
+             int numOfBots;
+             GameMode gameMode;
+             Game game;
+             GameData data;
+             void createNewGame()
+             void start()
+             void leadGame()
+             void printMessage(String [] msg)
+             void moveHandler(int currentPlayer, String [] msg)
+             void checkHandler(int currentPlayer, String [] msg)
+             void passHandler(int currentPlayer, String [] msg)
+             void errorHandler(int currentPlayer)
+             void connectPlayers()
+             void sendToEveryone(String message)
+             void sendToEveryoneExceptCurrent(String message,Player currentPlayer)
+             sendPlayerMovedMsg(String message,Player currentPlayer)
+    }
+    class Player
+    {
+        String nick;
+        Socket socket;
+        BufferedReader input;
+        PrintWriter output;
+        boolean finished;
+        String getNick()
+
+        void setNick(String nick)
+        void sendMessage(String message)
+        boolean isFinished()
+        void setFinished(boolean finished)
+    }
+    abstract class Game
+    {
+        Player[] players;
+        protected int currentPlayer;
+        protected int numOfPlayers;
+        protected Board board;
+        abstract boolean validateMove(Player player, int oldX, int oldY, int newX, int newY)
+        int getCurrentPlayer()
+        public Board getBoard()
+        public void makeMove(Player player, int oldX, int oldY, int newX, int newY)
+        public void nextTurn() {
+        public abstract boolean checkWinner(int currentPlayer);
+    }
+    class GameData {
+        private final int numOfPlayers;
+        private Player[] players;
+        public GameData(int numOfPlayers, Player [] players)
+        public int getNumOfPlayers()
+        public Player[] getPlayers()
+    }
+    interface GameMode {
+        Game generateGame(GameData data);
+        String getName();
+    }
+    class StandardGameMode {
+        public Game generateGame(GameData data)
+        public String getName()
+    }
+    abstract class BoardS {
+        protected Field[][] fields
+        public Field[][] getFields()
+    }
+    interface BoardGenerator {
+        Board generateBoard(GameData data);
+    }
+    class FieldS {
+        Player player
+        Field [] neighbours = new Field[6]
+        void setNeighbours(Field[] neighbours)
+        void setPlayer(Player player)
+        Field[] getNeighbours()
+        Player getPlayer()
+        }
+    class StandardBoard{
+        private int numOfPlayers
+        private Player[] players
+        private final int ROWS = 17
+        private final int COLUMNS = 25;
+        void setFields()
+        void setFieldsNeighbours()
+        void addPlayers()
+        }
+    class StandardBoardGenerator{
+    public Board generateBoard(GameData data)
+    }
+    class StandardGame{
+     private Player lastPlayer
+     private int originalX, originalY, defaultX, defaultY;
+     boolean validateMove;
+     boolean checkArm;
+     boolean checkWinner;
+     void setOriginalsDefault()
+        }
+
+}
+
+
 package "Client"{
 class ClientRun
 class MainWindow
@@ -10,48 +161,148 @@ abstract class Board
 abstract class AbstractGraphicPanel
 class MyMouseAdapter
 class CircleGraphicPanel
+class PlayerColor
+abstract class Square
+class SquareField
+class SquareGraphicPanel
+abstract class Circle
 
 ClientRun--"starts"MainWindow
-GameClient<|--PlayWindow
+GameClient<|..PlayWindow
 MainWindow--"starts"PlayWindow
-PlayWindow--AbstractGraphicPanel
-PlayWindow--Board
-AbstractGraphicPanel--Field
-AbstractGraphicPanel--MyMouseAdapter
+PlayWindow*--AbstractGraphicPanel
+PlayWindow*--Board
+AbstractGraphicPanel o--Field
+AbstractGraphicPanel *-left-MyMouseAdapter
 AbstractGraphicPanel<|--CircleGraphicPanel
-CircleGraphicPanel--CircleField
-Field<|--CircleField
+CircleGraphicPanel*--CircleField
+Field<|..CircleField
 Circle<|--CircleField
-}
+Board o--Field
+AbstractGraphicPanel<|--SquareGraphicPanel
+Field<|..SquareField
+Square<|--SquareField
 
-package "SERVER"{
-class ServerRun
-class ServerStartWindow
-class GameServer
-class StandardGame
-class StandardGameMode
-class Player
-class BoardS
-class StandardBoard
-interface BoardGenerator
-class StandardBoardGenerator
-abstract class Game
-interface GameMode
-class GameData
-ServerRun--"starts"ServerStartWindow
-ServerStartWindow--"starts"GameServer
-GameServer--Game
-GameServer--GameMode
-GameServer--GameData
-GameServer--Player
-Game<|--StandardGame
-Game--BoardS
-Game--BoardGenerator
-BoardGenerator<|--StandardBoardGenerator
-GameMode<|--StandardGameMode
-BoardS<|--StandardBoard
-BoardS-BoardGenerator
-StandardBoard-StandardBoardGenerator
+    class ClientRun {
+        static void main()
+    }
+    class MainWindow {
+        void start()
+    }
+    interface GameClient {
+        void runClient();
+        void onPlayerMoved(int originalX, int originalY, int newX, int newY);
+        void onAcceptMove(int oldX, int oldY, int newX, int newY);
+        void onDeclineMove();
+        void onYourMove();
+        void onEndMove();
+        void onPlayerQuit(String player);
+        void onGame(String gameMode, int numOfPLayers);
+        void onYourID(int ID);
+        void onGameOver();
+        void sendNickMessage(String nick);
+        void sendCheckMessage(int oldX, int oldY, int newX, int newY)
+        void sendMoveMessage(int originalX, int originalY, int newX, int newY);
+        void sendPassMessage(int originalX,int originalY,int newX,int newY);
+        String getMessage() throws IOException;
+    }
+    class PlayWindow {
+        private JFrame frame;
+        private AbstractGraphicPanel panel;
+        private Board standardBoard;
+        private Socket socket;
+        private BufferedReader reader;
+        private PrintWriter writer;
+        private String nick;
+        private String gameMode;
+        private int playerID;
+        private boolean myTurn = false;
+        public PlayWindow(String nick)
+        public void start()
+        private void configureCommunication()
+        private void goToGame(int players,String gameMode)
+        public void onPlayerMoved(int originalX, int originalY, int newX, int newY)
+        public void onAcceptMove(int oldX, int oldY, int newX, int newY)
+        public void onDeclineMove()
+        public void onYourMove()
+        public void onEndMove()
+        public void onPlayerQuit(String player)
+        public void onVictory(String winner)
+        public void onGame(String gameMode, int numOfPLayers)
+        public void onYourID(int ID)
+        public void onGameOver()
+        public void sendNickMessage(String nick)
+        public void sendCheckMessage(int oldX, int oldY, int newX, int newY)
+        public void sendMoveMessage(int originalX, int originalY, int newX, int newY)
+        public void sendPassMessage(int originalX,int originalY,int newX,int newY)
+        public String getMessage()
+        private void closeStreams()
+        private void setMyTurn(boolean t)
+        public boolean isMyTurn()
+        public int getPlayerID()
+        public AbstractGraphicPanel
+        public void onPassMessage()
+        public class StatementReceiver
+        }
+    abstract class AbstractGraphicPanel{
+        Field[][] fields
+        public abstract MyMouseAdapter getMyMouseAdapter();
+        public AbstractGraphicPanel(Board board)
+        public void paintComponent(Graphics g)
+    }
+    class MyMouseAdapter {
+    private Field[][] fields
+        private PlayWindow window;
+        private int clickedX, clickedY, originalX, originalY,activeX,activeY;
+        private boolean pawnChosen;
+        private Field active,originalField;
+        public void mousePressed(MouseEvent e)
+        private Field getClickedField(MouseEvent e)
+        private void deactivate()
+        private void setOriginalField(int x , int y)
+        public void setActiveField(int activeX,int activeY)
+        public Field getActive()
+    }
+    class CircleGraphicPanel {
+       private CircleField[][] fields;
+       private MyMouseAdapter mouseAdapter;
+       CircleGraphicPanel(Board board, PlayWindow window)
+       public MyMouseAdapter getMyMouseAdapter()
+    }
+    class SquareField {
+       public SquareField(double x, double y, double r, int player)
+       public SquareField(double x, double y, double r)
+       public int getPlayer()
+       public void setPlayer(int player)
+       public boolean doesContain(Point p)
+    }
+    abstract class Circle{
+      int player;
+      public Circle(double x, double y,double r) {
+      public Circle(double x, double y,double r,int player)
+    }
+    interface Field {
+        int getPlayer();
+        void setPlayer(int player);
+        boolean doesContain(Point p);
+    }
+    class Square {
+        int player;
+        public Square(double x, double y,double r)
+        public Square(double x, double y,double r,int player)
+    }
+    class SquareGraphicPanel {
+        private SquareField[][] fields;
+        private MyMouseAdapter mouseAdapter;
+        public SquareGraphicPanel(Board board, PlayWindow window)
+        public MyMouseAdapter getMyMouseAdapter()
+    }
+    class CircleField{
+        public CircleField(double x, double y, double r, int player)
+        public CircleField(double x, double y, double r)
+        public int getPlayer()
+        public void setPlayer(int player)
+        public boolean doesContain(Point p)
 }
 
 
