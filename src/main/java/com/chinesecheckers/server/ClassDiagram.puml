@@ -286,7 +286,7 @@ Square<|--SquareField
         void setPlayer(int player);
         boolean doesContain(Point p);
     }
-    class Square {
+    abstract class Square {
         int player;
         public Square(double x, double y,double r)
         public Square(double x, double y,double r,int player)
