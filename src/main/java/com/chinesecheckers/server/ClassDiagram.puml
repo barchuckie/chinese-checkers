@@ -1,0 +1,60 @@
+
+@startuml
+package "Client"{
+class ClientRun
+class MainWindow
+class PlayWindow
+interface Field
+interface GameClient
+abstract class Board
+abstract class AbstractGraphicPanel
+class MyMouseAdapter
+class CircleGraphicPanel
+
+ClientRun--"starts"MainWindow
+GameClient<|--PlayWindow
+MainWindow--"starts"PlayWindow
+PlayWindow--AbstractGraphicPanel
+PlayWindow--Board
+AbstractGraphicPanel--Field
+AbstractGraphicPanel--MyMouseAdapter
+AbstractGraphicPanel<|--CircleGraphicPanel
+CircleGraphicPanel--CircleField
+Field<|--CircleField
+Circle<|--CircleField
+}
+
+package "SERVER"{
+class ServerRun
+class ServerStartWindow
+class GameServer
+class StandardGame
+class StandardGameMode
+class Player
+class BoardS
+class StandardBoard
+interface BoardGenerator
+class StandardBoardGenerator
+abstract class Game
+interface GameMode
+class GameData
+ServerRun--"starts"ServerStartWindow
+ServerStartWindow--"starts"GameServer
+GameServer--Game
+GameServer--GameMode
+GameServer--GameData
+GameServer--Player
+Game<|--StandardGame
+Game--BoardS
+Game--BoardGenerator
+BoardGenerator<|--StandardBoardGenerator
+GameMode<|--StandardGameMode
+BoardS<|--StandardBoard
+BoardS-BoardGenerator
+StandardBoard-StandardBoardGenerator
+}
+
+
+
+
+@enduml
