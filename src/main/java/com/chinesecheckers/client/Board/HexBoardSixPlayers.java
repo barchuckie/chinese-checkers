@@ -1,13 +1,19 @@
 package com.chinesecheckers.client.Board;
 
-import com.chinesecheckers.client.Circle;
 import com.chinesecheckers.client.Field;
 
-public class HexBoardSixPlayers extends HexBoard
-{
+/**
+ * Concrete class extending {@code HexBoard}. Represents six-arm star board with 4 players.
+ * @see HexBoard
+ * @see Board
+ */
+public class HexBoardSixPlayers extends HexBoard {
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void addPlayers()
-    {
+    public void addPlayers() {
         for(int i = 0; i < 4; ++i) {
             for(Field field : fields[i]) {
                 if(field != null) {

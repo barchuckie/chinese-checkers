@@ -11,20 +11,38 @@ import java.io.PrintWriter;
 //miejsce z ktorego zaczynalem
 //i bez poruszania
 
+/**
+ * Concrete class extending {@code AbstractGraphicPanel}. Represents a panel with circle fields.
+ * @see AbstractGraphicPanel
+ */
 public class CircleGraphicPanel extends AbstractGraphicPanel {
+    /**
+     * Board circle fields
+     */
     private CircleField[][] fields;
+
+    /**
+     * Mouse adapter handling its events on the panel
+     */
     private MyMouseAdapter mouseAdapter;
 
-    public CircleGraphicPanel(Board board, PlayWindow window)
-    {
+    /**
+     * Initializes new instance of {@code CircleGraphicPanel}. Represents board fields with circles.
+     * @param board game board shown on the panel
+     * @param window window containing the panel
+     */
+    public CircleGraphicPanel(Board board, PlayWindow window) {
         super(board);
         fields = (CircleField[][]) board.getFields();
         mouseAdapter = new MyMouseAdapter(fields, window);
         this.addMouseListener(mouseAdapter);
     }
 
-    public MyMouseAdapter getMyMouseAdapter()
-    {
+    /**
+     * Gets mouse adapter.
+     * @return mouse adapter
+     */
+    public MyMouseAdapter getMyMouseAdapter() {
         return mouseAdapter;
     }
 }

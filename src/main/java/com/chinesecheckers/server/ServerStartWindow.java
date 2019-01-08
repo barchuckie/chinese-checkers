@@ -8,16 +8,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
+/**
+ * Class contains server window, where game data is picked up.
+ * It runs {@code GameServer}.
+ */
 class ServerStartWindow {
+    /**
+     * Window content
+     */
     private JFrame frame;
     private JPanel mainPanel,namePanel,choosePanel,choosePlayersPanel,chooseBotsPanel,newGamePanel,newGameLabelPanel;
-
     private JButton startButton;
     private JLabel chineseCheckersLabel;
     private ButtonGroup howManyPlayers,howManyBots;
     private JRadioButton twoP,threeP,fourP,sixP,zeroB,oneB,twoB,threeB,fourB,fiveB;
     private GridLayout mainGridLayout;
 
+    /**
+     * Starts and runs server window
+     */
     void start() {
         frame = new JFrame("Gra");
         mainGridLayout = new GridLayout(3,0);
@@ -102,6 +111,9 @@ class ServerStartWindow {
         frame.setResizable(false);
     }
 
+    /**
+     * Class handling start button events. It creates new instance of {@code GameServer} and runs it.
+     */
     class startButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e)

@@ -4,21 +4,29 @@ import com.chinesecheckers.client.CircleField;
 import com.chinesecheckers.client.Field;
 import com.chinesecheckers.client.SquareField;
 
+/**
+ * Abstract class representing all six-arm star boards.
+ */
 public abstract class HexBoard extends Board {
 
-    Field field;
-    Field field2;
-    public void setup(String type)
-    {
-        if(type.equals("STANDARD"))
-        {
+    /**
+     * Board fields.
+     */
+    private Field field;
+    private Field field2;
+
+    /**
+     * Sets up a board with given type of fields (circles, squares...).
+     * @param type type of fields
+     */
+    public void setup(String type) {
+        if(type.equals("STANDARD")) {
             fields = new CircleField[17][25];
-        }
-        else
-        {
+        } else {
             fields = new SquareField[17][25];
         }
         fillWithNulls();
+
         int startingX=500;
         int x;
         int y=30;
@@ -26,19 +34,15 @@ public abstract class HexBoard extends Board {
         int a=0;
         int b=12;
         int startingb=12;
-        for(int i=0;i<13;i++)
-        {
+
+        for(int i=0;i<13;i++) {
             x=startingX-30*i;
             //0-13
-            for(int w=0;w<i+1;w++)
-            {
-                if(type.equals("STANDARD"))
-                {
+            for(int w=0;w<i+1;w++) {
+                if(type.equals("STANDARD")) {
                     field = new CircleField(x,y,20);
                     field2 = new CircleField(x,y2,20);
-                }
-                else
-                {
+                } else {
                     field = new SquareField(x,y,20);
                     field2 = new SquareField(x,y2,20);
                 }
@@ -60,13 +64,13 @@ public abstract class HexBoard extends Board {
         }
     }
 
+    /**
+     * Makes all fields null.
+     */
     @Override
-    public void fillWithNulls()
-    {
-        for(int i=0;i<17;i++)
-        {
-            for(int j=0;j<25;j++)
-            {
+    public void fillWithNulls() {
+        for(int i=0;i<17;i++) {
+            for(int j=0;j<25;j++) {
                 fields[i][j]=null;
             }
         }

@@ -9,11 +9,27 @@ import com.chinesecheckers.server.game.GameData;
 
 import java.util.Random;
 
+/**
+ * Class representing standard game in chinese checkers.
+ * It takes care of the whole game logic.
+ */
 public class StandardGame extends Game {
 
+    /**
+     * Last turn player
+     */
     private Player lastPlayer;
-    int originalX, originalY, defaultX, defaultY;
 
+    /**
+     * Coordinates storing original position of the player and their default values.
+     */
+    private int originalX, originalY, defaultX, defaultY;
+
+    /**
+     * Instantiates new standard game.
+     * Builds a board, randomize a first player to move and sets all class fields.
+     * @param data game data
+     */
     public StandardGame(GameData data) {
         super(data);
         BoardGenerator generator = new StandardBoardGenerator();
@@ -26,6 +42,15 @@ public class StandardGame extends Game {
         setOriginalsDefault();
     }
 
+    /**
+     * Validates whether the move is correct according to standard game rules.
+     * @param player player who has made the move
+     * @param oldX old field x coordinate
+     * @param oldY old field y coordinate
+     * @param newX new field x coordinate
+     * @param newY new field y coordinate
+     * @return true if approved, otherwise false
+     */
     @Override
     public boolean validateMove(Player player, int oldX, int oldY, int newX, int newY) {
         System.out.println("Wszedł w validateMove z: " + player.getNick() + " " +
@@ -87,6 +112,9 @@ public class StandardGame extends Game {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean checkWinner(int player) {
         switch (numOfPlayers) {
@@ -155,6 +183,13 @@ public class StandardGame extends Game {
         }
     }
 
+    /**
+     * Checks given star arm if all the pawns of the player are there.
+     * If they are all in the opposite arm to the starting one, then the player wins (returns true).
+     * @param armNumber arm number to be checked
+     * @param player player to check
+     * @return true if player has won, false if not
+     */
     private boolean checkArm(int armNumber, int player) {
         Field [][] fields = board.getFields();
         switch (armNumber) {
@@ -238,6 +273,9 @@ public class StandardGame extends Game {
         }
     }
 
+    /**
+     * Sets original field coordinates to their default values.
+     */
     private void setOriginalsDefault() {
         originalX = defaultX;
         originalY = defaultY;

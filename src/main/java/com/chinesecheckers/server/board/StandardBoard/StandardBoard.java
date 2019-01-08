@@ -4,13 +4,36 @@ import com.chinesecheckers.server.Player;
 import com.chinesecheckers.server.board.Board;
 import com.chinesecheckers.server.board.Field;
 
+/**
+ * Concrete class extending {@code Board}. Represents standard game board.
+ * @see Board
+ */
 public class StandardBoard extends Board {
 
+    /**
+     * Number of players on a board
+     */
     private int numOfPlayers;
+
+    /**
+     * Array of players on a board
+     */
     private Player[] players;
+
+    /**
+     * Rows number
+     */
     private final int ROWS = 17;
+
+    /**
+     * Columns number
+     */
     private final int COLUMNS = 25;
 
+    /**
+     * Creates an instance with given game data.
+     * @param data game data
+     */
     StandardBoard(GameData data) {
         fields = new Field[ROWS][COLUMNS];
         for(int i = 0; i < 17; i++) {
@@ -25,6 +48,9 @@ public class StandardBoard extends Board {
         addPlayers();
     }
 
+    /**
+     * Sets proper fields.
+     */
     private void setFields() {
         for(int i = 0; i < 13; i++) {
             for(int j = 12-i; j <= 12 + i; j = j + 2) {
@@ -34,6 +60,9 @@ public class StandardBoard extends Board {
         }
     }
 
+    /**
+     * Sets every field neighbours. These are six fields around.
+     */
     private void setFieldsNeighbours() {
         for(int i = 0; i < ROWS; ++i) {
             for(int j = 0; j < COLUMNS; ++j) {
@@ -83,6 +112,9 @@ public class StandardBoard extends Board {
         }
     }
 
+    /**
+     * Adds players to the board.
+     */
     private void addPlayers() {
             switch (numOfPlayers) {
                 case 2:

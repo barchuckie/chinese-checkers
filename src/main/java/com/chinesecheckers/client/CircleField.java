@@ -2,30 +2,52 @@ package com.chinesecheckers.client;
 
 import java.awt.*;
 
+/**
+ * Represents game field on the graphic panel in circle.
+ * @see Circle
+ * @see Field
+ */
 public class CircleField extends Circle implements Field {
 
-    public CircleField(double x, double y, double r, int player)
-    {
+    /**
+     * Instantiate class with given parameters.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param r radius
+     * @param player player on the field
+     */
+    public CircleField(double x, double y, double r, int player) {
         super(x,y,r,player);
     }
 
-    public CircleField(double x, double y, double r)
-    {
+    /**
+     * Instantiate class with given parameters.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param r radius
+     */
+    public CircleField(double x, double y, double r) {
         super(x,y,r);
     }
 
-    public int getPlayer()
-    {
+    /**
+     * {@inheritDoc}
+     */
+    public int getPlayer() {
         return player;
     }
 
-    public void setPlayer(int player)
-    {
+    /**
+     * {@inheritDoc}
+     */
+    public void setPlayer(int player) {
         this.player = player;
     }
 
-    public boolean doesContain(Point p)
-    {
+    /**
+     * {@inheritDoc}
+     */
+    public boolean doesContain(Point p) {
         return contains(p);
     }
 }

@@ -2,11 +2,18 @@ package com.chinesecheckers.client;
 
 import java.awt.*;
 
+/**
+ * {@code PlayerColor} represents players colors of the pawns.
+ */
 public class PlayerColor {
-    public static Color getColor(int player)
-    {
-        switch(player)
-        {
+
+    /**
+     * Gets a proper player color based on his ID
+     * @param player ID
+     * @return player's color
+     */
+    public static Color getColor(int player) {
+        switch(player) {
             case 1:
                 return Color.GREEN;
             case 2:
@@ -23,9 +30,13 @@ public class PlayerColor {
                 return Color.WHITE;
         }
     }
-    public static int getPlayer(Color color)
-    {
 
+    /**
+     * Gets a proper player based on his color.
+     * @param color player's color
+     * @return player ID
+     */
+    public static int getPlayer(Color color) {
         if(color==Color.GREEN)
             return 1;
         else if(color==Color.RED)
@@ -41,10 +52,14 @@ public class PlayerColor {
         else
             return 0;
     }
-    public static String getColorName(int player)
-    {
-        switch(player)
-        {
+
+    /**
+     * Gets player color in {@code String} based on his ID
+     * @param player ID
+     * @return color name in String
+     */
+    public static String getColorName(int player) {
+        switch(player) {
             case 1:
                 return "GREEN";
             case 2:

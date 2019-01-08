@@ -1,13 +1,17 @@
 package com.chinesecheckers.client;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Enumeration;
 
+/**
+ * Class representing menu window at the beginning of client run.
+ */
 public class MainWindow {
+    /**
+     * Window content
+     */
     private JFrame frame;
     private JPanel mainPanel,namePanel,joinGamePanelLabel;
     private JButton joinButton;
@@ -15,14 +19,16 @@ public class MainWindow {
     private GridLayout mainGridLayout;
     private JTextField getNickTextField;
 
-    public void start()
-    {
+    /**
+     * Sets up and displays a window
+     */
+    public void start() {
         frame = new JFrame("Gra");
         mainGridLayout = new GridLayout(3,0);
 
         //guzik join
         joinButton = new JButton("Dołącz do istniejącej gry");
-        joinButton.addActionListener(new joinButtonListener());
+        joinButton.addActionListener(new JoinButtonListener());
 
         getNickTextField = new JTextField("Tu wpisz nick",20);
 
@@ -48,21 +54,28 @@ public class MainWindow {
         frame.setResizable(false);
     }
 
-    class joinButtonListener implements ActionListener
-    {
+    /**
+     * Class handling join button events
+     */
+    class JoinButtonListener implements ActionListener {
+
+        /**
+         * Called after button is pressed. Runs new {@code PlayWindow} with nick inserted in the TextField.
+         * @param e button pressed
+         */
         @Override
-        public void actionPerformed(ActionEvent e)
-        {
+        public void actionPerformed(ActionEvent e) {
             String nick = getNickTextField.getText();
             String[] x = nick.split(" ");
-            if(!nick.isEmpty() && x.length<2)
-            {
+
+            if(!nick.isEmpty() && x.length<2) {
                 PlayWindow playWindow = new PlayWindow(nick);
                 playWindow.start();
                 frame.dispose();
             }
 
         }
+
     }
 
 }

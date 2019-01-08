@@ -1,47 +1,25 @@
+import com.chinesecheckers.client.GameClient;
+import com.chinesecheckers.server.GameServer;
+import com.chinesecheckers.server.Player;
+import com.chinesecheckers.server.game.StandardGame.StandardGameMode;
+
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import static org.mockito.Mockito.mock;
 
 public class GameServerTest {
 
     @Test
-    public void mockPatrykClient() {
-        try {
-            Socket socket = new Socket("localhost", 8901);
-            BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
-            output.println("NICK patryk");
-
-            String msg;
-            while(true) {
-                msg = input.readLine();
-                if(msg == null) {
-                    break;
-                }
-                System.out.println(msg);
-            }
-        } catch (Exception ignored) {}
+    public void testServerLifecycle() {
+        GameServer server = new GameServer(2, 0, new StandardGameMode());
     }
 
-    @Test
-    public void mockKubaClient() {
-        try {
-            Socket socket = new Socket("localhost", 8901);
-            BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
-            output.println("NICK kuba");
-
-            String msg;
-            while(true) {
-                msg = input.readLine();
-                if(msg == null) {
-                    break;
-                }
-                System.out.println(msg);
-            }
-        } catch (Exception ignored) {}
+    private GameClient createGameClient() {
+        return mock(GameClient.class);
     }
+
+    private Player createPlayer() {
+        return mock(Player.class);
+    }
+
 }
