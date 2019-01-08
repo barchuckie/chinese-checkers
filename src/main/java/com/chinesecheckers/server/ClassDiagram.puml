@@ -303,6 +303,12 @@ Square<|--SquareField
         public int getPlayer()
         public void setPlayer(int player)
         public boolean doesContain(Point p)
+    }
+    class PlayerColor {
+        static Color getColor(int player)
+        static int getPlayer(Color color)
+        static String getColorName(int player)
+    }
 }
 
 
