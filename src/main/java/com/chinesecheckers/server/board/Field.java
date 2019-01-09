@@ -1,11 +1,14 @@
 package com.chinesecheckers.server.board;
 
-import com.chinesecheckers.server.Player;
+import com.chinesecheckers.server.player.Player;
 
 /**
  * Class representing a field on board in the server
  */
 public class Field {
+
+    private int x;
+    private int y;
 
     /**
      * Player on the field
@@ -20,7 +23,9 @@ public class Field {
     /**
      * Creates new field and sets its player to {@code null}.
      */
-    public Field() {
+    public Field(int x, int y) {
+        this.x = x;
+        this.y = y;
         player = null;
     }
 
@@ -54,5 +59,13 @@ public class Field {
      */
     public Player getPlayer() {
         return player;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }

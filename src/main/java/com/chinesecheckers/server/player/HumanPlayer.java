@@ -1,4 +1,4 @@
-package com.chinesecheckers.server;
+package com.chinesecheckers.server.player;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,14 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-/**
- * Class representing GameClient in a game
- */
-public class Player {
-    /**
-     * Player's nick
-     */
-    private String nick;
+public class HumanPlayer extends Player {
 
     /**
      * Socket to be listen on
@@ -28,18 +21,14 @@ public class Player {
      * Output to socket
      */
     private PrintWriter output;
-    /**
-     * Determines whether player has finished a game
-     */
-    private boolean finished;
 
     /**
      * Instantiate Player with given socket
      * @param socket socket to connect with client
      */
-    public Player(Socket socket) {
+    public HumanPlayer(Socket socket) {
         this.socket = socket;
-        finished = false;
+        super.setFinished(false);
         try {
             input = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
@@ -54,10 +43,10 @@ public class Player {
      * @param nick player's nick
      * @param socket socket to connect with client
      */
-    public Player(String nick, Socket socket) {
-        this.nick = nick;
+    public HumanPlayer(String nick, Socket socket) {
+        super.setNick(nick);
         this.socket = socket;
-        finished = false;
+        super.setFinished(false);
         try {
             input = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
@@ -71,25 +60,9 @@ public class Player {
      * Instantiate Player with given nick
      * @param nick player's nick
      */
-    public Player(String nick) {
-        this.nick = nick;
-        finished = false;
-    }
-
-    /**
-     * Gets player's nick
-     * @return player's nick
-     */
-    public String getNick() {
-        return nick;
-    }
-
-    /**
-     * Sets player's nick
-     * @param nick player's nick
-     */
-    public void setNick(String nick) {
-        this.nick = nick;
+    public HumanPlayer(String nick) {
+        super.setNick(nick);
+        super.setFinished(false);
     }
 
     /**
@@ -115,19 +88,11 @@ public class Player {
     }
 
     /**
-     * Gets {@code finished} value
-     * @return true if player has finished, false if not
+     * {@inheritDoc}
+     * @return false
      */
-    public boolean isFinished() {
-        return finished;
+    @Override
+    public boolean isBot() {
+        return false;
     }
-
-    /**
-     * Sets {@code finished} value
-     * @param finished value to be set
-     */
-    public void setFinished(boolean finished) {
-        this.finished = finished;
-    }
-
 }

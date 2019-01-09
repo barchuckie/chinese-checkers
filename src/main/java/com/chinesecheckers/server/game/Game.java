@@ -1,6 +1,6 @@
 package com.chinesecheckers.server.game;
 
-import com.chinesecheckers.server.Player;
+import com.chinesecheckers.server.player.Player;
 import com.chinesecheckers.server.board.Board;
 
 /**

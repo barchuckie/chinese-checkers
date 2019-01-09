@@ -1,9 +1,12 @@
 package com.chinesecheckers.server;
 
+import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.game.Game;
 import com.chinesecheckers.server.game.GameData;
 import com.chinesecheckers.server.game.GameMode;
-import com.chinesecheckers.server.game.StandardGame.StandardGame;
+import com.chinesecheckers.server.player.BotPlayer;
+import com.chinesecheckers.server.player.HumanPlayer;
+import com.chinesecheckers.server.player.Player;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -17,6 +20,7 @@ public class GameServer {
     private ServerSocket listener;
     private Player [] players;
     private int numOfPlayers;
+    private int numOfHumans;
     private int numOfBots;
     private GameMode gameMode;
     private Game game;
@@ -24,14 +28,15 @@ public class GameServer {
 
     /**
      * Creates an instance of GameServer with given parameters.
-     * @param numOfPlayers number of players taking part in the game
+     * @param numOfHumans number of humans taking part in the game
      * @param numOfBots number of bots playing the game
-     * @param gameMode  game mode
+     * @param gameMode game mode
      */
-    public GameServer(int numOfPlayers, int numOfBots, GameMode gameMode) {
-        this.numOfPlayers = numOfPlayers;
+    public GameServer(int numOfHumans, int numOfBots, GameMode gameMode) {
+        this.numOfHumans = numOfHumans;
         this.numOfBots = numOfBots;
         this.gameMode = gameMode;
+        this.numOfPlayers = numOfBots + numOfHumans;
     }
 
     /**
@@ -56,6 +61,29 @@ public class GameServer {
     }
 
     /**
+     * Connects {@code numOfPlayers} players
+     * @throws IOException if an I/O error occurs when  waiting for a connection
+     */
+    private void connectPlayers() throws IOException {
+        players = new Player[numOfPlayers];
+        for(int i = 0; i < numOfPlayers; ++i) {
+            if(i < numOfHumans) {
+                players[i] = new HumanPlayer(listener.accept());
+                System.out.println("Listener #" + i + " accepted");
+                String [] nickMsg = players[i].read();
+                if(!nickMsg[0].equals("NICK") || nickMsg.length < 2) {
+                    i--;
+                    continue;
+                }
+                players[i].setNick(nickMsg[1]);
+                players[i].sendMessage("YOURID " + (i+1));
+            } else {
+                players[i] = new BotPlayer(i);
+            }
+        }
+    }
+
+    /**
      * Creates new game.
      */
     private void createNewGame() {
@@ -75,7 +103,12 @@ public class GameServer {
                 game.nextTurn();
                 continue;
             }
-            players[currentPlayer].sendMessage("YOURMOVE");
+            if (players[currentPlayer].isBot()) {
+                Field[] move = ((BotPlayer) players[currentPlayer]).makeMove(game.getBoard().getFields());
+                game.makeMove(players[currentPlayer], move[0].getX(), move[0].getY(), move[1].getX(), move[1].getY());
+            } else {
+                players[currentPlayer].sendMessage("YOURMOVE");
+            }
             String [] msg = players[currentPlayer].read();
             printMessage(msg);
 
@@ -169,25 +202,6 @@ public class GameServer {
     }
 
     /**
-     * Connects {@code numOfPlayers} players
-     * @throws IOException if an I/O error occurs when  waiting for a connection
-     */
-    private void connectPlayers() throws IOException {
-        players = new Player[numOfPlayers];
-        for(int i = 0; i < numOfPlayers; ++i) {
-            players[i] = new Player(listener.accept());
-            System.out.println("Listener #" + i + " accepted");
-            String [] nickMsg = players[i].read();
-            if(!nickMsg[0].equals("NICK") || nickMsg.length < 2) {
-                i--;
-                continue;
-            }
-            players[i].setNick(nickMsg[1]);
-            players[i].sendMessage("YOURID " + (i+1));
-        }
-    }
-
-    /**
      * Sends message to every player
      * @param message message to send
      */
@@ -219,5 +233,4 @@ public class GameServer {
         currentPlayer.sendMessage("ENDMOVE");
         sendToEveryoneExceptCurrent(message,currentPlayer);
     }
-
 }

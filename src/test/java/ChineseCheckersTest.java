@@ -1,4 +1,5 @@
-import com.chinesecheckers.server.Player;
+import com.chinesecheckers.server.player.HumanPlayer;
+import com.chinesecheckers.server.player.Player;
 import com.chinesecheckers.server.board.Board;
 import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.game.GameData;
@@ -9,8 +10,8 @@ class ChineseCheckersTest {
 
     GameData createDummy2PlayerGameData() {
         int numOfPlayers = 2;
-        Player player1 = new Player(nicks[0]);
-        Player player2 = new Player(nicks[1]);
+        Player player1 = new HumanPlayer(nicks[0]);
+        Player player2 = new HumanPlayer(nicks[1]);
 
         Player[] players = { player1, player2 };
 
@@ -19,9 +20,9 @@ class ChineseCheckersTest {
 
     GameData createDummy3PlayerGameData() {
         int numOfPlayers = 3;
-        Player player1 = new Player(nicks[0]);
-        Player player2 = new Player(nicks[1]);
-        Player player3 = new Player(nicks[2]);
+        Player player1 = new HumanPlayer(nicks[0]);
+        Player player2 = new HumanPlayer(nicks[1]);
+        Player player3 = new HumanPlayer(nicks[2]);
 
         Player[] players = { player1, player2, player3 };
 
@@ -30,10 +31,10 @@ class ChineseCheckersTest {
 
     GameData createDummy4PlayerGameData() {
         int numOfPlayers = 4;
-        Player player1 = new Player(nicks[0]);
-        Player player2 = new Player(nicks[1]);
-        Player player3 = new Player(nicks[2]);
-        Player player4 = new Player(nicks[3]);
+        Player player1 = new HumanPlayer(nicks[0]);
+        Player player2 = new HumanPlayer(nicks[1]);
+        Player player3 = new HumanPlayer(nicks[2]);
+        Player player4 = new HumanPlayer(nicks[3]);
 
         Player[] players = { player1, player2, player3, player4 };
 
@@ -42,12 +43,12 @@ class ChineseCheckersTest {
 
     GameData createDummy6PlayerGameData() {
         int numOfPlayers = 6;
-        Player player1 = new Player(nicks[0]);
-        Player player2 = new Player(nicks[1]);
-        Player player3 = new Player(nicks[2]);
-        Player player4 = new Player(nicks[3]);
-        Player player5 = new Player(nicks[4]);
-        Player player6 = new Player(nicks[5]);
+        Player player1 = new HumanPlayer(nicks[0]);
+        Player player2 = new HumanPlayer(nicks[1]);
+        Player player3 = new HumanPlayer(nicks[2]);
+        Player player4 = new HumanPlayer(nicks[3]);
+        Player player5 = new HumanPlayer(nicks[4]);
+        Player player6 = new HumanPlayer(nicks[5]);
 
         Player[] players = { player1, player2, player3, player4, player5, player6 };
 

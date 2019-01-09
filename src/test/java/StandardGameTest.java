@@ -1,4 +1,4 @@
-import com.chinesecheckers.server.Player;
+import com.chinesecheckers.server.player.Player;
 import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.game.Game;
 import com.chinesecheckers.server.game.GameData;

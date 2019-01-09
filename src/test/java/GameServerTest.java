@@ -1,6 +1,6 @@
 import com.chinesecheckers.client.GameClient;
 import com.chinesecheckers.server.GameServer;
-import com.chinesecheckers.server.Player;
+import com.chinesecheckers.server.player.Player;
 import com.chinesecheckers.server.game.StandardGame.StandardGameMode;
 
 import org.junit.Test;

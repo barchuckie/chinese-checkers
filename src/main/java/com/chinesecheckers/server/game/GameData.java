@@ -1,6 +1,6 @@
 package com.chinesecheckers.server.game;
 
-import com.chinesecheckers.server.Player;
+import com.chinesecheckers.server.player.Player;
 
 /**
  * Class contains all necessary data to run a game.

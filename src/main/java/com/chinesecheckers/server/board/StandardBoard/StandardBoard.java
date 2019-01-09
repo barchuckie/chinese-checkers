@@ -1,6 +1,6 @@
 package com.chinesecheckers.server.board.StandardBoard;
 import com.chinesecheckers.server.game.GameData;
-import com.chinesecheckers.server.Player;
+import com.chinesecheckers.server.player.Player;
 import com.chinesecheckers.server.board.Board;
 import com.chinesecheckers.server.board.Field;
 
@@ -54,8 +54,8 @@ public class StandardBoard extends Board {
     private void setFields() {
         for(int i = 0; i < 13; i++) {
             for(int j = 12-i; j <= 12 + i; j = j + 2) {
-                fields[i][j]=new Field();
-                fields[16-i][j]=new Field();
+                fields[i][j] = new Field(i, j);
+                fields[16-i][j] = new Field(16-i, j);
             }
         }
     }
