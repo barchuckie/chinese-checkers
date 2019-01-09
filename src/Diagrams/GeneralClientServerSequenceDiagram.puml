@@ -1,0 +1,34 @@
+-ciagla
+--przerywana
+@startuml
+Server <- Client: NICK
+Server -> Client: YOURID
+Server -> Client: GAME
+loop PlayerTurn
+    Server -> Client: YOURMOVE
+    alt Pass Turn
+        Client ->Server: PASS
+        else Play Turn
+            loop until MOVE
+            Client -> Server: CHECK
+
+            alt move allowed
+               Server --> Client:ACCEPT
+            else move incorrect
+               Server --> Client:DECLINE
+            end
+        end
+    end
+    Client -> Server : MOVE
+    Server --> Client: ENDMOVE
+    else OpponentTurn
+    Server -> Client: PLAYERMOVED
+    else Someone Win
+    Server -> Client: VICTORY
+    else Error
+    Server -> Client: ERROR
+    else PlayerQuit
+    Server -> Client: PLAYERQUIT
+   end
+
+@enduml
