@@ -1,5 +1,6 @@
 package com.chinesecheckers.server.game;
 
+import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.player.Player;
 import com.chinesecheckers.server.board.Board;
 
@@ -95,4 +96,11 @@ public abstract class Game {
      * @return true if won, false if not
      */
     public abstract boolean checkWinner(int currentPlayer);
+
+    /**
+     * Returns destination arm for the given player.
+     * @param player player which destination vertex is returned for
+     * @return destination arm ID
+     */
+    public abstract int getDestination(int player);
 }

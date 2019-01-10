@@ -26,6 +26,11 @@ public class StandardGame extends Game {
     private int originalX, originalY, defaultX, defaultY;
 
     /**
+     * Variable allowing player whether to move further or not.
+     */
+    private boolean allowFurtherMove;
+
+    /**
      * Instantiates new standard game.
      * Builds a board, randomize a first player to move and sets all class fields.
      * @param data game data
@@ -36,10 +41,9 @@ public class StandardGame extends Game {
         super.board = generator.generateBoard(data);
         Random rand = new Random();
         currentPlayer = rand.nextInt(numOfPlayers);
-        lastPlayer = null;
         defaultX = super.board.getFields().length;
         defaultY = super.board.getFields()[0].length;
-        setOriginalsDefault();
+        setDefaults();
     }
 
     /**
@@ -77,32 +81,34 @@ public class StandardGame extends Game {
 
         if(newX == originalX && newY == originalY) {
             System.out.println("Poprawne cofnięcie z pola sąsiadującego");
-            lastPlayer = null;
-            setOriginalsDefault();
+            setDefaults();
             return true;
         }
 
-        if(!player.equals(lastPlayer)) {
-            originalX = oldX;
-            originalY = oldY;
-            for (Field neighbour : neighbours) { // simple move validation
-                if (fields[newX][newY].equals(neighbour)) {
-                    System.out.println("Poprawne pole sasiadujące");
-                    lastPlayer = player;
-                    return true;
+        if(allowFurtherMove) {
+            if(!player.equals(lastPlayer)) {
+                originalX = oldX;
+                originalY = oldY;
+                for (Field neighbour : neighbours) { // simple move validation
+                    if (fields[newX][newY].equals(neighbour)) {
+                        System.out.println("Poprawne pole sasiadujące");
+                        lastPlayer = player;
+                        allowFurtherMove = false;
+                        return true;
+                    }
                 }
             }
-        }
 
-        for(int i = 0; i < neighbours.length; ++i) { // jump move validation
-            if((neighbours[i] != null) &&
-                    (neighbours[i].getPlayer() != null)) {
-                Field nextField = neighbours[i].getNeighbours()[i];
-                if(nextField != null) {
-                    if(board.getFields()[newX][newY].equals(nextField)) {
-                        System.out.println("Poprawny skok");
-                        lastPlayer = player;
-                        return true;
+            for(int i = 0; i < neighbours.length; ++i) { // jump move validation
+                if((neighbours[i] != null) &&
+                        (neighbours[i].getPlayer() != null)) {
+                    Field nextField = neighbours[i].getNeighbours()[i];
+                    if(nextField != null) {
+                        if(board.getFields()[newX][newY].equals(nextField)) {
+                            System.out.println("Poprawny skok");
+                            lastPlayer = player;
+                            return true;
+                        }
                     }
                 }
             }
@@ -117,69 +123,78 @@ public class StandardGame extends Game {
      */
     @Override
     public boolean checkWinner(int player) {
+        if(getDestination(player) == -1) {
+            return false;
+        }
+        return checkArm(getDestination(player), player);
+    }
+
+    /**
+     * Returns destination arm for the given player. Returns -1 if some logic error occurs.
+     * @param player player which destination vertex is returned for
+     * @return destination arm ID
+     */
+    @Override
+    public int getDestination(int player) {
         switch (numOfPlayers) {
             case 2:
                 if(player == 1) {
-                    return checkArm(0, player);
+                    return 0;
                 } else if(player == 0) {
-                    return checkArm(3, player);
+                    return 3;
                 }
-                return false;
 
             case 3:
                 switch (player) {
                     case 0:
-                        return checkArm(3, player);
+                        return 3;
 
                     case 1:
-                        return checkArm(5, player);
+                        return 5;
 
                     case 2:
-                        return checkArm(1, player);
+                        return 1;
 
                 }
-                return false;
 
             case 4:
                 switch (player) {
                     case 0:
-                        return checkArm(4, player);
+                        return 4;
 
                     case 1:
-                        return checkArm(5, player);
+                        return 5;
 
                     case 2:
-                        return checkArm(1, player);
+                        return 1;
 
                     case 3:
-                        return checkArm(2, player);
+                        return 2;
                 }
-                return false;
 
             case 6:
                 switch (player) {
                     case 0:
-                        return checkArm(3, player);
+                        return 3;
 
                     case 1:
-                        return checkArm(4, player);
+                        return 4;
 
                     case 2:
-                        return checkArm(5, player);
+                        return 5;
 
                     case 3:
-                        return checkArm(0, player);
+                        return 0;
 
                     case 4:
-                        return checkArm(1, player);
+                        return 1;
 
                     case 5:
-                        return checkArm(2, player);
+                        return 2;
                 }
-                return false;
 
-                default:
-                    return false;
+            default:
+                return -1;
         }
     }
 
@@ -274,11 +289,19 @@ public class StandardGame extends Game {
     }
 
     /**
-     * Sets original field coordinates to their default values.
+     * Sets all logical variables to default values.
+     * Sets original field coordinates to their default values, clears lastPlayer and allows further move.
      */
-    private void setOriginalsDefault() {
+    private void setDefaults() {
         originalX = defaultX;
         originalY = defaultY;
+        lastPlayer = null;
+        allowFurtherMove = true;
     }
 
+    @Override
+    public void nextTurn() {
+        super.nextTurn();
+        setDefaults();
+    }
 }

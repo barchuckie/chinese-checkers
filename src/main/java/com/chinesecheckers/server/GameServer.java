@@ -28,15 +28,15 @@ public class GameServer {
 
     /**
      * Creates an instance of GameServer with given parameters.
-     * @param numOfHumans number of humans taking part in the game
+     * @param numOfPlayers number of all players taking part in the game
      * @param numOfBots number of bots playing the game
      * @param gameMode game mode
      */
-    public GameServer(int numOfHumans, int numOfBots, GameMode gameMode) {
-        this.numOfHumans = numOfHumans;
+    public GameServer(int numOfPlayers, int numOfBots, GameMode gameMode) {
+        this.numOfPlayers = numOfPlayers;
         this.numOfBots = numOfBots;
+        this.numOfHumans = numOfPlayers - numOfBots;
         this.gameMode = gameMode;
-        this.numOfPlayers = numOfBots + numOfHumans;
     }
 
     /**
@@ -89,6 +89,12 @@ public class GameServer {
     private void createNewGame() {
         data = new GameData(numOfPlayers, players);
         game = gameMode.generateGame(data);
+        for (int i = 0; i < numOfPlayers; ++i) {
+            if(players[i].isBot()) {
+                ((BotPlayer) players[i]).setFields(game.getBoard().getFields());
+                ((BotPlayer) players[i]).setDestinationArm(game.getDestination(i));
+            }
+        }
         sendToEveryone("GAME " + gameMode.getName() + " " + numOfPlayers);
     }
 
@@ -103,12 +109,7 @@ public class GameServer {
                 game.nextTurn();
                 continue;
             }
-            if (players[currentPlayer].isBot()) {
-                Field[] move = ((BotPlayer) players[currentPlayer]).makeMove(game.getBoard().getFields());
-                game.makeMove(players[currentPlayer], move[0].getX(), move[0].getY(), move[1].getX(), move[1].getY());
-            } else {
-                players[currentPlayer].sendMessage("YOURMOVE");
-            }
+            players[currentPlayer].sendMessage("YOURMOVE");
             String [] msg = players[currentPlayer].read();
             printMessage(msg);
 
@@ -148,6 +149,9 @@ public class GameServer {
 
         if (originalX != newX || originalY != newY) { // ignore if position has not changed
             // PLAYER_MOVED playerNick originalX originalY newX newY
+            if(players[currentPlayer].isBot()) {
+                game.makeMove(players[currentPlayer], originalX, originalY, newX, newY);
+            }
             sendPlayerMovedMsg("PLAYERMOVED " + players[currentPlayer].getNick() + " " +
                     originalX + " " + originalY + " " + newX + " " + newY + " ", players[currentPlayer]);
             if(game.checkWinner(currentPlayer)) {
