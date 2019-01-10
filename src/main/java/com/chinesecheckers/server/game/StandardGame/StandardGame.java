@@ -38,11 +38,11 @@ public class StandardGame extends Game {
     public StandardGame(GameData data) {
         super(data);
         BoardGenerator generator = new StandardBoardGenerator();
-        super.board = generator.generateBoard(data);
+        setBoard(generator.generateBoard(data));
         Random rand = new Random();
         currentPlayer = rand.nextInt(numOfPlayers);
-        defaultX = super.board.getFields().length;
-        defaultY = super.board.getFields()[0].length;
+        defaultX = super.getBoardFields().length;
+        defaultY = super.getBoardFields()[0].length;
         setDefaults();
     }
 
@@ -65,7 +65,7 @@ public class StandardGame extends Game {
             return false;
         }
 
-        Field [][] fields = board.getFields();
+        Field [][] fields = getBoardFields();
 
         if(!player.equals(fields[oldX][oldY].getPlayer())) {
             // player must play only with its own pawns
@@ -104,7 +104,7 @@ public class StandardGame extends Game {
                         (neighbours[i].getPlayer() != null)) {
                     Field nextField = neighbours[i].getNeighbours()[i];
                     if(nextField != null) {
-                        if(board.getFields()[newX][newY].equals(nextField)) {
+                        if(getBoardFields()[newX][newY].equals(nextField)) {
                             System.out.println("Poprawny skok");
                             lastPlayer = player;
                             return true;
@@ -209,7 +209,7 @@ public class StandardGame extends Game {
      * @return true if player has won, false if not
      */
     private boolean checkArm(int armNumber, int player) {
-        Field [][] fields = board.getFields();
+        Field [][] fields = getBoardFields();
         switch (armNumber) {
             case 0:
                 for(int i = 0; i < 4; ++i) {

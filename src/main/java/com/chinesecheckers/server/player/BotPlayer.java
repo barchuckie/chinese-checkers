@@ -12,11 +12,24 @@ public class BotPlayer extends Player {
      */
     private int playerID;
 
+    /**
+     * Game board fields to observe game updates
+     */
     private Field[][] fields;
-    
+
+    /**
+     * Board field that pawns are going to.
+     */
     private Field destinationField;
+
+    /**
+     * Board fields on the destination arm of the board star.
+     */
     private ArrayList<Field> destinationFields;
 
+    /**
+     * The best move a bot player can make.
+     */
     private Field [] bestMove;
 
     /**
@@ -30,6 +43,10 @@ public class BotPlayer extends Player {
         destinationFields = new ArrayList<>();
     }
 
+    /**
+     * Sets bot's fields
+     * @param fields
+     */
     public void setFields(Field[][] fields) {
         this.fields = fields;
     }
@@ -114,10 +131,20 @@ public class BotPlayer extends Player {
         }
     }
 
+    /**
+     * Defines whether player decided to move or not
+     * @return true if player moves, false if not
+     */
     private boolean canMove() {
         return !(bestMove[0].getX() == bestMove[1].getX() && bestMove[0].getY() == bestMove[1].getY());
     }
 
+    /**
+     * Search for jump moves and judge their value.
+     * @param origin original field
+     * @param lastField last field of the move
+     * @param currentField current field in the move
+     */
     private void correctJumpPaths(Field origin, Field lastField, Field currentField) {
         Field [] neighbours = currentField.getNeighbours();
         for(int i = 0; i < neighbours.length; ++i) { // jump move validation
@@ -139,17 +166,34 @@ public class BotPlayer extends Player {
             }
         }
     }
-    
+
+    /**
+     * Calculates the value of the move.
+     * It is the difference in distance between origin/destination and the field that the pawn is going to.
+     * @param origin original field
+     * @param destination destination field
+     * @return value of the move
+     */
     private int valueOfMove(Field origin, Field destination) {
         return distance(origin, destinationField) - distance(destination, destinationField);
     }
 
+    /**
+     * Calculates the shortest distance in simple jumps between two fields.
+     * @param origin original field
+     * @param destination destination field
+     * @return distance between them
+     */
     private int distance(Field origin, Field destination) {
         int horizontalLength = Math.abs(destination.getY() - origin.getY());
         int verticalLength = Math.abs(destination.getX() - origin.getX());
         return (horizontalLength + verticalLength)/2;
     }
 
+    /**
+     * Sets all destination parameters according to a given arm.
+     * @param destinationArm arm that the bot is going to
+     */
     public void setDestinationArm(int destinationArm) {
         switch (destinationArm) {
             case 0:

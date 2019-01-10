@@ -28,7 +28,7 @@ public abstract class Game {
     /**
      * Board that the game is played on
      */
-    protected Board board;
+    private Board board;
 
     /**
      * Creates new instance of game with given data
@@ -62,8 +62,16 @@ public abstract class Game {
      * Gets the game board, which is updated
      * @return game board
      */
-    public Board getBoard() {
-        return board;
+    public Field[][] getBoardFields() {
+        return board.getFields();
+    }
+
+    /**
+     * Sets game board
+     * @param board set board
+     */
+    protected void setBoard(Board board) {
+        this.board = board;
     }
 
     /**
@@ -75,8 +83,8 @@ public abstract class Game {
      * @param newY new field y coordinate
      */
     public void makeMove(Player player, int oldX, int oldY, int newX, int newY) {
-        board.getFields()[oldX][oldY].setPlayer(null);
-        board.getFields()[newX][newY].setPlayer(player);
+        getBoardFields()[oldX][oldY].setPlayer(null);
+        getBoardFields()[newX][newY].setPlayer(player);
     }
 
     /**

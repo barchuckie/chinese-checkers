@@ -13,7 +13,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import static java.lang.Thread.sleep;
-import static org.mockito.Mockito.mock;
 
 public class GameServerTest {
 
@@ -29,9 +28,6 @@ public class GameServerTest {
         }
     }
 
-    private GameClient createGameClient() {
-        return mock(GameClient.class);
-    }
     class ServerRunner implements Runnable {
 
         @Override

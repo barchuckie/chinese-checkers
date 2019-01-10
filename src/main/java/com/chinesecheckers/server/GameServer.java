@@ -1,6 +1,5 @@
 package com.chinesecheckers.server;
 
-import com.chinesecheckers.server.board.Field;
 import com.chinesecheckers.server.game.Game;
 import com.chinesecheckers.server.game.GameData;
 import com.chinesecheckers.server.game.GameMode;
@@ -91,7 +90,7 @@ public class GameServer {
         game = gameMode.generateGame(data);
         for (int i = 0; i < numOfPlayers; ++i) {
             if(players[i].isBot()) {
-                ((BotPlayer) players[i]).setFields(game.getBoard().getFields());
+                ((BotPlayer) players[i]).setFields(game.getBoardFields());
                 ((BotPlayer) players[i]).setDestinationArm(game.getDestination(i));
             }
         }

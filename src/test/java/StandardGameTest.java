@@ -109,7 +109,7 @@ public class StandardGameTest extends ChineseCheckersTest {
         Assert.assertFalse(game.checkWinner(0));
         Assert.assertFalse(game.checkWinner(1));
         for(int i = 0; i < 4; ++i) {
-            for(Field field : game.getBoard().getFields()[i]) {
+            for(Field field : game.getBoardFields()[i]) {
                 if(field != null) {
                     field.setPlayer(players[1]);
                 }
@@ -118,7 +118,7 @@ public class StandardGameTest extends ChineseCheckersTest {
         Assert.assertFalse(game.checkWinner(0));
         Assert.assertTrue(game.checkWinner(1));
         for(int i = 16; i > 12; --i) {
-            for(Field field : game.getBoard().getFields()[i]) {
+            for(Field field : game.getBoardFields()[i]) {
                 if(field != null) {
                     field.setPlayer(players[0]);
                 }
@@ -137,7 +137,7 @@ public class StandardGameTest extends ChineseCheckersTest {
 
         game = new StandardGame(data);
         currentPlayer = game.getCurrentPlayer();
-        Field[][] fields = game.getBoard().getFields();
+        Field[][] fields = game.getBoardFields();
 
         Assert.assertFalse(game.checkWinner(0));
         Assert.assertFalse(game.checkWinner(1));
@@ -157,7 +157,7 @@ public class StandardGameTest extends ChineseCheckersTest {
         Assert.assertFalse(game.checkWinner(2));
 
         for(int i = 16; i > 12; --i) {
-            for(Field field : game.getBoard().getFields()[i]) {
+            for(Field field : game.getBoardFields()[i]) {
                 if(field != null) {
                     field.setPlayer(players[0]);
                 }
@@ -189,7 +189,7 @@ public class StandardGameTest extends ChineseCheckersTest {
 
         game = new StandardGame(data);
         currentPlayer = game.getCurrentPlayer();
-        Field[][] fields = game.getBoard().getFields();
+        Field[][] fields = game.getBoardFields();
 
         Assert.assertFalse(game.checkWinner(0));
         Assert.assertFalse(game.checkWinner(1));
@@ -263,7 +263,7 @@ public class StandardGameTest extends ChineseCheckersTest {
 
         game = new StandardGame(data);
         currentPlayer = game.getCurrentPlayer();
-        Field[][] fields = game.getBoard().getFields();
+        Field[][] fields = game.getBoardFields();
 
         Assert.assertFalse(game.checkWinner(0));
         Assert.assertFalse(game.checkWinner(1));
@@ -273,7 +273,7 @@ public class StandardGameTest extends ChineseCheckersTest {
         Assert.assertFalse(game.checkWinner(5));
 
         for(int i = 16; i > 12; --i) {
-            for(Field field : game.getBoard().getFields()[i]) {
+            for(Field field : game.getBoardFields()[i]) {
                 if(field != null) {
                     field.setPlayer(players[0]);
                 }
@@ -320,7 +320,7 @@ public class StandardGameTest extends ChineseCheckersTest {
         Assert.assertFalse(game.checkWinner(5));
 
         for(int i = 0; i < 4; ++i) {
-            for(Field field : game.getBoard().getFields()[i]) {
+            for(Field field : game.getBoardFields()[i]) {
                 if(field != null) {
                     field.setPlayer(players[3]);
                 }
