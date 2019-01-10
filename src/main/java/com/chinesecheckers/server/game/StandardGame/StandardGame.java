@@ -126,6 +126,9 @@ public class StandardGame extends Game {
         if(getDestination(player) == -1) {
             return false;
         }
+        if(player < 0 || player >= numOfPlayers) {
+            return false;
+        }
         return checkArm(getDestination(player), player);
     }
 

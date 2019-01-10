@@ -77,8 +77,8 @@ public class PlayWindow implements GameClient {
     private void configureCommunication() {
         try {
             socket = new Socket("127.0.0.1", 8901);
-            InputStreamReader StreamReader = new InputStreamReader(socket.getInputStream());
-            reader = new BufferedReader(StreamReader);
+            InputStreamReader streamReader = new InputStreamReader(socket.getInputStream());
+            reader = new BufferedReader(streamReader);
             writer = new PrintWriter(socket.getOutputStream(),true);
             sendNickMessage(nick);
         } catch(IOException ex) {
