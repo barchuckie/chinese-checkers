@@ -39,7 +39,8 @@ GameMode<|..StandardGameMode
 BoardS<|--StandardBoard
 BoardS-BoardGenerator
 StandardBoard-StandardBoardGenerator
-
+HumanPlayer-|>Player
+BotPlayer-|>Player
     class ServerRun
     {
     void main()
@@ -70,19 +71,45 @@ StandardBoard-StandardBoardGenerator
              void sendToEveryoneExceptCurrent(String message,Player currentPlayer)
              sendPlayerMovedMsg(String message,Player currentPlayer)
     }
-    class Player
-    {
+    abstract class Player {
         String nick;
-        Socket socket;
-        BufferedReader input;
-        PrintWriter output;
         boolean finished;
         String getNick()
-
         void setNick(String nick)
-        void sendMessage(String message)
+        abstract String [] read();
+        abstract void sendMessage(String message);
         boolean isFinished()
         void setFinished(boolean finished)
+        abstract boolean isBot();
+    }
+    class HumanPlayer  {
+        Socket socket;
+        BufferedReader input;
+        private PrintWriter output;
+        HumanPlayer(Socket socket)
+        HumanPlayer(String nick, Socket socket)
+        HumanPlayer(String nick)
+        String [] read()
+        void sendMessage(String message)
+        boolean isBot()
+    }
+    class BotPlayer {
+        private int playerID;
+        private Field[][] fields;
+        private Field destinationField;
+        private ArrayList<Field> destinationFields;
+        private Field [] bestMove;
+        public BotPlayer(int ID)
+        void setFields(Field[][] fields)
+        String[] read()
+        void sendMessage(String message)
+        boolean isBot()
+        void makeMove()
+        boolean canMove() {
+        void correctJumpPaths(Field origin, Field lastField, Field currentField)
+        private int valueOfMove(Field origin, Field destination)
+        int distance(Field origin, Field destination)
+        void setDestinationArm(int destinationArm)
     }
     abstract class Game
     {
