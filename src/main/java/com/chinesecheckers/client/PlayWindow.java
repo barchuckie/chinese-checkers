@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 
 import static java.lang.Thread.sleep;
@@ -81,7 +82,11 @@ public class PlayWindow implements GameClient {
             reader = new BufferedReader(streamReader);
             writer = new PrintWriter(socket.getOutputStream(),true);
             sendNickMessage(nick);
-        } catch(IOException ex) {
+        }catch(ConnectException ex) {
+            System.out.println("There is no game to join");
+            System.exit(-1);
+        }catch(IOException ex) {
+            System.out.println("ESFS");
             ex.printStackTrace();
         }
     }

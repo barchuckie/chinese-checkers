@@ -1,6 +1,7 @@
 package com.chinesecheckers.client;
 
 import java.io.IOException;
+import java.net.SocketException;
 
 public interface GameClient {
 
@@ -42,7 +43,11 @@ public interface GameClient {
                 }
             }
             onGameOver();
-        } catch (Exception ex) {
+        } catch (SocketException ex) {
+            System.out.println("Serwer rozłączony");
+            System.exit(-1);
+        } catch(Exception ex)
+        {
             ex.printStackTrace();
         }
     }
