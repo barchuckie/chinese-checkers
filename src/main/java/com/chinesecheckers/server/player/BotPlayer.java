@@ -101,10 +101,10 @@ public class BotPlayer extends Player {
         bestMove[0] = myFields.get(0);
         bestMove[1] = myFields.get(0);
 
+        Random rand = new Random();
         for(Field destination : destinationFields) {
             if(canMove()) break;
             destinationField = destination;
-            Random rand = new Random();
             for (Field origin : myFields) {
                 for(int i = 0; i < origin.getNeighbours().length; ++i) {
                     Field neighbour = origin.getNeighbours()[i];
@@ -147,6 +147,7 @@ public class BotPlayer extends Player {
      */
     private void correctJumpPaths(Field origin, Field lastField, Field currentField) {
         Field [] neighbours = currentField.getNeighbours();
+        Random random = new Random();
         for(int i = 0; i < neighbours.length; ++i) { // jump move validation
             if((neighbours[i] != null) && (neighbours[i].getPlayer() != null)) {
                 Field nextField = neighbours[i].getNeighbours()[i];
@@ -155,7 +156,6 @@ public class BotPlayer extends Player {
                         bestMove[0] = origin;
                         bestMove[1] = nextField;
                     } else if(valueOfMove(origin, nextField) == valueOfMove(bestMove[0], bestMove[1])) {
-                        Random random = new Random();
                         if(random.nextBoolean()) {
                             bestMove[0] = origin;
                             bestMove[1] = nextField;

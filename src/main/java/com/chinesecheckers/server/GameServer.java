@@ -129,7 +129,7 @@ public class GameServer {
      * Prints received message into output
      * @param msg received message
      */
-    private void printMessage(String [] msg) {
+    private void printMessage(String... msg) {
         System.out.print("Otrzymano: ");
         for(String part : msg) System.out.print(part + " ");
         System.out.println();
@@ -140,7 +140,7 @@ public class GameServer {
      * @param currentPlayer player making move
      * @param msg full message
      */
-    private void moveHandler(int currentPlayer, String [] msg) {
+    private void moveHandler(int currentPlayer, String... msg) {
         int originalX = Integer.parseInt(msg[1]);
         int originalY = Integer.parseInt(msg[2]);
         int newX = Integer.parseInt(msg[3]);
@@ -166,7 +166,7 @@ public class GameServer {
      * @param currentPlayer player checking move
      * @param msg full message
      */
-    private void checkHandler(int currentPlayer, String [] msg) {
+    private void checkHandler(int currentPlayer, String... msg) {
         int oldX = Integer.parseInt(msg[1]);
         int oldY = Integer.parseInt(msg[2]);
         int newX = Integer.parseInt(msg[3]);
@@ -187,7 +187,7 @@ public class GameServer {
      * @param currentPlayer player passing turn
      * @param msg full message
      */
-    private void passHandler(int currentPlayer, String [] msg) {
+    private void passHandler(int currentPlayer, String... msg) {
         int originalX = Integer.parseInt(msg[1]);
         int originalY = Integer.parseInt(msg[2]);
         int newX = Integer.parseInt(msg[3]);

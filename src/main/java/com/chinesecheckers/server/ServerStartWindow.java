@@ -17,11 +17,27 @@ class ServerStartWindow {
      * Window content
      */
     private JFrame frame;
-    private JPanel mainPanel,namePanel,choosePanel,choosePlayersPanel,chooseBotsPanel,newGamePanel,newGameLabelPanel;
+    private JPanel mainPanel;
+    private JPanel namePanel;
+    private JPanel choosePanel;
+    private JPanel choosePlayersPanel;
+    private JPanel chooseBotsPanel;
+    private JPanel newGamePanel;
+    private JPanel newGameLabelPanel;
     private JButton startButton;
     private JLabel chineseCheckersLabel;
-    private ButtonGroup howManyPlayers,howManyBots;
-    private JRadioButton twoP,threeP,fourP,sixP,zeroB,oneB,twoB,threeB,fourB,fiveB;
+    private ButtonGroup howManyPlayers;
+    private ButtonGroup howManyBots;
+    private JRadioButton twoP;
+    private JRadioButton threeP;
+    private JRadioButton fourP;
+    private JRadioButton sixP;
+    private JRadioButton zeroB;
+    private JRadioButton oneB;
+    private JRadioButton twoB;
+    private JRadioButton threeB;
+    private JRadioButton fourB;
+    private JRadioButton fiveB;
     private GridLayout mainGridLayout;
 
     /**
@@ -143,7 +159,7 @@ class ServerStartWindow {
                 try {
                     gameServer.start();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    System.out.println(ex.getMessage());
                 }
             }
         }

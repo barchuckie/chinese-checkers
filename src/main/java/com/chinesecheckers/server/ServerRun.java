@@ -14,7 +14,7 @@ public class ServerRun {
             ServerStartWindow gameServerWindow = new ServerStartWindow();
             gameServerWindow.start();
         } catch(Exception ex) {
-            ex.printStackTrace();
+            System.out.println(ex.getMessage());
         }
     }
 

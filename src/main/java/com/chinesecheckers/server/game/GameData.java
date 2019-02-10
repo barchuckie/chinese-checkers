@@ -22,7 +22,7 @@ public class GameData {
      * @param numOfPlayers number of players playing the game
      * @param players the array of playing players
      */
-    public GameData(int numOfPlayers, Player [] players) {
+    public GameData(int numOfPlayers, Player... players) {
         this.numOfPlayers = numOfPlayers;
         this.players = players;
     }

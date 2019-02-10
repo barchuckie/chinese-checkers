@@ -23,7 +23,10 @@ public class StandardGame extends Game {
     /**
      * Coordinates storing original position of the player and their default values.
      */
-    private int originalX, originalY, defaultX, defaultY;
+    private int originalX;
+    private int originalY;
+    private int defaultX;
+    private int defaultY;
 
     /**
      * Variable allowing player whether to move further or not.

@@ -33,7 +33,7 @@ public class Field {
      * Sets field's neighbours.
      * @param neighbours field's neighbours
      */
-    public void setNeighbours(Field[] neighbours) {
+    public void setNeighbours(Field... neighbours) {
         this.neighbours = neighbours;
     }
 
